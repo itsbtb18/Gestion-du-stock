@@ -3,12 +3,13 @@ package org.example.model;
 import java.util.Date;
 
 public class produit {
+    private String id;
+    private String nom;
     private categorie categorie;
     private double prixAchat;
     private double prixVente;
     private Date dateExpiration;
     private String codeBar;
-    private String nom;
     private Fournisseur fournisseur;
 
     public produit() {
