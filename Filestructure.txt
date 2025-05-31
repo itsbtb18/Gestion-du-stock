@@ -1,0 +1,42 @@
+app/
+├── database/
+│   └── database.db         # SQLite database file
+├── src/
+│   └── main/
+│       ├── java/
+│       │   └── org/
+│       │       └── example/
+│       │           │── APP.java
+│       │           ├── controller/
+│       │           │   ├── ProduitCTRL.java
+│       │           │   ├── ClientCTRL.java
+│       │           │   ├── FournisseurCTRL.java
+│       │           │   ├── CategorieCTRL.java
+│       │           │   ├── RayonCTRL.java
+│       │           │   ├── VenteCTRL.java
+│       │           │   └── AchatCTRL.java
+│       │           ├── dao/
+│       │           │   ├── ProduitDb.java
+│       │           │   ├── ClientDb.java
+│       │           │   ├── CategorieDb.java
+│       │           │   ├── RayonDb.java
+│       │           │   ├── VenteDb.java
+│       │           │   ├── AchatDb.java
+│       │           │   └── FournisseurDb.java
+│       │           ├── db/
+│       │           │   ├── DBConnection.java
+│       │           │   └── DBInitializer.java
+│       │           ├── model/
+│       │           │   ├── client.java
+│       │           │   ├── categorie.java
+│       │           │   ├── produit.java
+│       │           │   ├── fournisseur.java
+│       │           │   ├── rayon.java
+│       │           │   ├── vente.java
+│       │           │   └── achat.java
+│       │           └── Util/
+│       │               ├── AlertUtil.java
+│       │               ├── DateUtil.java
+│       │               ├── DbUtil.java
+│       │               └── StatistiqueUtil.java
+│       └── resources/      # Application resources (config, images, etc.)
