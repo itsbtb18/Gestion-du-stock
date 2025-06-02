@@ -85,5 +85,4 @@ CREATE TABLE vente (
 -- Insertion de 3 exemples de ventes
 INSERT INTO vente (id,date, montantTotal, modePaiement, clientId) VALUES
                                                                       (1,'2024-06-01 14:30:00', 1250.50, 'Espèces', NULL),
-                                                                      (2,'2024-06-01 16:45:00', 890.75, 'Carte Bancaire', NULL),
-                                                                      (3,'2024-06-02 10:15:00', 2100.00, 'Chèque', NULL
+                                                                      (2,'2024-06-01 16:45:00', 890.75, 'Carte Bancaire', NULL);
