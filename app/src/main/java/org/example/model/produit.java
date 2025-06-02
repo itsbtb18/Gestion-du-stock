@@ -10,19 +10,37 @@ public class produit {
     private double prixVente;
     private Date dateExpiration;
     private String codeBar;
-    private Fournisseur fournisseur;
+    private Fournisseur id_fournisseur;
 
     public produit() {
     }
 
-    public produit(categorie categorie, double prixAchat, double prixVente, Date dateExpiration, String codeBar, String nom, Fournisseur fournisseur) {
+    public produit(String id, String nom, categorie categorie, double prixAchat, double prixVente,
+                   Date dateExpiration, String codeBar, Fournisseur fournisseur) {
+        this.id = id;
+        this.nom = nom;
         this.categorie = categorie;
         this.prixAchat = prixAchat;
         this.prixVente = prixVente;
         this.dateExpiration = dateExpiration;
         this.codeBar = codeBar;
+        this.id_fournisseur = fournisseur;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
         this.nom = nom;
-        this.fournisseur = fournisseur;
     }
 
     public categorie getCategorie() {
@@ -65,19 +83,25 @@ public class produit {
         this.codeBar = codeBar;
     }
 
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
     public Fournisseur getFournisseur() {
-        return fournisseur;
+        return id_fournisseur;
     }
 
     public void setFournisseur(Fournisseur fournisseur) {
-        this.fournisseur = fournisseur;
+        this.id_fournisseur = fournisseur;
+    }
+
+    @Override
+    public String toString() {
+        return "produit{" +
+                "id='" + id + '\'' +
+                ", nom='" + nom + '\'' +
+                ", categorie=" + categorie +
+                ", prixAchat=" + prixAchat +
+                ", prixVente=" + prixVente +
+                ", dateExpiration=" + dateExpiration +
+                ", codeBar='" + codeBar + '\'' +
+                ", fournisseur=" + id_fournisseur +
+                '}';
     }
 }

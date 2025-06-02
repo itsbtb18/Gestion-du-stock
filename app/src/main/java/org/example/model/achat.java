@@ -4,13 +4,13 @@ public class achat {
     private int id;
     private String dateAchat;
     private double montantTotal;
-    private String fournisseur;
+    private String id_fournisseur;
 
     public achat(int id, String dateAchat, double montantTotal, String fournisseur) {
         this.id = id;
         this.dateAchat = dateAchat;
         this.montantTotal = montantTotal;
-        this.fournisseur = fournisseur;
+        this.id_fournisseur = fournisseur;
     }
 
     public int getId() {
@@ -38,11 +38,11 @@ public class achat {
     }
 
     public String getFournisseur() {
-        return fournisseur;
+        return id_fournisseur;
     }
 
     public void setFournisseur(String fournisseur) {
-        this.fournisseur = fournisseur;
+        this.id_fournisseur = fournisseur;
     }
     @Override
     public String toString() {
@@ -50,7 +50,7 @@ public class achat {
                 "id=" + id +
                 ", dateAchat='" + dateAchat + '\'' +
                 ", montantTotal=" + montantTotal +
-                ", fournisseur='" + fournisseur + '\'' +
+                ", fournisseur='" + id_fournisseur + '\'' +
                 '}';
     }
 }
