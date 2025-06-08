@@ -1,94 +1,88 @@
--- Suppression des tables si elles existent
-DROP TABLE IF EXISTS vente;
-DROP TABLE IF EXISTS achat;
-DROP TABLE IF EXISTS produit;
-DROP TABLE IF EXISTS categorie;
-DROP TABLE IF EXISTS client;
-DROP TABLE IF EXISTS fournisseur;
-DROP TABLE IF EXISTS rayon;
-
--- Création de la table rayon
-CREATE TABLE IF NOT EXISTS rayon (
-                                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                     nom TEXT NOT NULL,
-                                     description TEXT
+CREATE TABLE achat (
+                       id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       dateAchat TEXT NOT NULL,
+                       montantTotal REAL NOT NULL,
+                       id_fournisseur TEXT NOT NULL
 );
 
+-- Insertion de 3 exemples d'achats
+INSERT INTO achat (id,dateAchat, montantTotal, id_fournisseur) VALUES
+                                                                   (1,'2024-01-15', 1250.75, 'FOURS001'),
+                                                                   (2,'2024-02-03', 890.50, 'FOURS002'),
+                                                                   (3,'2024-02-20', 2100.00, 'FOURS001');
 -- Création de la table categorie
-CREATE TABLE IF NOT EXISTS categorie (
-                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                         nom TEXT NOT NULL,
-                                         description TEXT
+CREATE TABLE categorie (
+                           id INTEGER PRIMARY KEY AUTOINCREMENT,
+                           nom TEXT NOT NULL UNIQUE
 );
 
--- Création de la table fournisseur
-CREATE TABLE IF NOT EXISTS fournisseur (
-                                           id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                           nom TEXT NOT NULL,
-                                           adresse TEXT,
-                                           telephone TEXT,
-                                           email TEXT
-);
-
+-- Insertion de 3 exemples de catégories de supermarché
+INSERT INTO categorie (id,nom) VALUES
+                                   (1,'Fruits et Légumes'),
+                                   (2,'Produits Laitiers'),
+                                   (3,'Boucherie-Charcuterie');
 -- Création de la table client
-CREATE TABLE IF NOT EXISTS client (
-                                      id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                      nom TEXT NOT NULL,
-                                      adresse TEXT,
-                                      telephone TEXT,
-                                      email TEXT
+CREATE TABLE client (
+                        nom TEXT NOT NULL,
+                        prenom TEXT NOT NULL,
+                        telephone TEXT PRIMARY KEY
 );
 
--- Création de la table produit
-CREATE TABLE IF NOT EXISTS produit (
-                                       id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                       nom TEXT NOT NULL,
-                                       description TEXT,
-                                       prix_unitaire REAL NOT NULL,
-                                       quantite_stock INTEGER DEFAULT 0,
-                                       id_categorie INTEGER,
-                                       id_rayon INTEGER,
-                                       FOREIGN KEY (id_categorie) REFERENCES categorie(id),
-    FOREIGN KEY (id_rayon) REFERENCES rayon(id)
-    );
+-- Insertion de 3 exemples de clients
+INSERT INTO client (nom, prenom, telephone) VALUES
+                                                ('Benali', 'Ahmed', '0551234567'),
+                                                ('Kadi', 'Fatima', '0661987654'),
+                                                ('Mokrani', 'Youcef', '0771122334');
+CREATE TABLE fournisseur (
+                             id INTEGER PRIMARY KEY AUTOINCREMENT,
+                             nom TEXT NOT NULL,
+                             adresse TEXT NOT NULL,
+                             telephone TEXT NOT NULL UNIQUE
+);
 
--- Création de la table achat
-CREATE TABLE IF NOT EXISTS achat (
-                                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                     date_achat DATE NOT NULL,
-                                     quantite INTEGER NOT NULL,
-                                     prix_total REAL NOT NULL,
-                                     id_produit INTEGER,
-                                     id_fournisseur INTEGER,
-                                     FOREIGN KEY (id_produit) REFERENCES produit(id),
-    FOREIGN KEY (id_fournisseur) REFERENCES fournisseur(id)
-    );
+-- Insertion de 3 exemples de fournisseurs
+INSERT INTO fournisseur (id,nom, adresse, telephone) VALUES
+                                                         (1,'Distribo Algérie', 'Zone Industrielle Rouiba, Alger', '023456789'),
+                                                         (2,'Fresh Market Supply', 'Rue Larbi Ben M''hidi, Oran', '041234567'),
+                                                         (3,'Atlas Distribution', 'Avenue Mohamed V, Constantine', '031987654');
+CREATE TABLE produit (
+                         id TEXT PRIMARY KEY,
+                         nom TEXT NOT NULL,
+                         id_categorie INTEGER NOT NULL,
+                         prixAchat REAL NOT NULL,
+                         prixVente REAL NOT NULL,
+                         dateExpiration DATE,
+                         codeBar TEXT UNIQUE,
+                         id_fournisseur INTEGER NOT NULL,
+                         FOREIGN KEY (id_categorie) REFERENCES categorie(id),
+                         FOREIGN KEY (id_fournisseur) REFERENCES fournisseur(id)
+);
 
--- Création de la table vente
-CREATE TABLE IF NOT EXISTS vente (
-                                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                     date_vente DATE NOT NULL,
-                                     quantite INTEGER NOT NULL,
-                                     prix_total REAL NOT NULL,
-                                     id_produit INTEGER,
-                                     id_client INTEGER,
-                                     FOREIGN KEY (id_produit) REFERENCES produit(id),
-    FOREIGN KEY (id_client) REFERENCES client(id)
-    );
+-- Insertion de 3 exemples de produits de supermarché
+INSERT INTO produit (id, nom, id_categorie, prixAchat, prixVente, dateExpiration, codeBar, id_fournisseur) VALUES
+                                                                                                               ('PROD001', 'Pommes Golden 1kg', 1, 180.00, 250.00, '2024-07-15', '3760123456789', 1),
+                                                                                                               ('PROD002', 'Lait UHT Candia 1L', 2, 85.00, 120.00, '2024-08-30', '6223000123456', 2),
+                                                                                                               ('PROD003', 'Escalope de Poulet 500g', 3, 450.00, 650.00, '2024-06-10', '2130000987654', 3);
+CREATE TABLE rayon (
+                       id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       nom TEXT NOT NULL UNIQUE
+);
 
--- Insertion de données de test
-INSERT INTO rayon (nom, description) VALUES
-                                         ('Alimentaire', 'Produits alimentaires'),
-                                         ('Cosmétiques', 'Produits de beauté');
+-- Insertion de 3 exemples de rayons de supermarché
+INSERT INTO rayon (id,nom) VALUES
+                               (1,'Rayon Frais'),
+                               (2,'Rayon Épicerie'),
+                               (3,'Rayon Surgelé');
+CREATE TABLE vente (
+                       id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       date TEXT NOT NULL,
+                       montantTotal REAL NOT NULL,
+                       modePaiement TEXT NOT NULL,
+                       clientId INTEGER,
+                       FOREIGN KEY (clientId) REFERENCES client(telephone)
+);
 
-INSERT INTO categorie (nom, description) VALUES
-                                             (1,'Fruits', 'Fruits frais'),
-                                             ('Légumes', 'Légumes frais');
-
-INSERT INTO fournisseur (nom, adresse, telephone, email) VALUES
-                                                             ('Fournisseur A', 'Adresse A', '0123456789', 'fournisseurA@email.com'),
-                                                             ('Fournisseur B', 'Adresse B', '9876543210', 'fournisseurB@email.com');
-
-INSERT INTO client (nom, adresse, telephone, email) VALUES
-                                                        ('Client X', 'Adresse X', '1122334455', 'clientX@email.com'),
-                                                        ('Client Y', 'Adresse Y', '5544332211', 'clientY@email.com');
+-- Insertion de 3 exemples de ventes
+INSERT INTO vente (id,date, montantTotal, modePaiement, clientId) VALUES
+                                                                      (1,'2024-06-01 14:30:00', 1250.50, 'Espèces', NULL),
+                                                                      (2,'2024-06-01 16:45:00', 890.75, 'Carte Bancaire', NULL);
