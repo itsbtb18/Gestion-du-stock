@@ -1,6 +1,6 @@
 package com.supermarket;
 
-import com.supermarket.models.CreditSale;
+import org.example.model.CreditSale;
 import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

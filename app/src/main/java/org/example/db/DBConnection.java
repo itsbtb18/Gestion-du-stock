@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DBConnection{
-    private static final String DB_URL = "jdbc:sqlite:stock.db";
+    private static final String DB_URL = "jdbc:sqlite:database/database.db";
 
     public static Connection connect() {
         Connection conn = null;

@@ -1,7 +1,7 @@
 package com.supermarket;
 
-import com.supermarket.models.CreditSale;
-import com.supermarket.models.Payment;
+import org.example.model.CreditSale;
+import org.example.model.Payment;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;

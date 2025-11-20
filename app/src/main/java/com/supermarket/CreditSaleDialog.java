@@ -1,7 +1,7 @@
 package com.supermarket;
 
-import com.supermarket.models.CreditItem;
-import com.supermarket.models.CreditSale;
+import org.example.model.CreditItem;
+import org.example.model.CreditSale;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;

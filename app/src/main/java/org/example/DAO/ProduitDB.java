@@ -1,4 +1,4 @@
-package org.example.DAO;
+package org.example.dao;
 
 import org.example.db.DBConnection;
 import org.example.model.produit;
