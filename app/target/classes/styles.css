@@ -1,0 +1,401 @@
+/* ===========================
+   SuperMarket Management System
+   Modern UI Stylesheet
+   =========================== */
+
+/* ===== ROOT VARIABLES ===== */
+.root {
+    -fx-font-family: "Segoe UI", "Helvetica", "Arial", sans-serif;
+}
+
+/* ===== SIDEBAR STYLES ===== */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #1E3C72, #2A5298);
+}
+
+.menu-item {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+.menu-item:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.3), 8, 0, 0, 0);
+}
+
+.menu-item-active {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-border-color: #FFB74D;
+    -fx-border-width: 0 0 0 4;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(255, 183, 77, 0.5), 10, 0, 0, 0);
+}
+
+/* ===== STAT CARD ANIMATIONS ===== */
+.stat-card {
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 25, 0, 0, 8);
+}
+
+/* ===== TABLE STYLES ===== */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-background-radius: 15;
+    -fx-border-color: transparent;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #F5F7FB, #E8EAF6);
+    -fx-background-radius: 15 15 0 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-padding: 10 5 10 5;
+    -fx-font-weight: bold;
+    -fx-text-fill: #222222;
+}
+
+.table-view .table-cell {
+    -fx-padding: 10 5 10 5;
+    -fx-border-color: transparent;
+    -fx-text-fill: #555555;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+}
+
+.table-view .table-row-cell:odd {
+    -fx-background-color: #FAFBFC;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: #E3F2FD;
+    -fx-text-fill: #1976D2;
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: #F0F4FF;
+    -fx-cursor: hand;
+}
+
+/* ===== BUTTON STYLES ===== */
+.button {
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s ease;
+}
+
+.button:hover {
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 12, 0, 0, 3);
+}
+
+.button:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* ===== TEXT FIELD STYLES ===== */
+.text-field {
+    -fx-background-color: #F5F7FB;
+    -fx-background-radius: 10;
+    -fx-border-color: transparent;
+    -fx-padding: 10 15;
+    -fx-text-fill: #222222;
+    -fx-font-size: 13px;
+}
+
+.text-field:focused {
+    -fx-border-color: #4E54C8;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(78, 84, 200, 0.3), 10, 0, 0, 0);
+}
+
+/* ===== COMBO BOX STYLES ===== */
+.combo-box {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+}
+
+.combo-box:hover {
+    -fx-border-color: #4E54C8;
+    -fx-effect: dropshadow(gaussian, rgba(78, 84, 200, 0.2), 8, 0, 0, 0);
+}
+
+.combo-box .list-cell {
+    -fx-padding: 8 12;
+    -fx-text-fill: #222222;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 5);
+}
+
+/* ===== DATE PICKER STYLES ===== */
+.date-picker {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+}
+
+.date-picker:hover {
+    -fx-border-color: #4E54C8;
+}
+
+.date-picker .text-field {
+    -fx-background-color: transparent;
+}
+
+/* ===== CHART STYLES ===== */
+.chart {
+    -fx-background-color: transparent;
+}
+
+.chart-plot-background {
+    -fx-background-color: #FAFBFC;
+}
+
+.chart-legend {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-padding: 10;
+}
+
+.default-color0.chart-series-line { -fx-stroke: #4E54C8; -fx-stroke-width: 3px; }
+.default-color1.chart-series-line { -fx-stroke: #66BB6A; -fx-stroke-width: 3px; }
+.default-color0.chart-line-symbol { -fx-background-color: #4E54C8, white; }
+.default-color1.chart-line-symbol { -fx-background-color: #66BB6A, white; }
+
+.default-color0.chart-bar { -fx-bar-fill: linear-gradient(to bottom, #4E54C8, #8F94FB); }
+.default-color1.chart-bar { -fx-bar-fill: linear-gradient(to bottom, #66BB6A, #A5D6A7); }
+.default-color2.chart-bar { -fx-bar-fill: linear-gradient(to bottom, #FFB74D, #FFE082); }
+
+.chart-pie-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+/* Pie Chart Colors */
+.default-color0.chart-pie { -fx-pie-color: #4E54C8; }
+.default-color1.chart-pie { -fx-pie-color: #66BB6A; }
+.default-color2.chart-pie { -fx-pie-color: #FFB74D; }
+.default-color3.chart-pie { -fx-pie-color: #FF6E7F; }
+.default-color4.chart-pie { -fx-pie-color: #8F94FB; }
+
+/* ===== SCROLL BAR STYLES ===== */
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: rgba(78, 84, 200, 0.3);
+    -fx-background-radius: 5;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: rgba(78, 84, 200, 0.5);
+}
+
+.scroll-bar .track {
+    -fx-background-color: #F5F7FB;
+    -fx-background-radius: 5;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* ===== SEPARATOR STYLES ===== */
+.separator .line {
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* ===== TOOLTIP STYLES ===== */
+.tooltip {
+    -fx-background-color: #222222;
+    -fx-background-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 8 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 3);
+}
+
+/* ===== TOGGLE BUTTON STYLES ===== */
+.toggle-button {
+    -fx-background-radius: 15;
+    -fx-cursor: hand;
+}
+
+.toggle-button:selected {
+    -fx-background-color: #66BB6A;
+}
+
+/* ===== ALERT DIALOG STYLES ===== */
+.alert {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+}
+
+.alert .header-panel {
+    -fx-background-color: linear-gradient(to bottom right, #4E54C8, #8F94FB);
+    -fx-background-radius: 15 15 0 0;
+}
+
+.alert .content {
+    -fx-padding: 20;
+}
+
+/* ===== SCROLL PANE STYLES ===== */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .corner {
+    -fx-background-color: transparent;
+}
+
+/* ===== CONTEXT MENU STYLES ===== */
+.context-menu {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 5);
+}
+
+.context-menu .menu-item {
+    -fx-padding: 10 20;
+}
+
+.context-menu .menu-item:hover {
+    -fx-background-color: #F5F7FB;
+}
+
+/* ===== PROGRESS BAR STYLES ===== */
+.progress-bar {
+    -fx-background-color: #E0E0E0;
+    -fx-background-radius: 10;
+}
+
+.progress-bar .bar {
+    -fx-background-color: linear-gradient(to right, #4E54C8, #8F94FB);
+    -fx-background-radius: 10;
+    -fx-padding: 5;
+}
+
+/* ===== CHECK BOX STYLES ===== */
+.check-box {
+    -fx-text-fill: #222222;
+}
+
+.check-box .box {
+    -fx-background-color: white;
+    -fx-border-color: #CCCCCC;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #4E54C8;
+    -fx-border-color: #4E54C8;
+}
+
+.check-box:hover .box {
+    -fx-border-color: #4E54C8;
+}
+
+/* ===== RADIO BUTTON STYLES ===== */
+.radio-button {
+    -fx-text-fill: #222222;
+}
+
+.radio-button .radio {
+    -fx-background-color: white;
+    -fx-border-color: #CCCCCC;
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+}
+
+.radio-button:selected .radio {
+    -fx-background-color: white;
+    -fx-border-color: #4E54C8;
+}
+
+.radio-button:selected .dot {
+    -fx-background-color: #4E54C8;
+    -fx-background-radius: 50%;
+}
+
+/* ===== TAB PANE STYLES ===== */
+.tab-pane {
+    -fx-background-color: transparent;
+}
+
+.tab-pane .tab-header-background {
+    -fx-background-color: white;
+    -fx-background-radius: 15 15 0 0;
+}
+
+.tab {
+    -fx-background-color: #F5F7FB;
+    -fx-background-radius: 10 10 0 0;
+    -fx-padding: 10 20;
+}
+
+.tab:selected {
+    -fx-background-color: white;
+    -fx-border-color: #4E54C8;
+    -fx-border-width: 3 0 0 0;
+}
+
+.tab .tab-label {
+    -fx-text-fill: #555555;
+    -fx-font-weight: bold;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: #4E54C8;
+}
+
+/* ===== LABEL STYLES ===== */
+.label {
+    -fx-text-fill: #222222;
+}
+
+/* ===== ANIMATION KEYFRAMES ===== */
+@keyframes fadeIn {
+    from { -fx-opacity: 0; }
+    to { -fx-opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { -fx-translate-x: 50; -fx-opacity: 0; }
+    to { -fx-translate-x: 0; -fx-opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from { -fx-scale-x: 0.8; -fx-scale-y: 0.8; -fx-opacity: 0; }
+    to { -fx-scale-x: 1; -fx-scale-y: 1; -fx-opacity: 1; }
+}
