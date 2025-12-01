@@ -7,7 +7,6 @@ module com.supermarket {
     exports com.supermarket;
     exports org.example;
     exports org.example.controller;
-    exports org.example.dao;
     exports org.example.db;
     exports org.example.model;
     exports org.example.Util;

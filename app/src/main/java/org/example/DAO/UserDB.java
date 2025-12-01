@@ -1,4 +1,4 @@
-package org.example.dao;
+package org.example.DAO;
 
 import org.example.model.User;
 import org.example.db.DBConnection;
