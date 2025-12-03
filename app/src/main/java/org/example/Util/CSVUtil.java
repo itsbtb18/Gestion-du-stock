@@ -1,4 +1,4 @@
-package org.example.util;
+package org.example.Util;
 
 // TODO: Implement CSVUtil
 public class CSVUtil {

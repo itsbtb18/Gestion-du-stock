@@ -1,4 +1,4 @@
-package org.example.util;
+package org.example.Util;
 
 // TODO: Implement ValidationUtil
 public class ValidationUtil {
