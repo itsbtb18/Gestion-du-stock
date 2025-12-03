@@ -1,7 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.ProduitController">
-    <!-- TODO: Add produit view layout -->
-</AnchorPane>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.ProduitController" spacing="15">
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Label text="Gestion des Produits">
+            <font>
+                <Font name="System Bold" size="24"/>
+            </font>
+        </Label>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="txtRecherche" promptText="🔍 Rechercher..." prefWidth="250" onKeyReleased="#handleRecherche"/>
+    </HBox>
+    
+    <Separator/>
+    
+    <SplitPane dividerPositions="0.6" VBox.vgrow="ALWAYS">
+        <VBox spacing="10">
+            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+            <Label text="Liste des Produits"><font><Font name="System Bold" size="16"/></font></Label>
+            <TableView fx:id="tableProduits" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colCode" text="Code" prefWidth="80"/>
+                    <TableColumn fx:id="colNom" text="Nom" prefWidth="150"/>
+                    <TableColumn fx:id="colPrix" text="Prix" prefWidth="80"/>
+                    <TableColumn fx:id="colStock" text="Stock" prefWidth="70"/>
+                    <TableColumn fx:id="colCategorie" text="Catégorie" prefWidth="120"/>
+                    <TableColumn fx:id="colUnite" text="Unité" prefWidth="70"/>
+                </columns>
+            </TableView>
+        </VBox>
+        
+        <ScrollPane fitToWidth="true">
+            <VBox spacing="15">
+                <padding><Insets top="10" right="15" bottom="10" left="15"/></padding>
+                <Label text="Informations du Produit"><font><Font name="System Bold" size="16"/></font></Label>
+                
+                <VBox spacing="5"><Label text="Code *"/><TextField fx:id="txtCode" promptText="Code"/></VBox>
+                <VBox spacing="5"><Label text="Nom *"/><TextField fx:id="txtNom" promptText="Nom"/></VBox>
+                <VBox spacing="5"><Label text="Description"/><TextArea fx:id="txtDescription" prefRowCount="3" wrapText="true"/></VBox>
+                
+                <HBox spacing="10">
+                    <VBox spacing="5" HBox.hgrow="ALWAYS"><Label text="Prix *"/><TextField fx:id="txtPrix"/></VBox>
+                    <VBox spacing="5" HBox.hgrow="ALWAYS"><Label text="Stock *"/><TextField fx:id="txtStock"/></VBox>
+                </HBox>
+                
+                <HBox spacing="10">
+                    <VBox spacing="5" HBox.hgrow="ALWAYS"><Label text="Seuil"/><TextField fx:id="txtSeuilAlerte" text="10"/></VBox>
+                    <VBox spacing="5" HBox.hgrow="ALWAYS"><Label text="Unité"/><TextField fx:id="txtUnite"/></VBox>
+                </HBox>
+                
+                <VBox spacing="5"><Label text="Catégorie"/><ComboBox fx:id="cmbCategorie" maxWidth="Infinity"/></VBox>
+                <VBox spacing="5"><Label text="Date expiration"/><DatePicker fx:id="dateExpiration" maxWidth="Infinity"/></VBox>
+                <VBox spacing="5"><Label text="Fournisseur"/><TextField fx:id="txtFournisseur"/></VBox>
+                <VBox spacing="5"><Label text="Emplacement"/><TextField fx:id="txtEmplacement"/></VBox>
+                
+                <CheckBox fx:id="chkActif" text="Actif" selected="true"/>
+                <Separator/>
+                
+                <HBox spacing="10" alignment="CENTER">
+                    <Button fx:id="btnAjouter" text="Ajouter" onAction="#handleAjouter" prefWidth="120"/>
+                    <Button fx:id="btnModifier" text="Modifier" onAction="#handleModifier" prefWidth="120" disable="true"/>
+                    <Button fx:id="btnSupprimer" text="Supprimer" onAction="#handleSupprimer" prefWidth="120" disable="true"/>
+                    <Button fx:id="btnNouveau" text="Nouveau" onAction="#handleNouveau" prefWidth="120"/>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </SplitPane>
+</VBox>

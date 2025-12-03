@@ -1,7 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.LoginController">
-    <!-- TODO: Add login view layout -->
-</AnchorPane>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.LoginController">
+    <center>
+        <VBox alignment="CENTER" spacing="20" maxWidth="400" maxHeight="500">
+            <padding>
+                <Insets top="40" right="40" bottom="40" left="40"/>
+            </padding>
+            
+            <Label text="Gestion de Stock">
+                <font>
+                    <Font name="System Bold" size="32"/>
+                </font>
+            </Label>
+            
+            <Label text="Système de Gestion de Magasin">
+                <font>
+                    <Font size="14"/>
+                </font>
+            </Label>
+            
+            <VBox spacing="5" VBox.vgrow="ALWAYS">
+                <padding>
+                    <Insets top="30"/>
+                </padding>
+                
+                <Label text="Nom d'utilisateur:"/>
+                <TextField fx:id="txtUsername" promptText="Entrez votre nom d'utilisateur" prefHeight="40"/>
+                
+                <Label text="Mot de passe:">
+                    <padding>
+                        <Insets top="10"/>
+                    </padding>
+                </Label>
+                <PasswordField fx:id="txtPassword" promptText="Entrez votre mot de passe" prefHeight="40"/>
+                
+                <CheckBox fx:id="chkRememberMe" text="Se souvenir de moi">
+                    <padding>
+                        <Insets top="10"/>
+                    </padding>
+                </CheckBox>
+                
+                <Label fx:id="lblError" text="Erreur de connexion" visible="false" textFill="red">
+                    <padding>
+                        <Insets top="10"/>
+                    </padding>
+                </Label>
+            </VBox>
+            
+            <HBox spacing="15" alignment="CENTER">
+                <padding>
+                    <Insets top="20"/>
+                </padding>
+                
+                <Button fx:id="btnLogin" text="Se connecter" onAction="#handleLogin" prefWidth="150" prefHeight="40">
+                    <font>
+                        <Font name="System Bold" size="14"/>
+                    </font>
+                </Button>
+                
+                <Button text="Annuler" onAction="#handleCancel" prefWidth="150" prefHeight="40">
+                    <font>
+                        <Font size="14"/>
+                    </font>
+                </Button>
+            </HBox>
+            
+            <Label text="Version 1.0.0 - © 2025">
+                <padding>
+                    <Insets top="30"/>
+                </padding>
+                <font>
+                    <Font size="11"/>
+                </font>
+            </Label>
+        </VBox>
+    </center>
+</BorderPane>

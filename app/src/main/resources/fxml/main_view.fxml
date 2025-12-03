@@ -1,7 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.MainController">
-    <!-- TODO: Add main view layout -->
-</AnchorPane>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:id="mainBorderPane" fx:controller="org.example.controller.MainController">
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" prefHeight="60">
+            <padding>
+                <Insets top="10" right="20" bottom="10" left="20"/>
+            </padding>
+            
+            <Label text="Gestion de Stock">
+                <font>
+                    <Font name="System Bold" size="20"/>
+                </font>
+            </Label>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <Label fx:id="lblUtilisateur" text="Utilisateur: Admin">
+                <font>
+                    <Font size="13"/>
+                </font>
+            </Label>
+            
+            <Separator orientation="VERTICAL"/>
+            
+            <Label fx:id="lblRole" text="Rôle: Administrateur">
+                <font>
+                    <Font size="13"/>
+                </font>
+            </Label>
+            
+            <Button text="Déconnexion" onAction="#handleDeconnexion"/>
+        </HBox>
+    </top>
+    
+    <left>
+        <VBox prefWidth="200" spacing="5">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="10"/>
+            </padding>
+            
+            <Label text="MENU PRINCIPAL">
+                <font>
+                    <Font name="System Bold" size="12"/>
+                </font>
+                <padding>
+                    <Insets bottom="10" left="10"/>
+                </padding>
+            </Label>
+            
+            <Button text="📦 Produits" onAction="#handleMenuProduits" maxWidth="Infinity" alignment="BASELINE_LEFT">
+                <padding>
+                    <Insets top="10" right="15" bottom="10" left="15"/>
+                </padding>
+            </Button>
+            
+            <Button text="🛒 Caisse" onAction="#handleMenuCaisse" maxWidth="Infinity" alignment="BASELINE_LEFT">
+                <padding>
+                    <Insets top="10" right="15" bottom="10" left="15"/>
+                </padding>
+            </Button>
+            
+            <Button text="📊 Stock" onAction="#handleMenuStock" maxWidth="Infinity" alignment="BASELINE_LEFT">
+                <padding>
+                    <Insets top="10" right="15" bottom="10" left="15"/>
+                </padding>
+            </Button>
+            
+            <Button text="👥 Clients" onAction="#handleMenuClients" maxWidth="Infinity" alignment="BASELINE_LEFT">
+                <padding>
+                    <Insets top="10" right="15" bottom="10" left="15"/>
+                </padding>
+            </Button>
+            
+            <Separator>
+                <VBox.margin>
+                    <Insets top="10" bottom="10"/>
+                </VBox.margin>
+            </Separator>
+            
+            <Button text="📈 Statistiques" onAction="#handleMenuStatistiques" maxWidth="Infinity" alignment="BASELINE_LEFT">
+                <padding>
+                    <Insets top="10" right="15" bottom="10" left="15"/>
+                </padding>
+            </Button>
+            
+            <Button text="📄 Rapports" onAction="#handleMenuRapports" maxWidth="Infinity" alignment="BASELINE_LEFT">
+                <padding>
+                    <Insets top="10" right="15" bottom="10" left="15"/>
+                </padding>
+            </Button>
+        </VBox>
+    </left>
+    
+    <center>
+        <StackPane fx:id="contentArea">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+        </StackPane>
+    </center>
+</BorderPane>

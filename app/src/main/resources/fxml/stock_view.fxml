@@ -1,7 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.StockController">
-    <!-- TODO: Add stock view layout -->
-</AnchorPane>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.StockController" spacing="15">
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Label text="Mouvements de Stock">
+            <font><Font name="System Bold" size="24"/></font>
+        </Label>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="lblNombreAlertes" text="Alertes: 0">
+            <font><Font name="System Bold" size="14"/></font>
+        </Label>
+        <Button text="🔔 Alertes" onAction="#handleVoirAlertes"/>
+    </HBox>
+    
+    <Separator/>
+    
+    <SplitPane dividerPositions="0.65" VBox.vgrow="ALWAYS" orientation="VERTICAL">
+        <VBox spacing="10">
+            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+            <Label text="Historique"><font><Font name="System Bold" size="16"/></font></Label>
+            <TableView fx:id="tableMouvements" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colProduit" text="Produit" prefWidth="200"/>
+                    <TableColumn fx:id="colType" text="Type" prefWidth="100"/>
+                    <TableColumn fx:id="colQuantite" text="Quantité" prefWidth="80"/>
+                    <TableColumn fx:id="colDate" text="Date" prefWidth="150"/>
+                    <TableColumn fx:id="colMotif" text="Motif" prefWidth="250"/>
+                </columns>
+            </TableView>
+        </VBox>
+        
+        <VBox spacing="15">
+            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+            <Label text="Enregistrer Mouvement"><font><Font name="System Bold" size="16"/></font></Label>
+            
+            <GridPane hgap="15" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="50"/>
+                    <ColumnConstraints percentWidth="50"/>
+                </columnConstraints>
+                
+                <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <Label text="Produit *"/>
+                    <ComboBox fx:id="cmbProduit" promptText="Sélectionner" maxWidth="Infinity"/>
+                    <Label fx:id="lblStockActuel" text="Stock: -"><font><Font size="12" name="System Bold"/></font></Label>
+                </VBox>
+                
+                <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <Label text="Type *"/>
+                    <ComboBox fx:id="cmbTypeMouvement" promptText="Type" maxWidth="Infinity"/>
+                </VBox>
+                
+                <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                    <Label text="Quantité *"/>
+                    <TextField fx:id="txtQuantite" promptText="Quantité"/>
+                </VBox>
+                
+                <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2">
+                    <Label text="Motif"/>
+                    <TextArea fx:id="txtMotif" promptText="Raison..." prefRowCount="3" wrapText="true"/>
+                </VBox>
+            </GridPane>
+            
+            <HBox spacing="10" alignment="CENTER">
+                <padding><Insets top="10"/></padding>
+                <Button text="✅ Enregistrer" onAction="#handleEnregistrerMouvement" prefWidth="250" prefHeight="40">
+                    <font><Font name="System Bold" size="14"/></font>
+                </Button>
+            </HBox>
+        </VBox>
+    </SplitPane>
+</VBox>
