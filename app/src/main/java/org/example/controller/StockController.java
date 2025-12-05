@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.model.entity.Produit;
 import org.example.model.entity.MouvementStock;
+import org.example.model.entity.TypeMouvement;
 import org.example.model.service.MagasinService;
 import org.example.model.service.AlerteService;
 import org.example.dao.ProduitDAO;
@@ -15,6 +16,7 @@ import org.example.dao.MouvementStockDAO;
 
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -86,8 +88,13 @@ public class StockController implements Initializable {
     }
     
     private void chargerMouvements() {
-        // TODO: Load from DAO when implemented
         listeMouvements.clear();
+        try {
+            List<MouvementStock> mouvements = mouvementDAO.findRecent(50);
+            listeMouvements.addAll(mouvements);
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement des mouvements: " + e.getMessage());
+        }
     }
     
     @FXML
@@ -116,8 +123,17 @@ public class StockController implements Initializable {
             // ** OBSERVER PATTERN: Notify observers of stock change **
             alerteService.notifierChangementStock(produit, ancienneQuantite, nouvelleQuantite);
             
-            // Create movement record
-            // TODO: Save to DAO when implemented
+            // Create and save movement record
+            MouvementStock mouvement = new MouvementStock();
+            mouvement.setProduit(produit);
+            mouvement.setTypeMouvement(TypeMouvement.valueOf(type));
+            mouvement.setQuantite(quantite);
+            mouvement.setDateMouvement(LocalDateTime.now());
+            mouvement.setMotif("Mouvement manuel");
+            
+            mouvementDAO.save(mouvement);
+            produitDAO.update(produit);
+            listeMouvements.add(0, mouvement);
             
             afficherMessage("Succès", "Mouvement enregistré", Alert.AlertType.INFORMATION);
             resetForm();
@@ -132,8 +148,20 @@ public class StockController implements Initializable {
     
     @FXML
     private void handleVoirAlertes() {
-        // TODO: Navigate to alerts view
-        System.out.println("Affichage des alertes...");
+        List<Produit> produitsEnAlerte = produitDAO.findAll().stream()
+            .filter(p -> p.getQuantiteStock() < p.getSeuilAlerte())
+            .collect(java.util.stream.Collectors.toList());
+        
+        if (produitsEnAlerte.isEmpty()) {
+            afficherMessage("Alertes", "Aucun produit en alerte", Alert.AlertType.INFORMATION);
+        } else {
+            StringBuilder message = new StringBuilder("Produits en alerte:\n\n");
+            for (Produit p : produitsEnAlerte) {
+                message.append(String.format("%s - Stock: %d (Seuil: %d)\n", 
+                    p.getNom(), p.getQuantiteStock(), p.getSeuilAlerte()));
+            }
+            afficherMessage("Alertes Stock", message.toString(), Alert.AlertType.WARNING);
+        }
     }
     
     private boolean validerFormulaire() {

@@ -1,7 +1,201 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.ClientController">
-    <!-- TODO: Add client view layout -->
-</AnchorPane>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.ClientController"
+            styleClass="main-container" stylesheets="@../css/styles.css">
+    
+    <!-- Top: Search and Actions -->
+    <top>
+        <VBox spacing="15" styleClass="search-section">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+            
+            <Label text="Gestion des Clients" styleClass="section-title">
+                <font>
+                    <Font name="System Bold" size="20"/>
+                </font>
+            </Label>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <TextField fx:id="searchField" promptText="Rechercher par code, nom, téléphone ou email" 
+                          styleClass="search-field" prefWidth="400"/>
+                <Button fx:id="searchButton" text="Rechercher" styleClass="btn-primary"
+                       onAction="#handleSearch"/>
+                <Button fx:id="refreshButton" text="Actualiser" styleClass="btn-secondary"
+                       onAction="#handleRefresh"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="showAllButton" text="Tous" styleClass="btn-secondary"
+                       onAction="#handleShowAll"/>
+                <Button fx:id="showVIPButton" text="VIP Seulement" styleClass="btn-secondary"
+                       onAction="#handleShowVIP"/>
+                <Button fx:id="newClientButton" text="+ Nouveau Client" styleClass="btn-success"
+                       onAction="#handleNewClient"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <!-- Center: Table and Form -->
+    <center>
+        <HBox spacing="15" HBox.hgrow="ALWAYS">
+            <padding>
+                <Insets top="10" right="15" bottom="15" left="15"/>
+            </padding>
+            
+            <!-- Left: Client Table -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS" prefWidth="700">
+                <Label text="Liste des Clients" styleClass="section-title">
+                    <font>
+                        <Font name="System Bold" size="14"/>
+                    </font>
+                </Label>
+                
+                <TableView fx:id="clientTable" VBox.vgrow="ALWAYS" styleClass="cart-table">
+                    <columns>
+                        <TableColumn fx:id="codeColumn" text="Code" prefWidth="80"/>
+                        <TableColumn fx:id="nomColumn" text="Nom" prefWidth="120"/>
+                        <TableColumn fx:id="prenomColumn" text="Prénom" prefWidth="120"/>
+                        <TableColumn fx:id="telephoneColumn" text="Téléphone" prefWidth="110"/>
+                        <TableColumn fx:id="emailColumn" text="Email" prefWidth="150"/>
+                        <TableColumn fx:id="typeColumn" text="Type" prefWidth="70"/>
+                        <TableColumn fx:id="pointsColumn" text="Points" prefWidth="60"/>
+                    </columns>
+                </TableView>
+            </VBox>
+            
+            <!-- Right: Form Section -->
+            <VBox spacing="15" prefWidth="400">
+                
+                <!-- Client Form Card -->
+                <VBox spacing="15" styleClass="card" VBox.vgrow="ALWAYS">
+                    <padding>
+                        <Insets top="15" right="15" bottom="15" left="15"/>
+                    </padding>
+                    
+                    <Label text="Informations Client" styleClass="section-title">
+                        <font>
+                            <Font name="System Bold" size="14"/>
+                        </font>
+                    </Label>
+                    
+                    <Separator/>
+                    
+                    <!-- Form Fields -->
+                    <GridPane hgap="10" vgap="12">
+                        <Label text="Code:" GridPane.rowIndex="0" GridPane.columnIndex="0" 
+                              styleClass="form-label"/>
+                        <TextField fx:id="codeField" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                                  promptText="Auto-généré" editable="false"/>
+                        
+                        <Label text="Nom:" GridPane.rowIndex="1" GridPane.columnIndex="0" 
+                              styleClass="form-label"/>
+                        <TextField fx:id="nomField" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                  promptText="Nom du client"/>
+                        
+                        <Label text="Prénom:" GridPane.rowIndex="2" GridPane.columnIndex="0" 
+                              styleClass="form-label"/>
+                        <TextField fx:id="prenomField" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                                  promptText="Prénom du client"/>
+                        
+                        <Label text="Téléphone:" GridPane.rowIndex="3" GridPane.columnIndex="0" 
+                              styleClass="form-label"/>
+                        <TextField fx:id="telephoneField" GridPane.rowIndex="3" GridPane.columnIndex="1"
+                                  promptText="0612345678"/>
+                        
+                        <Label text="Email:" GridPane.rowIndex="4" GridPane.columnIndex="0" 
+                              styleClass="form-label"/>
+                        <TextField fx:id="emailField" GridPane.rowIndex="4" GridPane.columnIndex="1"
+                                  promptText="client@email.com"/>
+                        
+                        <Label text="Adresse:" GridPane.rowIndex="5" GridPane.columnIndex="0" 
+                              styleClass="form-label"/>
+                        <TextField fx:id="adresseField" GridPane.rowIndex="5" GridPane.columnIndex="1"
+                                  promptText="Adresse complète"/>
+                        
+                        <Label text="Type:" GridPane.rowIndex="6" GridPane.columnIndex="0" 
+                              styleClass="form-label"/>
+                        <ComboBox fx:id="typeCombo" GridPane.rowIndex="6" GridPane.columnIndex="1"
+                                 maxWidth="Infinity"/>
+                        
+                        <Label text="Points:" GridPane.rowIndex="7" GridPane.columnIndex="0" 
+                              styleClass="form-label"/>
+                        <TextField fx:id="pointsField" GridPane.rowIndex="7" GridPane.columnIndex="1"
+                                  editable="false"/>
+                        
+                        <Label text="Total Achats:" GridPane.rowIndex="8" GridPane.columnIndex="0" 
+                              styleClass="form-label"/>
+                        <Label fx:id="totalAchatsLabel" text="0.00 DH" 
+                              GridPane.rowIndex="8" GridPane.columnIndex="1"
+                              styleClass="total-value">
+                            <font>
+                                <Font name="System Bold" size="13"/>
+                            </font>
+                        </Label>
+                        
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="35"/>
+                            <ColumnConstraints percentWidth="65"/>
+                        </columnConstraints>
+                    </GridPane>
+                    
+                    <Separator/>
+                    
+                    <!-- Action Buttons -->
+                    <GridPane hgap="10" vgap="10">
+                        <Button fx:id="saveButton" text="Enregistrer" styleClass="btn-success"
+                               onAction="#handleSave" maxWidth="Infinity"
+                               GridPane.rowIndex="0" GridPane.columnIndex="0">
+                            <font>
+                                <Font name="System Bold" size="12"/>
+                            </font>
+                        </Button>
+                        <Button fx:id="updateButton" text="Modifier" styleClass="btn-primary"
+                               onAction="#handleUpdate" maxWidth="Infinity"
+                               GridPane.rowIndex="0" GridPane.columnIndex="1">
+                            <font>
+                                <Font name="System Bold" size="12"/>
+                            </font>
+                        </Button>
+                        
+                        <Button fx:id="deleteButton" text="Supprimer" styleClass="btn-danger"
+                               onAction="#handleDelete" maxWidth="Infinity"
+                               GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                        <Button fx:id="clearFormButton" text="Annuler" styleClass="btn-cancel"
+                               onAction="#handleClearForm" maxWidth="Infinity"
+                               GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                        
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+                    </GridPane>
+                    
+                    <Separator/>
+                    
+                    <!-- Loyalty Points Actions -->
+                    <VBox spacing="10">
+                        <Label text="Gestion Points de Fidélité" styleClass="form-label">
+                            <font>
+                                <Font name="System Bold" size="12"/>
+                            </font>
+                        </Label>
+                        
+                        <HBox spacing="10">
+                            <Button fx:id="addPointsButton" text="Ajouter Points" styleClass="btn-primary"
+                                   onAction="#handleAddPoints" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="usePointsButton" text="Utiliser Points" styleClass="btn-secondary"
+                                   onAction="#handleUsePoints" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                        </HBox>
+                    </VBox>
+                    
+                </VBox>
+                
+            </VBox>
+        </HBox>
+    </center>
+    
+</BorderPane>

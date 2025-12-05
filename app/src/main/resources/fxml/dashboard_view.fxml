@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.chart.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.DashboardController"
+            styleClass="dashboard-container" stylesheets="@../css/styles.css"
+            prefWidth="1000" prefHeight="700">
+    
+    <!-- Top: Dashboard Header -->
+    <top>
+        <VBox styleClass="dashboard-header" spacing="10">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label text="📊 Tableau de Bord" styleClass="page-title">
+                    <font>
+                        <Font name="System Bold" size="24"/>
+                    </font>
+                </Label>
+                
+                <Region HBox.hgrow="ALWAYS"/>
+                
+                <!-- Date Range Selector -->
+                <Label text="Période:" styleClass="filter-label">
+                    <font>
+                        <Font size="12"/>
+                    </font>
+                </Label>
+                <ComboBox fx:id="periodCombo" prefWidth="150" styleClass="period-combo"/>
+                
+                <Button fx:id="refreshButton" text="🔄 Actualiser" onAction="#handleRefresh" 
+                       styleClass="btn-primary"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <!-- Center: KPIs and Charts -->
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="dashboard-scroll">
+            <VBox spacing="20">
+                <padding>
+                    <Insets top="10" right="20" bottom="20" left="20"/>
+                </padding>
+                
+                <!-- KPI Cards Row -->
+                <GridPane hgap="15" vgap="15" styleClass="kpi-grid">
+                    
+                    <!-- Sales KPI -->
+                    <VBox styleClass="kpi-card, kpi-sales" GridPane.columnIndex="0" GridPane.rowIndex="0"
+                          spacing="10" prefWidth="220" prefHeight="120">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+                        <Label text="💰 Ventes du Jour" styleClass="kpi-title">
+                            <font>
+                                <Font name="System Bold" size="13"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="lblTodaySales" text="0" styleClass="kpi-value">
+                            <font>
+                                <Font name="System Bold" size="32"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="lblSalesChange" text="+0% vs hier" styleClass="kpi-change"/>
+                    </VBox>
+                    
+                    <!-- Revenue KPI -->
+                    <VBox styleClass="kpi-card, kpi-revenue" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                          spacing="10" prefWidth="220" prefHeight="120">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+                        <Label text="💵 Chiffre d'Affaires" styleClass="kpi-title">
+                            <font>
+                                <Font name="System Bold" size="13"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="lblTodayRevenue" text="0.00 DH" styleClass="kpi-value">
+                            <font>
+                                <Font name="System Bold" size="28"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="lblRevenueChange" text="+0% vs hier" styleClass="kpi-change"/>
+                    </VBox>
+                    
+                    <!-- Products KPI -->
+                    <VBox styleClass="kpi-card, kpi-products" GridPane.columnIndex="2" GridPane.rowIndex="0"
+                          spacing="10" prefWidth="220" prefHeight="120">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+                        <Label text="📦 Produits en Stock" styleClass="kpi-title">
+                            <font>
+                                <Font name="System Bold" size="13"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="lblTotalProducts" text="0" styleClass="kpi-value">
+                            <font>
+                                <Font name="System Bold" size="32"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="lblLowStockAlert" text="0 en rupture" styleClass="kpi-alert"/>
+                    </VBox>
+                    
+                    <!-- Customers KPI -->
+                    <VBox styleClass="kpi-card, kpi-customers" GridPane.columnIndex="3" GridPane.rowIndex="0"
+                          spacing="10" prefWidth="220" prefHeight="120">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+                        <Label text="👥 Clients" styleClass="kpi-title">
+                            <font>
+                                <Font name="System Bold" size="13"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="lblTotalCustomers" text="0" styleClass="kpi-value">
+                            <font>
+                                <Font name="System Bold" size="32"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="lblNewCustomers" text="+0 ce mois" styleClass="kpi-change"/>
+                    </VBox>
+                    
+                </GridPane>
+                
+                <!-- Charts Row -->
+                <HBox spacing="15" HBox.hgrow="ALWAYS">
+                    
+                    <!-- Sales Chart -->
+                    <VBox styleClass="chart-card" spacing="10" HBox.hgrow="ALWAYS" prefWidth="500">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+                        <Label text="Ventes des 7 derniers jours" styleClass="chart-title">
+                            <font>
+                                <Font name="System Bold" size="14"/>
+                            </font>
+                        </Label>
+                        <LineChart fx:id="salesChart" legendVisible="false" VBox.vgrow="ALWAYS">
+                            <xAxis>
+                                <CategoryAxis side="BOTTOM" fx:id="salesXAxis"/>
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis side="LEFT" fx:id="salesYAxis"/>
+                            </yAxis>
+                        </LineChart>
+                    </VBox>
+                    
+                    <!-- Top Products Chart -->
+                    <VBox styleClass="chart-card" spacing="10" HBox.hgrow="ALWAYS" prefWidth="450">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+                        <Label text="Top 5 Produits" styleClass="chart-title">
+                            <font>
+                                <Font name="System Bold" size="14"/>
+                            </font>
+                        </Label>
+                        <BarChart fx:id="topProductsChart" legendVisible="false" VBox.vgrow="ALWAYS">
+                            <xAxis>
+                                <CategoryAxis side="BOTTOM" fx:id="productsXAxis"/>
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis side="LEFT" fx:id="productsYAxis"/>
+                            </yAxis>
+                        </BarChart>
+                    </VBox>
+                    
+                </HBox>
+                
+                <!-- Alerts & Recent Activity Row -->
+                <HBox spacing="15" HBox.hgrow="ALWAYS">
+                    
+                    <!-- Alerts Panel -->
+                    <VBox styleClass="alert-card" spacing="10" prefWidth="450">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+                        <Label text="⚠️ Alertes" styleClass="section-title">
+                            <font>
+                                <Font name="System Bold" size="14"/>
+                            </font>
+                        </Label>
+                        <ListView fx:id="alertsList" prefHeight="200" styleClass="alerts-list"/>
+                    </VBox>
+                    
+                    <!-- Recent Sales Panel -->
+                    <VBox styleClass="recent-card" spacing="10" HBox.hgrow="ALWAYS">
+                        <padding>
+                            <Insets top="15" right="15" bottom="15" left="15"/>
+                        </padding>
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="🕐 Ventes Récentes" styleClass="section-title">
+                                <font>
+                                    <Font name="System Bold" size="14"/>
+                                </font>
+                            </Label>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button text="Voir tout" styleClass="btn-link" onAction="#handleViewAllSales"/>
+                        </HBox>
+                        <TableView fx:id="recentSalesTable" prefHeight="200" styleClass="recent-sales-table">
+                            <columns>
+                                <TableColumn fx:id="colSaleNumber" text="Numéro" prefWidth="100"/>
+                                <TableColumn fx:id="colSaleTime" text="Heure" prefWidth="80"/>
+                                <TableColumn fx:id="colSaleCustomer" text="Client" prefWidth="120"/>
+                                <TableColumn fx:id="colSaleAmount" text="Montant" prefWidth="100"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                    
+                </HBox>
+                
+            </VBox>
+        </ScrollPane>
+    </center>
+    
+</BorderPane>

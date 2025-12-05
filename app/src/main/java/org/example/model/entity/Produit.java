@@ -8,6 +8,7 @@ import java.time.LocalDate;
  */
 public class Produit {
     
+    private Long id;
     private String code;
     private String nom;
     private String description;
@@ -65,6 +66,14 @@ public class Produit {
     }
     
     // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+    
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
     public String getCode() {
         return code;
     }
@@ -159,6 +168,11 @@ public class Produit {
     
     public void setActif(boolean actif) {
         this.actif = actif;
+    }
+    
+    // Alias method for compatibility
+    public double getPrixVente() {
+        return prix;
     }
     
     @Override

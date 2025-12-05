@@ -7,34 +7,34 @@ import java.time.LocalDateTime;
  */
 public class MouvementStock {
     
-    private String id;
+    private Long id;
     private Produit produit;
-    private String type; // ENTREE, SORTIE, AJUSTEMENT, RETOUR
+    private TypeMouvement typeMouvement;
     private int quantite;
-    private LocalDateTime date;
+    private LocalDateTime dateMouvement;
     private String motif;
-    private String utilisateur;
+    private Long utilisateurId;
     private int stockAvant;
     private int stockApres;
     
     public MouvementStock() {
-        this.date = LocalDateTime.now();
+        this.dateMouvement = LocalDateTime.now();
     }
     
-    public MouvementStock(Produit produit, String type, int quantite, String motif) {
+    public MouvementStock(Produit produit, TypeMouvement typeMouvement, int quantite, String motif) {
         this();
         this.produit = produit;
-        this.type = type;
+        this.typeMouvement = typeMouvement;
         this.quantite = quantite;
         this.motif = motif;
     }
     
     // Getters and Setters
-    public String getId() {
+    public Long getId() {
         return id;
     }
     
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
     
@@ -46,12 +46,12 @@ public class MouvementStock {
         this.produit = produit;
     }
     
-    public String getType() {
-        return type;
+    public TypeMouvement getTypeMouvement() {
+        return typeMouvement;
     }
     
-    public void setType(String type) {
-        this.type = type;
+    public void setTypeMouvement(TypeMouvement typeMouvement) {
+        this.typeMouvement = typeMouvement;
     }
     
     public int getQuantite() {
@@ -62,12 +62,12 @@ public class MouvementStock {
         this.quantite = quantite;
     }
     
-    public LocalDateTime getDate() {
-        return date;
+    public LocalDateTime getDateMouvement() {
+        return dateMouvement;
     }
     
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setDateMouvement(LocalDateTime dateMouvement) {
+        this.dateMouvement = dateMouvement;
     }
     
     public String getMotif() {
@@ -78,12 +78,12 @@ public class MouvementStock {
         this.motif = motif;
     }
     
-    public String getUtilisateur() {
-        return utilisateur;
+    public Long getUtilisateurId() {
+        return utilisateurId;
     }
     
-    public void setUtilisateur(String utilisateur) {
-        this.utilisateur = utilisateur;
+    public void setUtilisateurId(Long utilisateurId) {
+        this.utilisateurId = utilisateurId;
     }
     
     public int getStockAvant() {
@@ -105,9 +105,9 @@ public class MouvementStock {
     @Override
     public String toString() {
         return "MouvementStock{" +
-                "type='" + type + '\'' +
+                "typeMouvement='" + typeMouvement + '\'' +
                 ", quantite=" + quantite +
-                ", date=" + date +
+                ", dateMouvement=" + dateMouvement +
                 '}';
     }
 }

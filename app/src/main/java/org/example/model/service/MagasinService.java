@@ -1,8 +1,6 @@
 package org.example.model.service;
 
 import org.example.dao.*;
-import org.example.model.entity.*;
-import java.util.List;
 
 /**
  * MagasinService - Singleton central service for managing the store
@@ -35,10 +33,10 @@ public class MagasinService {
         this.mouvementStockDAO = new MouvementStockDAO();
         this.clientDAO = new ClientDAO();
         
-        // Initialize services
-        this.clientService = new ClientService();
-        this.statistiquesService = new StatistiquesService();
-        this.alerteService = new AlerteService();
+        // Initialize services using getInstance()
+        this.clientService = ClientService.getInstance();
+        this.statistiquesService = StatistiquesService.getInstance();
+        this.alerteService = AlerteService.getInstance();
     }
     
     /**

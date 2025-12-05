@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.BonCommandeController"
+            styleClass="main-container" stylesheets="@../css/styles.css">
+    
+    <top>
+        <VBox spacing="15" styleClass="search-section">
+            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+            
+            <Label text="Gestion des Bons de Commande" styleClass="section-title">
+                <font><Font name="System Bold" size="20"/></font>
+            </Label>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button fx:id="refreshButton" text="Actualiser" styleClass="btn-secondary" onAction="#handleRefresh"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="newButton" text="+ Nouvelle Commande" styleClass="btn-success" onAction="#handleNew"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <center>
+        <VBox spacing="15" VBox.vgrow="ALWAYS">
+            <padding><Insets top="10" right="15" bottom="15" left="15"/></padding>
+            
+            <!-- Top: Order List -->
+            <VBox spacing="10" VBox.vgrow="SOMETIMES" prefHeight="200">
+                <Label text="Liste des Commandes" styleClass="section-title">
+                    <font><Font name="System Bold" size="14"/></font>
+                </Label>
+                
+                <TableView fx:id="commandeTable" VBox.vgrow="ALWAYS" styleClass="cart-table">
+                    <columns>
+                        <TableColumn fx:id="numeroColumn" text="Numéro" prefWidth="120"/>
+                        <TableColumn fx:id="fournisseurColumn" text="Fournisseur" prefWidth="200"/>
+                        <TableColumn fx:id="dateColumn" text="Date" prefWidth="100"/>
+                        <TableColumn fx:id="statutColumn" text="Statut" prefWidth="100"/>
+                        <TableColumn fx:id="totalColumn" text="Total TTC" prefWidth="100"/>
+                    </columns>
+                </TableView>
+            </VBox>
+            
+            <!-- Middle: Order Form and Line Items -->
+            <HBox spacing="15" VBox.vgrow="ALWAYS">
+                <!-- Left: Header Form -->
+                <VBox spacing="15" prefWidth="400">
+                    <VBox spacing="15" styleClass="card">
+                        <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+                        
+                        <Label text="En-tête de Commande" styleClass="section-title">
+                            <font><Font name="System Bold" size="14"/></font>
+                        </Label>
+                        <Separator/>
+                        
+                        <GridPane hgap="10" vgap="12">
+                            <Label text="Numéro:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <Label fx:id="numeroLabel" text="Nouveau" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="form-value"/>
+                            
+                            <Label text="Fournisseur:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <ComboBox fx:id="fournisseurCombo" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="Sélectionner" prefWidth="250"/>
+                            
+                            <Label text="Date Commande:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <DatePicker fx:id="dateCommandePicker" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                            
+                            <Label text="Date Livraison:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <DatePicker fx:id="dateLivraisonPicker" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                            
+                            <Label text="Statut:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <ComboBox fx:id="statutCombo" GridPane.rowIndex="4" GridPane.columnIndex="1" disable="true"/>
+                            
+                            <Label text="Notes:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <TextArea fx:id="notesArea" GridPane.rowIndex="5" GridPane.columnIndex="1" promptText="Notes" prefRowCount="3"/>
+                        </GridPane>
+                    </VBox>
+                    
+                    <VBox spacing="15" styleClass="card">
+                        <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+                        
+                        <Label text="Totaux" styleClass="section-title">
+                            <font><Font name="System Bold" size="14"/></font>
+                        </Label>
+                        <Separator/>
+                        
+                        <HBox spacing="10" alignment="CENTER_RIGHT">
+                            <Label text="Total HT:" styleClass="form-label"/>
+                            <Label fx:id="totalHTLabel" text="0.00" styleClass="form-value"/>
+                        </HBox>
+                        <HBox spacing="10" alignment="CENTER_RIGHT">
+                            <Label text="TVA (20%):" styleClass="form-label"/>
+                            <Label fx:id="taxeLabel" text="0.00" styleClass="form-value"/>
+                        </HBox>
+                        <Separator/>
+                        <HBox spacing="10" alignment="CENTER_RIGHT">
+                            <Label text="Total TTC:" styleClass="total-label"/>
+                            <Label fx:id="totalTTCLabel" text="0.00" styleClass="total-value"/>
+                        </HBox>
+                    </VBox>
+                    
+                    <HBox spacing="10">
+                        <Button fx:id="saveButton" text="Créer" styleClass="btn-success" onAction="#handleSave" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="clearButton" text="Vider" styleClass="btn-secondary" onAction="#handleClear" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    <HBox spacing="10">
+                        <Button fx:id="approveButton" text="Approuver" styleClass="btn-primary" onAction="#handleApprove" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="receiveButton" text="Réceptionner" styleClass="btn-success" onAction="#handleReceive" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                </VBox>
+                
+                <!-- Right: Line Items -->
+                <VBox spacing="15" HBox.hgrow="ALWAYS">
+                    <VBox spacing="10" styleClass="card" VBox.vgrow="ALWAYS">
+                        <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+                        
+                        <Label text="Lignes de Commande" styleClass="section-title">
+                            <font><Font name="System Bold" size="14"/></font>
+                        </Label>
+                        
+                        <TableView fx:id="lignesTable" VBox.vgrow="ALWAYS" styleClass="cart-table">
+                            <columns>
+                                <TableColumn fx:id="produitColumn" text="Produit" prefWidth="250"/>
+                                <TableColumn fx:id="quantiteColumn" text="Quantité" prefWidth="80"/>
+                                <TableColumn fx:id="prixColumn" text="Prix Unitaire" prefWidth="100"/>
+                                <TableColumn fx:id="totalLigneColumn" text="Total" prefWidth="100"/>
+                            </columns>
+                        </TableView>
+                        
+                        <Separator/>
+                        
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <ComboBox fx:id="produitCombo" promptText="Produit" prefWidth="250"/>
+                            <TextField fx:id="quantiteField" promptText="Quantité" prefWidth="80"/>
+                            <TextField fx:id="prixUnitaireField" promptText="Prix" prefWidth="100"/>
+                            <Button fx:id="addLineButton" text="+ Ajouter" styleClass="btn-primary" onAction="#handleAddLine"/>
+                            <Button fx:id="removeLineButton" text="- Retirer" styleClass="btn-danger" onAction="#handleRemoveLine"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

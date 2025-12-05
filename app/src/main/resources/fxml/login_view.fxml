@@ -1,7 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.LoginController">
-    <!-- TODO: Add login view layout -->
-</AnchorPane>
+<StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.LoginController"
+           styleClass="login-container" stylesheets="@../css/styles.css"
+           prefWidth="1280" prefHeight="720">
+    
+    <!-- Gradient Background -->
+    <VBox styleClass="gradient-background" StackPane.alignment="CENTER"/>
+    
+    <!-- Login Card -->
+    <VBox styleClass="login-card" spacing="25" alignment="CENTER" maxWidth="450" maxHeight="600">
+        <padding>
+            <Insets top="40" right="40" bottom="40" left="40"/>
+        </padding>
+        
+        <!-- Logo/Title -->
+        <VBox alignment="CENTER" spacing="10">
+            <Label text="REB7A" styleClass="app-title">
+                <font>
+                    <Font name="System Bold" size="42"/>
+                </font>
+            </Label>
+            <Label text="Point de Vente" styleClass="app-subtitle">
+                <font>
+                    <Font name="System" size="18"/>
+                </font>
+            </Label>
+            <Separator prefWidth="200"/>
+        </VBox>
+        
+        <!-- Login Form -->
+        <VBox spacing="20" VBox.vgrow="ALWAYS">
+            
+            <!-- Username Field -->
+            <VBox spacing="8">
+                <Label text="Nom d'utilisateur" styleClass="form-label">
+                    <font>
+                        <Font name="System Bold" size="13"/>
+                    </font>
+                </Label>
+                <TextField fx:id="txtUsername" promptText="Entrez votre nom d'utilisateur" 
+                          styleClass="login-field" prefHeight="45">
+                    <font>
+                        <Font size="14"/>
+                    </font>
+                </TextField>
+            </VBox>
+            
+            <!-- Password Field -->
+            <VBox spacing="8">
+                <Label text="Mot de passe" styleClass="form-label">
+                    <font>
+                        <Font name="System Bold" size="13"/>
+                    </font>
+                </Label>
+                <PasswordField fx:id="txtPassword" promptText="Entrez votre mot de passe" 
+                              styleClass="login-field" prefHeight="45">
+                    <font>
+                        <Font size="14"/>
+                    </font>
+                </PasswordField>
+            </VBox>
+            
+            <!-- Remember Me -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <CheckBox fx:id="chkRememberMe" text="Se souvenir de moi" styleClass="remember-checkbox">
+                    <font>
+                        <Font size="12"/>
+                    </font>
+                </CheckBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Hyperlink text="Mot de passe oublié?" styleClass="forgot-link">
+                    <font>
+                        <Font size="12"/>
+                    </font>
+                </Hyperlink>
+            </HBox>
+            
+            <!-- Error Label -->
+            <Label fx:id="lblError" text="" styleClass="error-label" wrapText="true" 
+                   visible="false" maxWidth="Infinity">
+                <font>
+                    <Font size="13"/>
+                </font>
+            </Label>
+            
+            <!-- Login Button -->
+            <Button fx:id="btnLogin" text="Se connecter" onAction="#handleLogin" 
+                   styleClass="btn-login" maxWidth="Infinity" prefHeight="50">
+                <font>
+                    <Font name="System Bold" size="16"/>
+                </font>
+            </Button>
+            
+            <!-- Create Account Button -->
+            <Button text="Créer un compte" onAction="#handleRegister" 
+                   styleClass="btn-secondary" maxWidth="Infinity" prefHeight="40">
+                <font>
+                    <Font name="System" size="14"/>
+                </font>
+            </Button>
+            
+            <!-- Cancel Button -->
+            <Button text="Quitter" onAction="#handleCancel" styleClass="btn-cancel" 
+                   maxWidth="Infinity" prefHeight="40">
+                <font>
+                    <Font name="System" size="14"/>
+                </font>
+            </Button>
+            
+        </VBox>
+        
+        <!-- Footer -->
+        <VBox alignment="CENTER" spacing="5">
+            <Separator prefWidth="300"/>
+            <Label text="Gestion de Stock v1.0" styleClass="footer-label">
+                <font>
+                    <Font size="11"/>
+                </font>
+            </Label>
+            <Label text="© 2024 Reb7a Supermarché" styleClass="footer-label">
+                <font>
+                    <Font size="10"/>
+                </font>
+            </Label>
+        </VBox>
+        
+    </VBox>
+    
+</StackPane>

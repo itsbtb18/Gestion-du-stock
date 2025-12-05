@@ -10,10 +10,9 @@ import org.example.model.entity.Produit;
 import org.example.model.entity.Categorie;
 import org.example.model.service.MagasinService;
 import org.example.dao.ProduitDAO;
-import org.example.Util.ValidationUtil;
 
 import java.net.URL;
-import java.time.LocalDate;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Optional;
 
@@ -99,10 +98,13 @@ public class ProduitController implements Initializable {
     }
     
     private void chargerProduits() {
-        // TODO: Load from DAO when implemented
-        // For now, create sample data
         listeProduits.clear();
-        // listeProduits.addAll(produitDAO.findAll());
+        try {
+            List<Produit> produits = produitDAO.findAll();
+            listeProduits.addAll(produits);
+        } catch (Exception e) {
+            afficherMessage("Erreur", "Erreur lors du chargement des produits: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
     
     @FXML
@@ -114,9 +116,7 @@ public class ProduitController implements Initializable {
         try {
             Produit nouveauProduit = creerProduitDepuisFormulaire();
             
-            // TODO: Save to DAO when implemented
-            // produitDAO.save(nouveauProduit);
-            
+            produitDAO.save(nouveauProduit);
             listeProduits.add(nouveauProduit);
             afficherMessage("Succès", "Produit ajouté avec succès", Alert.AlertType.INFORMATION);
             resetForm();
@@ -140,9 +140,7 @@ public class ProduitController implements Initializable {
         try {
             mettreAJourProduit(produitSelectionne);
             
-            // TODO: Update in DAO when implemented
-            // produitDAO.update(produitSelectionne);
-            
+            produitDAO.update(produitSelectionne);
             tableProduits.refresh();
             afficherMessage("Succès", "Produit modifié avec succès", Alert.AlertType.INFORMATION);
             
@@ -165,9 +163,7 @@ public class ProduitController implements Initializable {
         
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
-                // TODO: Delete from DAO when implemented
-                // produitDAO.delete(produitSelectionne.getCode());
-                
+                produitDAO.delete(produitSelectionne.getId());
                 listeProduits.remove(produitSelectionne);
                 afficherMessage("Succès", "Produit supprimé avec succès", Alert.AlertType.INFORMATION);
                 resetForm();
@@ -189,11 +185,28 @@ public class ProduitController implements Initializable {
         if (recherche.isEmpty()) {
             chargerProduits();
         } else {
-            // TODO: Implement search in DAO
-            // For now, simple filter
             listeProduits.clear();
-            // Add filtered results
+            try {
+                List<Produit> resultats = produitDAO.search(recherche);
+                listeProduits.addAll(resultats);
+            } catch (Exception e) {
+                afficherMessage("Erreur", "Erreur lors de la recherche: " + e.getMessage(), Alert.AlertType.ERROR);
+            }
         }
+    }
+    
+    @FXML
+    private void handleActualiser() {
+        chargerProduits();
+        txtRecherche.clear();
+        resetForm();
+        afficherMessage("Succès", "Liste des produits actualisée", Alert.AlertType.INFORMATION);
+    }
+    
+    @FXML
+    private void handleReinitialiser() {
+        resetForm();
+        tableProduits.getSelectionModel().clearSelection();
     }
     
     private void handleSelectionChange(Produit produit) {
@@ -209,7 +222,6 @@ public class ProduitController implements Initializable {
     }
     
     private boolean validerFormulaire() {
-        // TODO: Use ValidationUtil when implemented
         if (txtCode.getText().isEmpty() || txtNom.getText().isEmpty()) {
             afficherMessage("Validation", "Code et Nom sont obligatoires", Alert.AlertType.WARNING);
             return false;

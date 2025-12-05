@@ -1,7 +1,187 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.ProduitController">
-    <!-- TODO: Add produit view layout -->
-</AnchorPane>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.ProduitController"
+            styleClass="content-area" stylesheets="@../css/styles.css">
+    
+    <!-- Top: Header & Search -->
+    <top>
+        <VBox spacing="15" styleClass="card">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label text="Gestion des Produits" styleClass="section-title">
+                    <font>
+                        <Font name="System Bold" size="24"/>
+                    </font>
+                </Label>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnAjouter" text="➕ Nouveau Produit" styleClass="btn-success"
+                       onAction="#handleAjouter">
+                    <font>
+                        <Font name="System Bold" size="14"/>
+                    </font>
+                </Button>
+            </HBox>
+            
+            <!-- Search Bar -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <TextField fx:id="txtRecherche" promptText="🔍 Rechercher par code, nom ou catégorie..." 
+                          styleClass="search-field" HBox.hgrow="ALWAYS" prefHeight="40"/>
+                <Button text="Rechercher" styleClass="btn-primary" onAction="#handleRecherche"/>
+                <Button text="↻ Actualiser" styleClass="btn-secondary" onAction="#handleActualiser"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <!-- Center: Split View -->
+    <center>
+        <HBox spacing="20" HBox.hgrow="ALWAYS">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            
+            <!-- Left: Product List -->
+            <VBox spacing="15" HBox.hgrow="ALWAYS" prefWidth="600">
+                <VBox styleClass="card" VBox.vgrow="ALWAYS" spacing="10">
+                    <padding>
+                        <Insets top="15" right="15" bottom="15" left="15"/>
+                    </padding>
+                    
+                    <Label text="Liste des Produits" styleClass="section-title">
+                        <font>
+                            <Font name="System Bold" size="16"/>
+                        </font>
+                    </Label>
+                    
+                    <TableView fx:id="tableProduits" styleClass="modern-table" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colCode" text="Code" prefWidth="100"/>
+                            <TableColumn fx:id="colNom" text="Nom" prefWidth="200"/>
+                            <TableColumn fx:id="colPrix" text="Prix (DH)" prefWidth="100"/>
+                            <TableColumn fx:id="colStock" text="Stock" prefWidth="80"/>
+                            <TableColumn fx:id="colCategorie" text="Catégorie" prefWidth="120"/>
+                            <TableColumn fx:id="colUnite" text="Unité" prefWidth="80"/>
+                        </columns>
+                        <placeholder>
+                            <Label text="Aucun produit trouvé" styleClass="text-muted"/>
+                        </placeholder>
+                    </TableView>
+                </VBox>
+            </VBox>
+            
+            <!-- Right: Product Form -->
+            <VBox spacing="15" prefWidth="400">
+                <VBox styleClass="card" spacing="20">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+                    
+                    <Label text="Détails du Produit" styleClass="section-title">
+                        <font>
+                            <Font name="System Bold" size="16"/>
+                        </font>
+                    </Label>
+                    
+                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+                        <VBox spacing="15">
+                            <!-- Code -->
+                            <VBox spacing="5">
+                                <Label text="Code Produit *" styleClass="form-label"/>
+                                <TextField fx:id="txtCode" promptText="Ex: P001" styleClass="modern-field"/>
+                            </VBox>
+                            
+                            <!-- Nom -->
+                            <VBox spacing="5">
+                                <Label text="Nom *" styleClass="form-label"/>
+                                <TextField fx:id="txtNom" promptText="Nom du produit" styleClass="modern-field"/>
+                            </VBox>
+                            
+                            <!-- Description -->
+                            <VBox spacing="5">
+                                <Label text="Description" styleClass="form-label"/>
+                                <TextArea fx:id="txtDescription" promptText="Description détaillée" 
+                                         styleClass="modern-text-area" prefRowCount="3"/>
+                            </VBox>
+                            
+                            <!-- Prix & Stock Row -->
+                            <HBox spacing="10">
+                                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                    <Label text="Prix (DH) *" styleClass="form-label"/>
+                                    <TextField fx:id="txtPrix" promptText="0.00" styleClass="modern-field"/>
+                                </VBox>
+                                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                    <Label text="Stock *" styleClass="form-label"/>
+                                    <TextField fx:id="txtStock" promptText="0" styleClass="modern-field"/>
+                                </VBox>
+                            </HBox>
+                            
+                            <!-- Seuil & Unité Row -->
+                            <HBox spacing="10">
+                                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                    <Label text="Seuil Alerte *" styleClass="form-label"/>
+                                    <TextField fx:id="txtSeuilAlerte" promptText="10" styleClass="modern-field"/>
+                                </VBox>
+                                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                    <Label text="Unité" styleClass="form-label"/>
+                                    <TextField fx:id="txtUnite" promptText="Ex: kg" styleClass="modern-field"/>
+                                </VBox>
+                            </HBox>
+                            
+                            <!-- Catégorie -->
+                            <VBox spacing="5">
+                                <Label text="Catégorie *" styleClass="form-label"/>
+                                <ComboBox fx:id="cmbCategorie" promptText="Sélectionner une catégorie" 
+                                         styleClass="modern-combo-box" prefWidth="Infinity"/>
+                            </VBox>
+                            
+                            <!-- Date Expiration -->
+                            <VBox spacing="5">
+                                <Label text="Date d'Expiration" styleClass="form-label"/>
+                                <DatePicker fx:id="dateExpiration" promptText="JJ/MM/AAAA" 
+                                           styleClass="modern-date-picker" prefWidth="Infinity"/>
+                            </VBox>
+                            
+                            <!-- Fournisseur -->
+                            <VBox spacing="5">
+                                <Label text="Fournisseur" styleClass="form-label"/>
+                                <TextField fx:id="txtFournisseur" promptText="Nom du fournisseur" 
+                                          styleClass="modern-field"/>
+                            </VBox>
+                            
+                            <!-- Emplacement -->
+                            <VBox spacing="5">
+                                <Label text="Emplacement" styleClass="form-label"/>
+                                <TextField fx:id="txtEmplacement" promptText="Ex: Allée 3, Rayon A" 
+                                          styleClass="modern-field"/>
+                            </VBox>
+                            
+                            <!-- Actif Checkbox -->
+                            <CheckBox fx:id="chkActif" text="Produit actif" selected="true">
+                                <font>
+                                    <Font name="System Bold" size="13"/>
+                                </font>
+                            </CheckBox>
+                        </VBox>
+                    </ScrollPane>
+                    
+                    <!-- Action Buttons -->
+                    <HBox spacing="10" alignment="CENTER">
+                        <Button fx:id="btnModifier" text="✏️ Modifier" styleClass="btn-primary" 
+                               onAction="#handleModifier" prefWidth="120"/>
+                        <Button fx:id="btnSupprimer" text="🗑️ Supprimer" styleClass="btn-danger" 
+                               onAction="#handleSupprimer" prefWidth="120"/>
+                        <Button text="🔄 Réinitialiser" styleClass="btn-secondary" 
+                               onAction="#handleReinitialiser" prefWidth="120"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

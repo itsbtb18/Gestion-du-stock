@@ -1,15 +1,18 @@
 package org.example.db;
 
+import org.example.app.AppConfig;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
 import java.io.InputStream;
 import java.io.IOException;
 
 /**
  * DatabaseConnection - Singleton for managing database connections
- * Thread-safe implementation with connection pooling support
+ * Thread-safe implementation with H2 embedded database support
  */
 public class DatabaseConnection {
     
@@ -24,6 +27,9 @@ public class DatabaseConnection {
     private String username;
     private String password;
     private String driver;
+    
+    // Schema initialization flag
+    private boolean schemaInitialized = false;
     
     /**
      * Private constructor to prevent direct instantiation
@@ -52,6 +58,7 @@ public class DatabaseConnection {
     
     /**
      * Load database configuration from properties file or use defaults
+     * Uses H2 embedded database from AppConfig
      */
     private void loadConfiguration() {
         Properties props = new Properties();
@@ -59,12 +66,12 @@ public class DatabaseConnection {
         try (InputStream input = getClass().getClassLoader().getResourceAsStream("db.properties")) {
             if (input != null) {
                 props.load(input);
-                this.url = props.getProperty("db.url", "jdbc:mysql://localhost:3306/gestion_stock");
-                this.username = props.getProperty("db.username", "root");
-                this.password = props.getProperty("db.password", "");
-                this.driver = props.getProperty("db.driver", "com.mysql.cj.jdbc.Driver");
+                this.url = props.getProperty("db.url", AppConfig.DB_URL);
+                this.username = props.getProperty("db.username", AppConfig.DB_USER);
+                this.password = props.getProperty("db.password", AppConfig.DB_PASSWORD);
+                this.driver = props.getProperty("db.driver", AppConfig.DB_DRIVER);
             } else {
-                // Use default configuration if properties file not found
+                // Use default H2 configuration from AppConfig
                 useDefaultConfiguration();
             }
         } catch (IOException e) {
@@ -74,17 +81,17 @@ public class DatabaseConnection {
     }
     
     /**
-     * Use default database configuration
+     * Use default H2 embedded database configuration
      */
     private void useDefaultConfiguration() {
-        this.url = "jdbc:mysql://localhost:3306/gestion_stock";
-        this.username = "root";
-        this.password = "";
-        this.driver = "com.mysql.cj.jdbc.Driver";
+        this.url = AppConfig.DB_URL;
+        this.username = AppConfig.DB_USER;
+        this.password = AppConfig.DB_PASSWORD;
+        this.driver = AppConfig.DB_DRIVER;
     }
     
     /**
-     * Establish database connection
+     * Establish database connection and initialize schema
      */
     private void establishConnection() {
         try {
@@ -95,10 +102,89 @@ public class DatabaseConnection {
             this.connection = DriverManager.getConnection(url, username, password);
             
             System.out.println("Database connection established successfully");
+            
+            // Initialize database schema if not already done
+            if (!schemaInitialized) {
+                initializeSchema();
+                schemaInitialized = true;
+            }
         } catch (ClassNotFoundException e) {
             System.err.println("JDBC Driver not found: " + e.getMessage());
+            org.example.util.LoggerUtil.logError(DatabaseConnection.class, "JDBC Driver not found", e);
         } catch (SQLException e) {
             System.err.println("Failed to establish database connection: " + e.getMessage());
+            org.example.util.LoggerUtil.logError(DatabaseConnection.class, "Database connection failed", e);
+        }
+    }
+    
+    /**
+     * Initialize database schema from schema.sql file
+     */
+    private void initializeSchema() {
+        // Execute schema files in order
+        executeSchemaFile("schema.sql");
+        executeSchemaFile("schema_store_config.sql");
+        executeSchemaFile("schema_enhancements.sql");
+    }
+    
+    /**
+     * Execute a schema SQL file from resources
+     */
+    private void executeSchemaFile(String filename) {
+        try {
+            // Read schema file from resources
+            InputStream schemaStream = getClass().getClassLoader().getResourceAsStream(filename);
+            
+            if (schemaStream == null) {
+                System.err.println("Warning: " + filename + " not found in resources");
+                return;
+            }
+            
+            // Read SQL content
+            String sqlContent = new String(schemaStream.readAllBytes());
+            
+            // Remove single-line comments (-- comments)
+            sqlContent = sqlContent.replaceAll("--[^\n]*", "");
+            
+            // Remove multi-line comments (/* ... */)
+            sqlContent = sqlContent.replaceAll("/\\*.*?\\*/", "");
+            
+            // Split by semicolon and execute each statement
+            String[] statements = sqlContent.split(";");
+            
+            try (Statement stmt = connection.createStatement()) {
+                int successCount = 0;
+                
+                for (String sql : statements) {
+                    sql = sql.trim();
+                    
+                    // Skip empty statements
+                    if (sql.isEmpty()) {
+                        continue;
+                    }
+                    
+                    try {
+                        stmt.execute(sql);
+                        successCount++;
+                    } catch (SQLException e) {
+                        // Skip errors for DROP TABLE IF EXISTS and other non-critical errors
+                        if (!e.getMessage().contains("already exists") && 
+                            !e.getMessage().contains("not found")) {
+                            System.err.println("Warning executing SQL in " + filename + ": " + e.getMessage());
+                            System.err.println("SQL: " + sql.substring(0, Math.min(100, sql.length())));
+                        }
+                    }
+                }
+                
+                if (successCount > 0) {
+                    System.out.println(filename + " initialized successfully (" + successCount + " statements executed)");
+                }
+            }
+            
+        } catch (IOException e) {
+            System.err.println("Error reading " + filename + ": " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("Error initializing " + filename + ": " + e.getMessage());
         }
     }
     

@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="org.example.controller.StoreSettingsController"
+      spacing="10" styleClass="main-container">
+    
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+    
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="Paramètres du Magasin" styleClass="page-title">
+            <font>
+                <Font name="System Bold" size="24"/>
+            </font>
+        </Label>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="saveButton" text="Enregistrer" onAction="#handleSave" styleClass="primary-button"/>
+        <Button fx:id="cancelButton" text="Annuler" onAction="#handleCancel" styleClass="secondary-button"/>
+    </HBox>
+    
+    <Separator/>
+    
+    <!-- Tab Pane -->
+    <TabPane fx:id="settingsTabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        
+        <!-- Tab 1: Store Information -->
+        <Tab text="Informations Magasin">
+            <ScrollPane fitToWidth="true" fitToHeight="true">
+                <VBox spacing="15" style="-fx-padding: 20;">
+                    
+                    <!-- Store Code -->
+                    <VBox spacing="5">
+                        <Label text="Code Magasin *" styleClass="field-label"/>
+                        <TextField fx:id="storeCodeField" promptText="Ex: MAIN" maxWidth="300"/>
+                    </VBox>
+                    
+                    <!-- Store Name -->
+                    <VBox spacing="5">
+                        <Label text="Nom du Magasin *" styleClass="field-label"/>
+                        <TextField fx:id="storeNameField" promptText="Ex: Reb7a - Point de Vente Principal" maxWidth="400"/>
+                    </VBox>
+                    
+                    <!-- Address -->
+                    <VBox spacing="5">
+                        <Label text="Adresse" styleClass="field-label"/>
+                        <TextArea fx:id="storeAddressField" promptText="Adresse complète du magasin" 
+                                  prefRowCount="3" maxWidth="500" wrapText="true"/>
+                    </VBox>
+                    
+                    <!-- Contact Info -->
+                    <HBox spacing="20">
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Téléphone" styleClass="field-label"/>
+                            <TextField fx:id="storePhoneField" promptText="+212 XXX-XXXXXX"/>
+                        </VBox>
+                        
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Email" styleClass="field-label"/>
+                            <TextField fx:id="storeEmailField" promptText="contact@magasin.com"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <!-- Logo Path -->
+                    <VBox spacing="5">
+                        <Label text="Chemin du Logo" styleClass="field-label"/>
+                        <HBox spacing="10">
+                            <TextField fx:id="storeLogoField" promptText="Chemin vers le fichier logo" HBox.hgrow="ALWAYS"/>
+                            <Button text="Parcourir..." onAction="#handleBrowseLogo"/>
+                        </HBox>
+                    </VBox>
+                    
+                    <!-- Currency and Language -->
+                    <HBox spacing="20">
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Devise" styleClass="field-label"/>
+                            <ComboBox fx:id="currencyCombo" promptText="Sélectionner" prefWidth="200"/>
+                        </VBox>
+                        
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Langue" styleClass="field-label"/>
+                            <ComboBox fx:id="languageCombo" promptText="Sélectionner" prefWidth="200"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <!-- Active Status -->
+                    <CheckBox fx:id="storeActiveCheck" text="Magasin actif"/>
+                    
+                </VBox>
+            </ScrollPane>
+        </Tab>
+        
+        <!-- Tab 2: Promotions -->
+        <Tab text="Promotions">
+            <VBox spacing="10" style="-fx-padding: 20;">
+                
+                <!-- Promotions Table -->
+                <TableView fx:id="promotionsTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="promoNameColumn" text="Nom" prefWidth="150"/>
+                        <TableColumn fx:id="promoTypeColumn" text="Type" prefWidth="100"/>
+                        <TableColumn fx:id="promoValueColumn" text="Valeur" prefWidth="80"/>
+                        <TableColumn fx:id="promoScopeColumn" text="Portée" prefWidth="120"/>
+                        <TableColumn fx:id="promoStartColumn" text="Début" prefWidth="100"/>
+                        <TableColumn fx:id="promoEndColumn" text="Fin" prefWidth="100"/>
+                        <TableColumn fx:id="promoActiveColumn" text="Actif" prefWidth="60"/>
+                    </columns>
+                </TableView>
+                
+                <!-- Promotion Actions -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Button fx:id="addPromoButton" text="Ajouter" onAction="#handleAddPromotion" styleClass="primary-button"/>
+                    <Button fx:id="editPromoButton" text="Modifier" onAction="#handleEditPromotion" styleClass="secondary-button"/>
+                    <Button fx:id="deletePromoButton" text="Supprimer" onAction="#handleDeletePromotion" styleClass="danger-button"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="refreshPromoButton" text="Actualiser" onAction="#handleRefreshPromotions"/>
+                </HBox>
+                
+            </VBox>
+        </Tab>
+        
+        <!-- Tab 3: Loyalty Program -->
+        <Tab text="Programme Fidélité">
+            <ScrollPane fitToWidth="true" fitToHeight="true">
+                <VBox spacing="15" style="-fx-padding: 20;">
+                    
+                    <!-- Enable Loyalty -->
+                    <CheckBox fx:id="loyaltyEnabledCheck" text="Activer le programme de fidélité"/>
+                    
+                    <Separator/>
+                    
+                    <!-- Points Earning -->
+                    <Label text="Gagner des Points" styleClass="section-header">
+                        <font><Font name="System Bold" size="14"/></font>
+                    </Label>
+                    
+                    <HBox spacing="20">
+                        <VBox spacing="5">
+                            <Label text="Points par unité de devise" styleClass="field-label"/>
+                            <Spinner fx:id="pointsPerCurrencySpinner" editable="true" 
+                                     prefWidth="150" min="1" max="100" initialValue="10"/>
+                        </VBox>
+                        
+                        <VBox spacing="5">
+                            <Label text="Montant minimum d'achat" styleClass="field-label"/>
+                            <TextField fx:id="minPurchaseField" promptText="0.00" prefWidth="150"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <Separator/>
+                    
+                    <!-- Rewards -->
+                    <Label text="Récompenses" styleClass="section-header">
+                        <font><Font name="System Bold" size="14"/></font>
+                    </Label>
+                    
+                    <HBox spacing="20">
+                        <VBox spacing="5">
+                            <Label text="Seuil de points" styleClass="field-label"/>
+                            <Spinner fx:id="rewardThresholdSpinner" editable="true" 
+                                     prefWidth="150" min="10" max="10000" initialValue="100"/>
+                        </VBox>
+                        
+                        <VBox spacing="5">
+                            <Label text="Type de récompense" styleClass="field-label"/>
+                            <ComboBox fx:id="rewardTypeCombo" prefWidth="200"/>
+                        </VBox>
+                        
+                        <VBox spacing="5">
+                            <Label text="Valeur de récompense" styleClass="field-label"/>
+                            <TextField fx:id="rewardValueField" promptText="5.0" prefWidth="150"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <Separator/>
+                    
+                    <!-- Redemption Rules -->
+                    <Label text="Règles d'utilisation" styleClass="section-header">
+                        <font><Font name="System Bold" size="14"/></font>
+                    </Label>
+                    
+                    <CheckBox fx:id="allowPartialRedemptionCheck" text="Autoriser l'utilisation partielle des points"/>
+                    
+                    <HBox spacing="20">
+                        <VBox spacing="5">
+                            <Label text="Points minimum pour utilisation" styleClass="field-label"/>
+                            <Spinner fx:id="minRedemptionPointsSpinner" editable="true" 
+                                     prefWidth="150" min="1" max="1000" initialValue="50"/>
+                        </VBox>
+                        
+                        <VBox spacing="5">
+                            <Label text="Remise max (% du total)" styleClass="field-label"/>
+                            <Spinner fx:id="maxRedemptionPercentSpinner" editable="true" 
+                                     prefWidth="150" min="0.1" max="1.0" initialValue="0.3" amountToStepBy="0.1"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <VBox spacing="5">
+                        <Label text="Expiration des points (jours)" styleClass="field-label"/>
+                        <Spinner fx:id="pointsExpirationSpinner" editable="true" 
+                                 prefWidth="150" min="30" max="3650" initialValue="365"/>
+                    </VBox>
+                    
+                </VBox>
+            </ScrollPane>
+        </Tab>
+        
+        <!-- Tab 4: Advanced Settings -->
+        <Tab text="Paramètres Avancés">
+            <ScrollPane fitToWidth="true" fitToHeight="true">
+                <VBox spacing="15" style="-fx-padding: 20;">
+                    
+                    <!-- Stock Settings -->
+                    <Label text="Gestion du Stock" styleClass="section-header">
+                        <font><Font name="System Bold" size="14"/></font>
+                    </Label>
+                    
+                    <CheckBox fx:id="allowNegativeStockCheck" text="Autoriser le stock négatif"/>
+                    <CheckBox fx:id="lowStockNotificationsCheck" text="Activer les notifications de stock faible"/>
+                    <CheckBox fx:id="expirationAlertsCheck" text="Activer les alertes d'expiration"/>
+                    
+                    <VBox spacing="5">
+                        <Label text="Jours avant expiration pour alerte" styleClass="field-label"/>
+                        <Spinner fx:id="expirationAlertDaysSpinner" editable="true" 
+                                 prefWidth="150" min="1" max="365" initialValue="30"/>
+                    </VBox>
+                    
+                    <Separator/>
+                    
+                    <!-- Discount Settings -->
+                    <Label text="Remises" styleClass="section-header">
+                        <font><Font name="System Bold" size="14"/></font>
+                    </Label>
+                    
+                    <CheckBox fx:id="requireManagerApprovalCheck" text="Requérir l'approbation du manager pour les remises"/>
+                    
+                    <VBox spacing="5">
+                        <Label text="Remise maximum (%)" styleClass="field-label"/>
+                        <TextField fx:id="maxDiscountField" promptText="10.0" prefWidth="150"/>
+                    </VBox>
+                    
+                    <Separator/>
+                    
+                    <!-- Tax Settings -->
+                    <Label text="Taxes" styleClass="section-header">
+                        <font><Font name="System Bold" size="14"/></font>
+                    </Label>
+                    
+                    <VBox spacing="5">
+                        <Label text="Taux de TVA par défaut (%)" styleClass="field-label"/>
+                        <TextField fx:id="defaultVatRateField" promptText="20.0" prefWidth="150"/>
+                        <Label text="Entrez le taux en pourcentage (ex: 20 pour 20%)" styleClass="help-text" style="-fx-text-fill: gray;"/>
+                    </VBox>
+                    
+                    <Separator/>
+                    
+                    <!-- Invoice Settings -->
+                    <Label text="Factures" styleClass="section-header">
+                        <font><Font name="System Bold" size="14"/></font>
+                    </Label>
+                    
+                    <VBox spacing="5">
+                        <Label text="En-tête de facture" styleClass="field-label"/>
+                        <TextField fx:id="invoiceHeaderField" promptText="Reb7a - Point de Vente" maxWidth="500"/>
+                    </VBox>
+                    
+                    <VBox spacing="5">
+                        <Label text="Pied de page de facture" styleClass="field-label"/>
+                        <TextArea fx:id="invoiceFooterField" promptText="Merci pour votre visite !" 
+                                  prefRowCount="3" maxWidth="500" wrapText="true"/>
+                    </VBox>
+                    
+                </VBox>
+            </ScrollPane>
+        </Tab>
+        
+    </TabPane>
+    
+</VBox>

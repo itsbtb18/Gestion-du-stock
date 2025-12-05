@@ -1,7 +1,386 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.MainController">
-    <!-- TODO: Add main view layout -->
-</AnchorPane>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.MainController"
+            styleClass="main-container" stylesheets="@../css/styles.css"
+            prefWidth="1280" prefHeight="720">
+    
+    <!-- Top: Header Bar -->
+    <top>
+        <HBox styleClass="header-bar" alignment="CENTER_LEFT" spacing="15">
+            <padding>
+                <Insets top="15" right="20" bottom="15" left="20"/>
+            </padding>
+            
+            <Label text="REB7A" styleClass="header-title">
+                <font>
+                    <Font name="System Bold" size="24"/>
+                </font>
+            </Label>
+            
+            <Label text="Point de Vente" styleClass="header-subtitle">
+                <font>
+                    <Font size="14"/>
+                </font>
+            </Label>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <!-- User Info -->
+            <VBox alignment="CENTER_RIGHT" spacing="2">
+                <Label fx:id="lblUsername" text="Admin User" styleClass="user-name">
+                    <font>
+                        <Font name="System Bold" size="13"/>
+                    </font>
+                </Label>
+                <Label fx:id="lblRole" text="Administrateur" styleClass="user-role">
+                    <font>
+                        <Font size="11"/>
+                    </font>
+                </Label>
+            </VBox>
+            
+            <Separator orientation="VERTICAL"/>
+            
+            <Button fx:id="btnLogout" text="Déconnexion" onAction="#handleLogout" 
+                   styleClass="btn-logout">
+                <font>
+                    <Font size="12"/>
+                </font>
+            </Button>
+        </HBox>
+    </top>
+    
+    <!-- Left: Sidebar Navigation -->
+    <left>
+        <VBox styleClass="sidebar" spacing="5" prefWidth="220">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="10"/>
+            </padding>
+            
+            <Label text="MENU" styleClass="sidebar-header">
+                <font>
+                    <Font name="System Bold" size="12"/>
+                </font>
+                <VBox.margin>
+                    <Insets bottom="10"/>
+                </VBox.margin>
+            </Label>
+            
+            <!-- Navigation Buttons -->
+            <Button fx:id="btnDashboard" text="🏠 Tableau de Bord" onAction="#handleDashboardView" 
+                   styleClass="nav-button, nav-button-active" maxWidth="Infinity" 
+                   alignment="CENTER_LEFT">
+                <font>
+                    <Font name="System Bold" size="14"/>
+                </font>
+                <padding>
+                    <Insets top="12" right="15" bottom="12" left="15"/>
+                </padding>
+            </Button>
+            
+            <Button fx:id="btnCaisse" text="🛒 Caisse" onAction="#handleCaisseView" 
+                   styleClass="nav-button" maxWidth="Infinity" 
+                   alignment="CENTER_LEFT">
+                <font>
+                    <Font name="System Bold" size="14"/>
+                </font>
+                <padding>
+                    <Insets top="12" right="15" bottom="12" left="15"/>
+                </padding>
+            </Button>
+            
+            <Button fx:id="btnClients" text="👥 Clients" onAction="#handleClientsView" 
+                   styleClass="nav-button" maxWidth="Infinity" alignment="CENTER_LEFT">
+                <font>
+                    <Font size="14"/>
+                </font>
+                <padding>
+                    <Insets top="12" right="15" bottom="12" left="15"/>
+                </padding>
+            </Button>
+            
+            <Button fx:id="btnProduits" text="📦 Produits" onAction="#handleProduitsView" 
+                   styleClass="nav-button" maxWidth="Infinity" alignment="CENTER_LEFT">
+                <font>
+                    <Font size="14"/>
+                </font>
+                <padding>
+                    <Insets top="12" right="15" bottom="12" left="15"/>
+                </padding>
+            </Button>
+            
+            <Button fx:id="btnStock" text="📊 Stock" onAction="#handleStockView" 
+                   styleClass="nav-button" maxWidth="Infinity" alignment="CENTER_LEFT">
+                <font>
+                    <Font size="14"/>
+                </font>
+                <padding>
+                    <Insets top="12" right="15" bottom="12" left="15"/>
+                </padding>
+            </Button>
+            
+            <Button fx:id="btnFournisseurs" text="🏭 Fournisseurs" onAction="#handleFournisseursView" 
+                   styleClass="nav-button" maxWidth="Infinity" alignment="CENTER_LEFT">
+                <font>
+                    <Font size="14"/>
+                </font>
+                <padding>
+                    <Insets top="12" right="15" bottom="12" left="15"/>
+                </padding>
+            </Button>
+            
+            <Button fx:id="btnCommandes" text="📋 Commandes" onAction="#handleCommandesView" 
+                   styleClass="nav-button" maxWidth="Infinity" alignment="CENTER_LEFT">
+                <font>
+                    <Font size="14"/>
+                </font>
+                <padding>
+                    <Insets top="12" right="15" bottom="12" left="15"/>
+                </padding>
+            </Button>
+            
+            <Button fx:id="btnRetours" text="↩️ Retours" onAction="#handleRetoursView" 
+                   styleClass="nav-button" maxWidth="Infinity" alignment="CENTER_LEFT">
+                <font>
+                    <Font size="14"/>
+                </font>
+                <padding>
+                    <Insets top="12" right="15" bottom="12" left="15"/>
+                </padding>
+            </Button>
+            
+            <Button fx:id="btnTransferts" text="🔄 Transferts" onAction="#handleTransfertsView" 
+                   styleClass="nav-button" maxWidth="Infinity" alignment="CENTER_LEFT">
+                <font>
+                    <Font size="14"/>
+                </font>
+                <padding>
+                    <Insets top="12" right="15" bottom="12" left="15"/>
+                </padding>
+            </Button>
+            
+            <Separator>
+                <VBox.margin>
+                    <Insets top="10" bottom="10"/>
+                </VBox.margin>
+            </Separator>
+            
+            <Button fx:id="btnDepenses" text="💸 Dépenses" onAction="#handleDepensesView" 
+                   styleClass="nav-button" maxWidth="Infinity" alignment="CENTER_LEFT">
+                <font>
+                    <Font size="14"/>
+                </font>
+                <padding>
+                    <Insets top="12" right="15" bottom="12" left="15"/>
+                </padding>
+            </Button>
+            
+            <Button fx:id="btnRapports" text="📄 Rapports" onAction="#handleRapportsView" 
+                   styleClass="nav-button" maxWidth="Infinity" alignment="CENTER_LEFT">
+                <font>
+                    <Font size="14"/>
+                </font>
+                <padding>
+                    <Insets top="12" right="15" bottom="12" left="15"/>
+                </padding>
+            </Button>
+            
+            <Button fx:id="btnStatistiques" text="📈 Statistiques" onAction="#handleStatistiquesView" 
+                   styleClass="nav-button" maxWidth="Infinity" alignment="CENTER_LEFT">
+                <font>
+                    <Font size="14"/>
+                </font>
+                <padding>
+                    <Insets top="12" right="15" bottom="12" left="15"/>
+                </padding>
+            </Button>
+            
+            <Separator>
+                <VBox.margin>
+                    <Insets top="10" bottom="10"/>
+                </VBox.margin>
+            </Separator>
+            
+            <Button fx:id="btnSettings" text="⚙️ Paramètres" onAction="#handleSettingsView" 
+                   styleClass="nav-button" maxWidth="Infinity" alignment="CENTER_LEFT">
+                <font>
+                    <Font size="14"/>
+                </font>
+                <padding>
+                    <Insets top="12" right="15" bottom="12" left="15"/>
+                </padding>
+            </Button>
+            
+            <Region VBox.vgrow="ALWAYS"/>
+            
+            <Separator>
+                <VBox.margin>
+                    <Insets top="10" bottom="10"/>
+                </VBox.margin>
+            </Separator>
+            
+            <!-- Footer Info -->
+            <VBox spacing="8" styleClass="sidebar-footer">
+                <padding>
+                    <Insets top="10" right="5" bottom="5" left="5"/>
+                </padding>
+                
+                <Label text="📅 Date du jour" styleClass="footer-info">
+                    <font>
+                        <Font name="System Bold" size="11"/>
+                    </font>
+                </Label>
+                <Label fx:id="lblDate" text="01/01/2024" styleClass="footer-value">
+                    <font>
+                        <Font size="11"/>
+                    </font>
+                </Label>
+                
+                <Label text="💰 CA du jour" styleClass="footer-info">
+                    <font>
+                        <Font name="System Bold" size="11"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets top="5"/>
+                    </VBox.margin>
+                </Label>
+                <Label fx:id="lblRevenue" text="0.00 DH" styleClass="footer-value">
+                    <font>
+                        <Font name="System Bold" size="13"/>
+                    </font>
+                </Label>
+            </VBox>
+            
+        </VBox>
+    </left>
+    
+    <!-- Center: Content Area -->
+    <center>
+        <StackPane fx:id="contentArea" styleClass="content-area">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+            
+            <!-- Default Welcome Screen -->
+            <VBox alignment="CENTER" spacing="20" fx:id="welcomeScreen">
+                <Label text="Bienvenue dans REB7A" styleClass="welcome-title">
+                    <font>
+                        <Font name="System Bold" size="32"/>
+                    </font>
+                </Label>
+                <Label text="Sélectionnez une option dans le menu pour commencer" 
+                      styleClass="welcome-subtitle">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Label>
+                
+                <GridPane hgap="20" vgap="20" alignment="CENTER">
+                    <VBox alignment="CENTER" spacing="10" styleClass="stat-card" 
+                          GridPane.rowIndex="0" GridPane.columnIndex="0" prefWidth="200" prefHeight="150">
+                        <padding>
+                            <Insets top="20" right="20" bottom="20" left="20"/>
+                        </padding>
+                        <Label text="📊" styleClass="stat-icon">
+                            <font>
+                                <Font size="40"/>
+                            </font>
+                        </Label>
+                        <Label text="Ventes du jour" styleClass="stat-label">
+                            <font>
+                                <Font name="System Bold" size="13"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="lblTodaySales" text="0" styleClass="stat-value">
+                            <font>
+                                <Font name="System Bold" size="28"/>
+                            </font>
+                        </Label>
+                    </VBox>
+                    
+                    <VBox alignment="CENTER" spacing="10" styleClass="stat-card" 
+                          GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="200" prefHeight="150">
+                        <padding>
+                            <Insets top="20" right="20" bottom="20" left="20"/>
+                        </padding>
+                        <Label text="💰" styleClass="stat-icon">
+                            <font>
+                                <Font size="40"/>
+                            </font>
+                        </Label>
+                        <Label text="CA du jour" styleClass="stat-label">
+                            <font>
+                                <Font name="System Bold" size="13"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="lblTodayRevenue" text="0.00 DH" styleClass="stat-value">
+                            <font>
+                                <Font name="System Bold" size="24"/>
+                            </font>
+                        </Label>
+                    </VBox>
+                    
+                    <VBox alignment="CENTER" spacing="10" styleClass="stat-card" 
+                          GridPane.rowIndex="0" GridPane.columnIndex="2" prefWidth="200" prefHeight="150">
+                        <padding>
+                            <Insets top="20" right="20" bottom="20" left="20"/>
+                        </padding>
+                        <Label text="📦" styleClass="stat-icon">
+                            <font>
+                                <Font size="40"/>
+                            </font>
+                        </Label>
+                        <Label text="Produits" styleClass="stat-label">
+                            <font>
+                                <Font name="System Bold" size="13"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="lblTotalProducts" text="0" styleClass="stat-value">
+                            <font>
+                                <Font name="System Bold" size="28"/>
+                            </font>
+                        </Label>
+                    </VBox>
+                </GridPane>
+            </VBox>
+        </StackPane>
+    </center>
+    
+    <!-- Bottom: Status Bar -->
+    <bottom>
+        <HBox styleClass="status-bar" alignment="CENTER_LEFT" spacing="20">
+            <padding>
+                <Insets top="8" right="20" bottom="8" left="20"/>
+            </padding>
+            
+            <Label text="Prêt" styleClass="status-label">
+                <font>
+                    <Font size="11"/>
+                </font>
+            </Label>
+            
+            <Separator orientation="VERTICAL"/>
+            
+            <Label fx:id="lblStatus" text="Connexion à la base de données établie" 
+                  styleClass="status-message">
+                <font>
+                    <Font size="11"/>
+                </font>
+            </Label>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <Label fx:id="lblTime" text="00:00:00" styleClass="status-time">
+                <font>
+                    <Font name="System Bold" size="11"/>
+                </font>
+            </Label>
+        </HBox>
+    </bottom>
+    
+</BorderPane>

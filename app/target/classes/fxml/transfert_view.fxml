@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.TransfertController"
+            styleClass="main-container" stylesheets="@../css/styles.css">
+    
+    <top>
+        <VBox spacing="15" styleClass="search-section">
+            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+            
+            <Label text="Gestion des Transferts de Stock" styleClass="section-title">
+                <font><Font name="System Bold" size="20"/></font>
+            </Label>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <ComboBox fx:id="statutFilterCombo" promptText="Statut" prefWidth="150"/>
+                <ComboBox fx:id="emplacementFilterCombo" promptText="Emplacement" prefWidth="200"/>
+                <Button fx:id="filterButton" text="Filtrer" styleClass="btn-primary" onAction="#handleFilter"/>
+                <Button fx:id="clearFilterButton" text="Effacer" styleClass="btn-secondary" onAction="#handleClearFilter"/>
+                <Button fx:id="refreshButton" text="Actualiser" styleClass="btn-secondary" onAction="#handleRefresh"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="newButton" text="+ Nouveau Transfert" styleClass="btn-success" onAction="#handleNew"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <center>
+        <HBox spacing="15" HBox.hgrow="ALWAYS">
+            <padding><Insets top="10" right="15" bottom="15" left="15"/></padding>
+            
+            <!-- Left: Transfer Table -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS" prefWidth="800">
+                <Label text="Liste des Transferts" styleClass="section-title">
+                    <font><Font name="System Bold" size="14"/></font>
+                </Label>
+                
+                <TableView fx:id="transfertTable" VBox.vgrow="ALWAYS" styleClass="cart-table">
+                    <columns>
+                        <TableColumn fx:id="numeroColumn" text="Numéro" prefWidth="100"/>
+                        <TableColumn fx:id="produitColumn" text="Produit" prefWidth="150"/>
+                        <TableColumn fx:id="sourceColumn" text="Source" prefWidth="120"/>
+                        <TableColumn fx:id="destinationColumn" text="Destination" prefWidth="120"/>
+                        <TableColumn fx:id="quantiteColumn" text="Quantité" prefWidth="80"/>
+                        <TableColumn fx:id="statutColumn" text="Statut" prefWidth="100"/>
+                        <TableColumn fx:id="dateColumn" text="Date" prefWidth="100"/>
+                    </columns>
+                </TableView>
+            </VBox>
+            
+            <!-- Right: Form -->
+            <VBox spacing="15" prefWidth="450">
+                <VBox spacing="15" styleClass="card" VBox.vgrow="ALWAYS">
+                    <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+                    
+                    <Label text="Détails du Transfert" styleClass="section-title">
+                        <font><Font name="System Bold" size="14"/></font>
+                    </Label>
+                    <Separator/>
+                    
+                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+                        <GridPane hgap="10" vgap="12">
+                            <Label text="Numéro:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <Label fx:id="numeroLabel" text="Nouveau" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="form-value"/>
+                            
+                            <Label text="Produit:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <ComboBox fx:id="produitCombo" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="Sélectionner" prefWidth="250"/>
+                            
+                            <Label text="Source:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <ComboBox fx:id="sourceCombo" GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="Emplacement source" prefWidth="250"/>
+                            
+                            <Label text="Destination:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <ComboBox fx:id="destinationCombo" GridPane.rowIndex="3" GridPane.columnIndex="1" promptText="Emplacement destination" prefWidth="250"/>
+                            
+                            <Label text="Quantité:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <TextField fx:id="quantiteField" GridPane.rowIndex="4" GridPane.columnIndex="1" promptText="Quantité"/>
+                            
+                            <Label text="Date:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <DatePicker fx:id="dateTransfertPicker" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                            
+                            <Label text="Demandeur:" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <TextField fx:id="demandeurField" GridPane.rowIndex="6" GridPane.columnIndex="1" promptText="Nom du demandeur"/>
+                            
+                            <Label text="Statut:" GridPane.rowIndex="7" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <ComboBox fx:id="statutCombo" GridPane.rowIndex="7" GridPane.columnIndex="1" promptText="Statut" disable="true"/>
+                            
+                            <Label text="Motif:" GridPane.rowIndex="8" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <TextArea fx:id="motifArea" GridPane.rowIndex="8" GridPane.columnIndex="1" promptText="Motif du transfert" prefRowCount="2"/>
+                            
+                            <Label text="Notes:" GridPane.rowIndex="9" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <TextArea fx:id="notesArea" GridPane.rowIndex="9" GridPane.columnIndex="1" promptText="Notes" prefRowCount="2"/>
+                        </GridPane>
+                    </ScrollPane>
+                    
+                    <Separator/>
+                    
+                    <VBox spacing="5">
+                        <Label fx:id="stockSourceLabel" text="Stock source: -" styleClass="info-label"/>
+                        <Label fx:id="stockDestLabel" text="Stock destination: -" styleClass="info-label"/>
+                        <Label fx:id="validatorLabel" text="Non validé" styleClass="info-label"/>
+                    </VBox>
+                </VBox>
+                
+                <!-- Action Buttons -->
+                <VBox spacing="10">
+                    <HBox spacing="10">
+                        <Button fx:id="saveButton" text="Créer" styleClass="btn-success" onAction="#handleSave" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="clearFormButton" text="Vider" styleClass="btn-secondary" onAction="#handleClearForm" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    <HBox spacing="10">
+                        <Button fx:id="approveButton" text="Approuver" styleClass="btn-primary" onAction="#handleApprove" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="refuseButton" text="Refuser" styleClass="btn-danger" onAction="#handleRefuse" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    <HBox spacing="10">
+                        <Button fx:id="startButton" text="Démarrer" styleClass="btn-primary" onAction="#handleStart" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="completeButton" text="Compléter" styleClass="btn-success" onAction="#handleComplete" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    <Button fx:id="cancelButton" text="Annuler" styleClass="btn-danger" onAction="#handleCancel"/>
+                </VBox>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

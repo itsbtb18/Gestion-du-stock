@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.RetourController"
+            styleClass="main-container" stylesheets="@../css/styles.css">
+    
+    <top>
+        <VBox spacing="15" styleClass="search-section">
+            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+            
+            <Label text="Gestion des Retours Produits" styleClass="section-title">
+                <font><Font name="System Bold" size="20"/></font>
+            </Label>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button fx:id="refreshButton" text="Actualiser" styleClass="btn-secondary" onAction="#handleRefresh"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="newButton" text="+ Nouveau Retour" styleClass="btn-success" onAction="#handleNew"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <center>
+        <VBox spacing="15" VBox.vgrow="ALWAYS">
+            <padding><Insets top="10" right="15" bottom="15" left="15"/></padding>
+            
+            <!-- Top: Return List -->
+            <VBox spacing="10" VBox.vgrow="SOMETIMES" prefHeight="250">
+                <Label text="Liste des Retours" styleClass="section-title">
+                    <font><Font name="System Bold" size="14"/></font>
+                </Label>
+                
+                <TableView fx:id="retourTable" VBox.vgrow="ALWAYS" styleClass="cart-table">
+                    <columns>
+                        <TableColumn fx:id="numeroColumn" text="Numéro" prefWidth="120"/>
+                        <TableColumn fx:id="clientColumn" text="Client" prefWidth="150"/>
+                        <TableColumn fx:id="dateColumn" text="Date" prefWidth="100"/>
+                        <TableColumn fx:id="statutColumn" text="Statut" prefWidth="100"/>
+                        <TableColumn fx:id="totalColumn" text="Total" prefWidth="100"/>
+                    </columns>
+                </TableView>
+            </VBox>
+            
+            <!-- Middle: Return Form and Line Items -->
+            <HBox spacing="15" VBox.vgrow="ALWAYS">
+                <!-- Left: Form -->
+                <VBox spacing="15" prefWidth="400">
+                    <VBox spacing="15" styleClass="card">
+                        <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+                        
+                        <Label text="Détails du Retour" styleClass="section-title">
+                            <font><Font name="System Bold" size="14"/></font>
+                        </Label>
+                        <Separator/>
+                        
+                        <GridPane hgap="10" vgap="12">
+                            <Label text="Numéro:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <Label fx:id="numeroLabel" text="Nouveau" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="form-value"/>
+                            
+                            <Label text="Vente:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <ComboBox fx:id="venteCombo" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="Sélectionner vente" prefWidth="250"/>
+                            
+                            <Label text="Date:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <DatePicker fx:id="dateRetourPicker" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                            
+                            <Label text="Statut:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <ComboBox fx:id="statutCombo" GridPane.rowIndex="3" GridPane.columnIndex="1" disable="true"/>
+                            
+                            <Label text="Motif:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <TextField fx:id="motifField" GridPane.rowIndex="4" GridPane.columnIndex="1" promptText="Motif du retour"/>
+                            
+                            <Label text="Notes:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <TextArea fx:id="notesArea" GridPane.rowIndex="5" GridPane.columnIndex="1" promptText="Notes" prefRowCount="2"/>
+                            
+                            <Label text="Remboursé:" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <CheckBox fx:id="remboursementCheckBox" GridPane.rowIndex="6" GridPane.columnIndex="1" disable="true"/>
+                            
+                            <Label text="Note Crédit:" GridPane.rowIndex="7" GridPane.columnIndex="0" styleClass="form-label"/>
+                            <Label fx:id="creditNoteLabel" text="N/A" GridPane.rowIndex="7" GridPane.columnIndex="1" styleClass="form-value"/>
+                        </GridPane>
+                    </VBox>
+                    
+                    <HBox spacing="10">
+                        <Button fx:id="saveButton" text="Créer" styleClass="btn-success" onAction="#handleSave" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="clearButton" text="Vider" styleClass="btn-secondary" onAction="#handleClear" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    <HBox spacing="10">
+                        <Button fx:id="approveButton" text="Approuver" styleClass="btn-primary" onAction="#handleApprove" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="refuseButton" text="Refuser" styleClass="btn-danger" onAction="#handleRefuse" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    <Button fx:id="processRefundButton" text="Traiter Remboursement" styleClass="btn-success" onAction="#handleProcessRefund"/>
+                </VBox>
+                
+                <!-- Right: Line Items -->
+                <VBox spacing="15" HBox.hgrow="ALWAYS">
+                    <VBox spacing="10" styleClass="card" VBox.vgrow="ALWAYS">
+                        <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+                        
+                        <Label text="Lignes du Retour" styleClass="section-title">
+                            <font><Font name="System Bold" size="14"/></font>
+                        </Label>
+                        
+                        <TableView fx:id="lignesTable" VBox.vgrow="ALWAYS" styleClass="cart-table">
+                            <columns>
+                                <TableColumn fx:id="produitColumn" text="Produit" prefWidth="200"/>
+                                <TableColumn fx:id="quantiteColumn" text="Quantité" prefWidth="80"/>
+                                <TableColumn fx:id="prixColumn" text="Prix Unit." prefWidth="80"/>
+                                <TableColumn fx:id="endommagéColumn" text="Endommagé" prefWidth="90"/>
+                                <TableColumn fx:id="totalLigneColumn" text="Total" prefWidth="80"/>
+                            </columns>
+                        </TableView>
+                        
+                        <Separator/>
+                        
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <ComboBox fx:id="produitCombo" promptText="Produit" prefWidth="200"/>
+                            <TextField fx:id="quantiteField" promptText="Qté" prefWidth="60"/>
+                            <TextField fx:id="prixUnitaireField" promptText="Prix" prefWidth="80"/>
+                            <CheckBox fx:id="endommagéCheckBox" text="Endommagé"/>
+                            <Button fx:id="addLineButton" text="+" styleClass="btn-primary" onAction="#handleAddLine"/>
+                            <Button fx:id="removeLineButton" text="-" styleClass="btn-danger" onAction="#handleRemoveLine"/>
+                        </HBox>
+                        
+                        <HBox spacing="10" alignment="CENTER_RIGHT">
+                            <Label text="Total Retour:" styleClass="total-label"/>
+                            <Label fx:id="totalRetourLabel" text="0.00" styleClass="total-value"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

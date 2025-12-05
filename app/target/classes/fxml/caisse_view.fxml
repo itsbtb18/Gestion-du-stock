@@ -1,7 +1,233 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.CaisseController">
-    <!-- TODO: Add caisse view layout -->
-</AnchorPane>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.CaisseController"
+            styleClass="caisse-container" stylesheets="@../css/styles.css">
+    
+    <!-- Top: Product Search Section -->
+    <top>
+        <VBox styleClass="search-section" spacing="10">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+            
+            <Label text="Recherche Produit" styleClass="section-title">
+                <font>
+                    <Font name="System Bold" size="16"/>
+                </font>
+            </Label>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <TextField fx:id="productCodeField" promptText="Code produit ou code-barres" 
+                          styleClass="search-field" prefWidth="300"/>
+                <Button fx:id="searchProductButton" text="Rechercher" styleClass="btn-primary"
+                       onAction="#handleSearchProduct"/>
+                <Button fx:id="scanBarcodeButton" text="Scanner" styleClass="btn-secondary"/>
+                <TextField fx:id="quantityField" promptText="Qté" prefWidth="80" text="1"/>
+                <Button fx:id="addToCartButton" text="Ajouter au panier" styleClass="btn-success"
+                       onAction="#handleAddToCart"/>
+            </HBox>
+            
+            <Label fx:id="productInfoLabel" text="" styleClass="product-info"/>
+        </VBox>
+    </top>
+    
+    <!-- Center: Cart and Payment -->
+    <center>
+        <HBox spacing="15" HBox.hgrow="ALWAYS">
+            <padding>
+                <Insets top="10" right="15" bottom="15" left="15"/>
+            </padding>
+            
+            <!-- Left: Cart Table -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS" prefWidth="600">
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Panier" styleClass="section-title">
+                        <font>
+                            <Font name="System Bold" size="16"/>
+                        </font>
+                    </Label>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="removeFromCartButton" text="Supprimer" styleClass="btn-danger"
+                           onAction="#handleRemoveFromCart"/>
+                    <Button fx:id="clearCartButton" text="Vider" styleClass="btn-cancel"
+                           onAction="#handleClearCart">
+                        <HBox.margin>
+                            <Insets left="5"/>
+                        </HBox.margin>
+                    </Button>
+                </HBox>
+                
+                <TableView fx:id="cartTable" VBox.vgrow="ALWAYS" styleClass="cart-table">
+                    <columns>
+                        <TableColumn fx:id="codeColumn" text="Code" prefWidth="80"/>
+                        <TableColumn fx:id="nameColumn" text="Produit" prefWidth="200"/>
+                        <TableColumn fx:id="quantityColumn" text="Qté" prefWidth="60"/>
+                        <TableColumn fx:id="unitPriceColumn" text="Prix U." prefWidth="80"/>
+                        <TableColumn fx:id="subtotalColumn" text="Sous-total" prefWidth="100"/>
+                    </columns>
+                </TableView>
+            </VBox>
+            
+            <!-- Right: Client & Payment Section -->
+            <VBox spacing="15" prefWidth="350">
+                
+                <!-- Client Section -->
+                <VBox spacing="10" styleClass="card">
+                    <padding>
+                        <Insets top="15" right="15" bottom="15" left="15"/>
+                    </padding>
+                    
+                    <Label text="Client" styleClass="section-title">
+                        <font>
+                            <Font name="System Bold" size="14"/>
+                        </font>
+                    </Label>
+                    
+                    <HBox spacing="10">
+                        <TextField fx:id="clientSearchField" promptText="Code, tél ou email" 
+                                  HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="searchClientButton" text="Chercher" styleClass="btn-primary"
+                               onAction="#handleSearchClient"/>
+                    </HBox>
+                    
+                    <GridPane hgap="10" vgap="5">
+                        <Label text="Nom:" GridPane.rowIndex="0" GridPane.columnIndex="0" 
+                              styleClass="form-label"/>
+                        <Label fx:id="clientNameLabel" text="Aucun client" 
+                              GridPane.rowIndex="0" GridPane.columnIndex="1" 
+                              styleClass="client-info-value"/>
+                        
+                        <Label text="Type:" GridPane.rowIndex="1" GridPane.columnIndex="0" 
+                              styleClass="form-label"/>
+                        <Label fx:id="clientTypeLabel" text="-" 
+                              GridPane.rowIndex="1" GridPane.columnIndex="1"
+                              styleClass="client-info-value"/>
+                        
+                        <Label text="Points:" GridPane.rowIndex="2" GridPane.columnIndex="0" 
+                              styleClass="form-label"/>
+                        <Label fx:id="clientPointsLabel" text="0 points" 
+                              GridPane.rowIndex="2" GridPane.columnIndex="1"
+                              styleClass="points-label"/>
+                    </GridPane>
+                    
+                    <Button fx:id="clearClientButton" text="Effacer client" styleClass="btn-cancel"
+                           onAction="#handleClearClient" maxWidth="Infinity"/>
+                </VBox>
+                
+                <!-- Payment Section -->
+                <VBox spacing="10" styleClass="card" VBox.vgrow="ALWAYS">
+                    <padding>
+                        <Insets top="15" right="15" bottom="15" left="15"/>
+                    </padding>
+                    
+                    <Label text="Paiement" styleClass="section-title">
+                        <font>
+                            <Font name="System Bold" size="14"/>
+                        </font>
+                    </Label>
+                    
+                    <GridPane hgap="10" vgap="10">
+                        <Label text="Mode de paiement:" GridPane.rowIndex="0" GridPane.columnIndex="0" 
+                              styleClass="form-label"/>
+                        <ComboBox fx:id="paymentMethodCombo" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                                 maxWidth="Infinity"/>
+                        
+                        <Label text="Remise (%):" GridPane.rowIndex="1" GridPane.columnIndex="0" 
+                              styleClass="form-label"/>
+                        <TextField fx:id="discountField" text="0" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                  promptText="0-15%"/>
+                    </GridPane>
+                    
+                    <Separator/>
+                    
+                    <!-- Totals -->
+                    <GridPane hgap="10" vgap="8">
+                        <Label text="Sous-total:" GridPane.rowIndex="0" GridPane.columnIndex="0" 
+                              styleClass="total-label"/>
+                        <Label fx:id="subtotalLabel" text="0.00 DH" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                              styleClass="total-value" GridPane.halignment="RIGHT"/>
+                        
+                        <Label text="Remise:" GridPane.rowIndex="1" GridPane.columnIndex="0" 
+                              styleClass="total-label"/>
+                        <Label fx:id="discountLabel" text="-0.00 DH (0%)" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                              styleClass="discount-value" GridPane.halignment="RIGHT"/>
+                        
+                        <Label text="TVA (20%):" GridPane.rowIndex="2" GridPane.columnIndex="0" 
+                              styleClass="total-label"/>
+                        <Label fx:id="tvaLabel" text="0.00 DH" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                              styleClass="total-value" GridPane.halignment="RIGHT"/>
+                        
+                        <Separator GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+                        
+                        <Label text="TOTAL:" GridPane.rowIndex="4" GridPane.columnIndex="0" 
+                              styleClass="total-final-label">
+                            <font>
+                                <Font name="System Bold" size="18"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="totalLabel" text="0.00 DH" GridPane.rowIndex="4" GridPane.columnIndex="1"
+                              styleClass="total-final-value" GridPane.halignment="RIGHT">
+                            <font>
+                                <Font name="System Bold" size="20"/>
+                            </font>
+                        </Label>
+                        
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+                    </GridPane>
+                    
+                    <Region VBox.vgrow="ALWAYS"/>
+                    
+                    <!-- Action Buttons -->
+                    <HBox spacing="10">
+                        <Button fx:id="validateSaleButton" text="Valider la vente" styleClass="btn-success"
+                               onAction="#handleValidateSale" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                            <font>
+                                <Font name="System Bold" size="14"/>
+                            </font>
+                        </Button>
+                        <Button fx:id="cancelSaleButton" text="Annuler" styleClass="btn-cancel"
+                               onAction="#handleCancelSale" prefWidth="100"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </HBox>
+    </center>
+    
+    <!-- Bottom: Receipt Preview -->
+    <bottom>
+        <VBox spacing="10" styleClass="receipt-section">
+            <padding>
+                <Insets top="10" right="15" bottom="15" left="15"/>
+            </padding>
+            
+            <HBox alignment="CENTER_LEFT">
+                <Label text="Ticket de caisse" styleClass="section-title">
+                    <font>
+                        <Font name="System Bold" size="14"/>
+                    </font>
+                </Label>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="printReceiptButton" text="Imprimer" styleClass="btn-primary"
+                       onAction="#handlePrintReceipt"/>
+            </HBox>
+            
+            <TextArea fx:id="receiptArea" editable="false" prefHeight="150" 
+                     styleClass="receipt-area" wrapText="true">
+                <font>
+                    <Font family="Courier New" size="11"/>
+                </font>
+            </TextArea>
+        </VBox>
+    </bottom>
+    
+</BorderPane>
+    
+</BorderPane>

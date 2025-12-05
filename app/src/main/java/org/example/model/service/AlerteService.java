@@ -15,11 +15,12 @@ import java.util.stream.Collectors;
  */
 public class AlerteService implements StockObserver {
     
+    private static AlerteService instance;
     private List<AlerteStock> alertesStock;
     private AlerteExpirationObserver alerteExpirationObserver;
     private StockSubject stockSubject;
     
-    public AlerteService() {
+    private AlerteService() {
         this.alertesStock = new ArrayList<>();
         this.alerteExpirationObserver = new AlerteExpirationObserver(30);
         this.stockSubject = new StockSubject();
@@ -27,6 +28,13 @@ public class AlerteService implements StockObserver {
         // Register observers
         stockSubject.attach(this);
         stockSubject.attach(alerteExpirationObserver);
+    }
+    
+    public static synchronized AlerteService getInstance() {
+        if (instance == null) {
+            instance = new AlerteService();
+        }
+        return instance;
     }
     
     @Override

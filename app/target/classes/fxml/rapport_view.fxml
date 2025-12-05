@@ -1,7 +1,226 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.RapportController">
-    <!-- TODO: Add rapport view layout -->
-</AnchorPane>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.RapportController"
+            styleClass="content-area" stylesheets="@../css/styles.css">
+    
+    <!-- Top: Header & Filters -->
+    <top>
+        <VBox spacing="15">
+            <VBox styleClass="card">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+                
+                <Label text="📊 Rapports & Analyses" styleClass="section-title">
+                    <font>
+                        <Font name="System Bold" size="24"/>
+                    </font>
+                </Label>
+                <Label text="Générez des rapports détaillés de vos ventes et mouvements de stock" 
+                      styleClass="section-subtitle">
+                    <font>
+                        <Font size="14"/>
+                    </font>
+                </Label>
+                
+                <Separator>
+                    <padding>
+                        <Insets top="15" bottom="15"/>
+                    </padding>
+                </Separator>
+                
+                <!-- Filters Row -->
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <!-- Date Range -->
+                    <VBox spacing="5">
+                        <Label text="Date Début" styleClass="form-label"/>
+                        <DatePicker fx:id="dateDebut" promptText="JJ/MM/AAAA" 
+                                   styleClass="modern-date-picker" prefWidth="150"/>
+                    </VBox>
+                    
+                    <VBox spacing="5">
+                        <Label text="Date Fin" styleClass="form-label"/>
+                        <DatePicker fx:id="dateFin" promptText="JJ/MM/AAAA" 
+                                   styleClass="modern-date-picker" prefWidth="150"/>
+                    </VBox>
+                    
+                    <VBox spacing="5">
+                        <Label text="Type de Rapport" styleClass="form-label"/>
+                        <ComboBox fx:id="comboTypeRapport" promptText="Sélectionner" 
+                                 styleClass="modern-combo-box" prefWidth="180"/>
+                    </VBox>
+                    
+                    <Region HBox.hgrow="ALWAYS"/>
+                    
+                    <VBox alignment="BOTTOM_CENTER" spacing="5">
+                        <Label text=" "/> <!-- Spacer -->
+                        <HBox spacing="10">
+                            <Button fx:id="btnGenerer" text="🔍 Générer" styleClass="btn-primary" 
+                                   onAction="#handleGenererRapport">
+                                <font>
+                                    <Font name="System Bold" size="14"/>
+                                </font>
+                            </Button>
+                            <Button fx:id="btnExporterCSV" text="📥 Exporter CSV" styleClass="btn-success" 
+                                   onAction="#handleExporterCSV">
+                                <font>
+                                    <Font name="System Bold" size="14"/>
+                                </font>
+                            </Button>
+                        </HBox>
+                    </VBox>
+                </HBox>
+            </VBox>
+            
+            <!-- Summary Stats Cards -->
+            <HBox spacing="15">
+                <VBox styleClass="stat-card success" HBox.hgrow="ALWAYS">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+                    <Label text="💰 Total Ventes" styleClass="stat-label"/>
+                    <Label fx:id="lblTotalVentes" text="0.00 DH" styleClass="stat-value" textFill="#4caf50">
+                        <font>
+                            <Font name="System Bold" size="28"/>
+                        </font>
+                    </Label>
+                </VBox>
+                
+                <VBox styleClass="stat-card info" HBox.hgrow="ALWAYS">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+                    <Label text="🛒 Nombre de Ventes" styleClass="stat-label"/>
+                    <Label fx:id="lblNombreVentes" text="0" styleClass="stat-value" textFill="#2196f3">
+                        <font>
+                            <Font name="System Bold" size="28"/>
+                        </font>
+                    </Label>
+                </VBox>
+                
+                <VBox styleClass="stat-card warning" HBox.hgrow="ALWAYS">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+                    <Label text="📊 Panier Moyen" styleClass="stat-label"/>
+                    <Label fx:id="lblMoyenneVente" text="0.00 DH" styleClass="stat-value" textFill="#ff9800">
+                        <font>
+                            <Font name="System Bold" size="28"/>
+                        </font>
+                    </Label>
+                </VBox>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <!-- Center: Tables with Tabs -->
+    <center>
+        <VBox spacing="0" VBox.vgrow="ALWAYS">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            
+            <VBox styleClass="card" VBox.vgrow="ALWAYS">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+                
+                <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+                    
+                    <!-- Ventes Tab -->
+                    <Tab text="💳 Ventes">
+                        <VBox spacing="10" VBox.vgrow="ALWAYS">
+                            <padding>
+                                <Insets top="15" right="10" bottom="10" left="10"/>
+                            </padding>
+                            
+                            <HBox alignment="CENTER_LEFT">
+                                <Label text="Rapport des Ventes" styleClass="section-title">
+                                    <font>
+                                        <Font name="System Bold" size="16"/>
+                                    </font>
+                                </Label>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Button text="↻ Actualiser" styleClass="btn-secondary"/>
+                            </HBox>
+                            
+                            <TableView fx:id="tableVentes" styleClass="modern-table" VBox.vgrow="ALWAYS">
+                                <columns>
+                                    <TableColumn fx:id="colNumero" text="N° Vente" prefWidth="120"/>
+                                    <TableColumn fx:id="colDate" text="Date" prefWidth="150"/>
+                                    <TableColumn fx:id="colClient" text="Client" prefWidth="200"/>
+                                    <TableColumn fx:id="colMontant" text="Montant (DH)" prefWidth="120"/>
+                                </columns>
+                                <placeholder>
+                                    <VBox alignment="CENTER" spacing="10">
+                                        <Label text="📊" style="-fx-font-size: 48px; -fx-opacity: 0.3;"/>
+                                        <Label text="Aucune vente pour cette période" styleClass="text-muted">
+                                            <font>
+                                                <Font size="14"/>
+                                            </font>
+                                        </Label>
+                                        <Label text="Sélectionnez une période et cliquez sur 'Générer'" 
+                                              styleClass="text-muted">
+                                            <font>
+                                                <Font size="12"/>
+                                            </font>
+                                        </Label>
+                                    </VBox>
+                                </placeholder>
+                            </TableView>
+                        </VBox>
+                    </Tab>
+                    
+                    <!-- Mouvements Tab -->
+                    <Tab text="📦 Mouvements Stock">
+                        <VBox spacing="10" VBox.vgrow="ALWAYS">
+                            <padding>
+                                <Insets top="15" right="10" bottom="10" left="10"/>
+                            </padding>
+                            
+                            <HBox alignment="CENTER_LEFT">
+                                <Label text="Rapport des Mouvements" styleClass="section-title">
+                                    <font>
+                                        <Font name="System Bold" size="16"/>
+                                    </font>
+                                </Label>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Button text="↻ Actualiser" styleClass="btn-secondary"/>
+                            </HBox>
+                            
+                            <TableView fx:id="tableMouvements" styleClass="modern-table" VBox.vgrow="ALWAYS">
+                                <columns>
+                                    <TableColumn fx:id="colProduit" text="Produit" prefWidth="250"/>
+                                    <TableColumn fx:id="colType" text="Type" prefWidth="120"/>
+                                    <TableColumn fx:id="colQuantite" text="Quantité" prefWidth="100"/>
+                                    <TableColumn fx:id="colDateMouvement" text="Date" prefWidth="150"/>
+                                </columns>
+                                <placeholder>
+                                    <VBox alignment="CENTER" spacing="10">
+                                        <Label text="📦" style="-fx-font-size: 48px; -fx-opacity: 0.3;"/>
+                                        <Label text="Aucun mouvement pour cette période" styleClass="text-muted">
+                                            <font>
+                                                <Font size="14"/>
+                                            </font>
+                                        </Label>
+                                        <Label text="Sélectionnez une période et cliquez sur 'Générer'" 
+                                              styleClass="text-muted">
+                                            <font>
+                                                <Font size="12"/>
+                                            </font>
+                                        </Label>
+                                    </VBox>
+                                </placeholder>
+                            </TableView>
+                        </VBox>
+                    </Tab>
+                </TabPane>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>
