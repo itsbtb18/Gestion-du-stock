@@ -5,183 +5,297 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.ProduitController"
-            styleClass="content-area" stylesheets="@../css/styles.css">
+<VBox xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="org.example.controller.ProduitController"
+      styleClass="content-container" 
+      stylesheets="@../css/styles.css"
+      spacing="20">
+    <padding>
+        <Insets top="24" right="24" bottom="24" left="24"/>
+        </padding>
     
-    <!-- Top: Header & Search -->
-    <top>
-        <VBox spacing="15" styleClass="card">
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
-            
-            <HBox alignment="CENTER_LEFT" spacing="15">
-                <Label text="Gestion des Produits" styleClass="section-title">
+    <!-- Header Card -->
+    <VBox spacing="18" styleClass="content-card">
+        <padding>
+            <Insets top="24" right="28" bottom="24" left="28"/>
+        </padding>
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Gestion des Produits" styleClass="page-title">
                     <font>
-                        <Font name="System Bold" size="24"/>
+                        <Font name="Segoe UI Bold" size="24"/>
                     </font>
                 </Label>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="btnAjouter" text="➕ Nouveau Produit" styleClass="btn-success"
-                       onAction="#handleAjouter">
+                <Label text="Gérer votre inventaire et stock" styleClass="page-subtitle">
                     <font>
-                        <Font name="System Bold" size="14"/>
+                        <Font name="Segoe UI" size="14"/>
+                    </font>
+                </Label>
+            </VBox>
+            <HBox spacing="12" alignment="CENTER_RIGHT">
+                <TextField fx:id="txtRecherche" promptText="🔍 Rechercher..." 
+                          styleClass="modern-input" prefHeight="42" prefWidth="280"
+                          onKeyReleased="#handleRecherche">
+                    <font>
+                        <Font name="Segoe UI" size="14"/>
+                    </font>
+                </TextField>
+                <Button fx:id="btnNouveau" text="➕ Nouveau" styleClass="btn-primary"
+                       onAction="#handleNouveau" prefHeight="42" prefWidth="150">
+                    <font>
+                        <Font name="Segoe UI Semibold" size="14"/>
                     </font>
                 </Button>
             </HBox>
-            
-            <!-- Search Bar -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <TextField fx:id="txtRecherche" promptText="🔍 Rechercher par code, nom ou catégorie..." 
-                          styleClass="search-field" HBox.hgrow="ALWAYS" prefHeight="40"/>
-                <Button text="Rechercher" styleClass="btn-primary" onAction="#handleRecherche"/>
-                <Button text="↻ Actualiser" styleClass="btn-secondary" onAction="#handleActualiser"/>
-            </HBox>
-        </VBox>
-    </top>
+        </HBox>
+    </VBox>
     
-    <!-- Center: Split View -->
-    <center>
-        <HBox spacing="20" HBox.hgrow="ALWAYS">
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
-            
-            <!-- Left: Product List -->
-            <VBox spacing="15" HBox.hgrow="ALWAYS" prefWidth="600">
-                <VBox styleClass="card" VBox.vgrow="ALWAYS" spacing="10">
-                    <padding>
-                        <Insets top="15" right="15" bottom="15" left="15"/>
-                    </padding>
-                    
-                    <Label text="Liste des Produits" styleClass="section-title">
-                        <font>
-                            <Font name="System Bold" size="16"/>
-                        </font>
-                    </Label>
-                    
-                    <TableView fx:id="tableProduits" styleClass="modern-table" VBox.vgrow="ALWAYS">
-                        <columns>
-                            <TableColumn fx:id="colCode" text="Code" prefWidth="100"/>
-                            <TableColumn fx:id="colNom" text="Nom" prefWidth="200"/>
-                            <TableColumn fx:id="colPrix" text="Prix (DH)" prefWidth="100"/>
-                            <TableColumn fx:id="colStock" text="Stock" prefWidth="80"/>
-                            <TableColumn fx:id="colCategorie" text="Catégorie" prefWidth="120"/>
-                            <TableColumn fx:id="colUnite" text="Unité" prefWidth="80"/>
-                        </columns>
-                        <placeholder>
-                            <Label text="Aucun produit trouvé" styleClass="text-muted"/>
-                        </placeholder>
-                    </TableView>
-                </VBox>
+    <!-- Split View: Table & Form -->
+    <HBox spacing="28" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+        
+        <!-- Left: Product Table (60%) -->
+        <VBox spacing="16" HBox.hgrow="ALWAYS">
+            <VBox styleClass="content-card" VBox.vgrow="ALWAYS" spacing="16">
+                <padding>
+                    <Insets top="24" right="24" bottom="24" left="24"/>
+                </padding>
+                
+                <Label text="Liste des Produits" styleClass="card-title">
+                    <font>
+                        <Font name="Segoe UI Bold" size="18"/>
+                    </font>
+                </Label>
+                
+                <TableView fx:id="tableProduits" styleClass="modern-table" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colCode" text="Code" prefWidth="100"/>
+                        <TableColumn fx:id="colNom" text="Nom" prefWidth="200"/>
+                        <TableColumn fx:id="colPrix" text="Prix (DH)" prefWidth="100"/>
+                        <TableColumn fx:id="colStock" text="Stock" prefWidth="80"/>
+                        <TableColumn fx:id="colCategorie" text="Catégorie" prefWidth="130"/>
+                        <TableColumn fx:id="colUnite" text="Unité" prefWidth="80"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="Aucun produit trouvé" styleClass="placeholder-label">
+                            <font>
+                                <Font name="Segoe UI" size="14"/>
+                            </font>
+                        </Label>
+                    </placeholder>
+                </TableView>
             </VBox>
-            
-            <!-- Right: Product Form -->
-            <VBox spacing="15" prefWidth="400">
-                <VBox styleClass="card" spacing="20">
-                    <padding>
-                        <Insets top="20" right="20" bottom="20" left="20"/>
-                    </padding>
-                    
-                    <Label text="Détails du Produit" styleClass="section-title">
-                        <font>
-                            <Font name="System Bold" size="16"/>
-                        </font>
-                    </Label>
-                    
-                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
-                        <VBox spacing="15">
-                            <!-- Code -->
-                            <VBox spacing="5">
-                                <Label text="Code Produit *" styleClass="form-label"/>
-                                <TextField fx:id="txtCode" promptText="Ex: P001" styleClass="modern-field"/>
-                            </VBox>
-                            
-                            <!-- Nom -->
-                            <VBox spacing="5">
-                                <Label text="Nom *" styleClass="form-label"/>
-                                <TextField fx:id="txtNom" promptText="Nom du produit" styleClass="modern-field"/>
-                            </VBox>
-                            
-                            <!-- Description -->
-                            <VBox spacing="5">
-                                <Label text="Description" styleClass="form-label"/>
-                                <TextArea fx:id="txtDescription" promptText="Description détaillée" 
-                                         styleClass="modern-text-area" prefRowCount="3"/>
-                            </VBox>
-                            
-                            <!-- Prix & Stock Row -->
-                            <HBox spacing="10">
-                                <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                    <Label text="Prix (DH) *" styleClass="form-label"/>
-                                    <TextField fx:id="txtPrix" promptText="0.00" styleClass="modern-field"/>
-                                </VBox>
-                                <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                    <Label text="Stock *" styleClass="form-label"/>
-                                    <TextField fx:id="txtStock" promptText="0" styleClass="modern-field"/>
-                                </VBox>
-                            </HBox>
-                            
-                            <!-- Seuil & Unité Row -->
-                            <HBox spacing="10">
-                                <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                    <Label text="Seuil Alerte *" styleClass="form-label"/>
-                                    <TextField fx:id="txtSeuilAlerte" promptText="10" styleClass="modern-field"/>
-                                </VBox>
-                                <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                    <Label text="Unité" styleClass="form-label"/>
-                                    <TextField fx:id="txtUnite" promptText="Ex: kg" styleClass="modern-field"/>
-                                </VBox>
-                            </HBox>
-                            
-                            <!-- Catégorie -->
-                            <VBox spacing="5">
-                                <Label text="Catégorie *" styleClass="form-label"/>
-                                <ComboBox fx:id="cmbCategorie" promptText="Sélectionner une catégorie" 
-                                         styleClass="modern-combo-box" prefWidth="Infinity"/>
-                            </VBox>
-                            
-                            <!-- Date Expiration -->
-                            <VBox spacing="5">
-                                <Label text="Date d'Expiration" styleClass="form-label"/>
-                                <DatePicker fx:id="dateExpiration" promptText="JJ/MM/AAAA" 
-                                           styleClass="modern-date-picker" prefWidth="Infinity"/>
-                            </VBox>
-                            
-                            <!-- Fournisseur -->
-                            <VBox spacing="5">
-                                <Label text="Fournisseur" styleClass="form-label"/>
-                                <TextField fx:id="txtFournisseur" promptText="Nom du fournisseur" 
-                                          styleClass="modern-field"/>
-                            </VBox>
-                            
-                            <!-- Emplacement -->
-                            <VBox spacing="5">
-                                <Label text="Emplacement" styleClass="form-label"/>
-                                <TextField fx:id="txtEmplacement" promptText="Ex: Allée 3, Rayon A" 
-                                          styleClass="modern-field"/>
-                            </VBox>
-                            
-                            <!-- Actif Checkbox -->
-                            <CheckBox fx:id="chkActif" text="Produit actif" selected="true">
+        </VBox>
+        
+        <!-- Right: Product Form (40%) -->
+        <VBox spacing="16" prefWidth="420" minWidth="400" maxWidth="500">
+            <VBox styleClass="content-card" spacing="24" VBox.vgrow="ALWAYS">
+                <padding>
+                    <Insets top="28" right="28" bottom="28" left="28"/>
+                </padding>
+                
+                <Label text="Détails du Produit" styleClass="card-title">
+                    <font>
+                        <Font name="Segoe UI Bold" size="18"/>
+                    </font>
+                </Label>
+                
+                <VBox spacing="18" VBox.vgrow="ALWAYS">
+                        <!-- Code -->
+                        <VBox spacing="8">
+                            <Label text="Code Produit *" styleClass="subsection-title">
                                 <font>
-                                    <Font name="System Bold" size="13"/>
+                                    <Font name="Segoe UI Semibold" size="12"/>
                                 </font>
-                            </CheckBox>
+                            </Label>
+                            <TextField fx:id="txtCode" promptText="Ex: P001" styleClass="modern-input"
+                                      prefHeight="44">
+                                <font>
+                                    <Font name="Segoe UI" size="14"/>
+                                </font>
+                            </TextField>
                         </VBox>
-                    </ScrollPane>
-                    
-                    <!-- Action Buttons -->
-                    <HBox spacing="10" alignment="CENTER">
-                        <Button fx:id="btnModifier" text="✏️ Modifier" styleClass="btn-primary" 
-                               onAction="#handleModifier" prefWidth="120"/>
-                        <Button fx:id="btnSupprimer" text="🗑️ Supprimer" styleClass="btn-danger" 
-                               onAction="#handleSupprimer" prefWidth="120"/>
+                        
+                        <!-- Nom -->
+                        <VBox spacing="8">
+                            <Label text="Nom *" styleClass="subsection-title">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="12"/>
+                                </font>
+                            </Label>
+                            <TextField fx:id="txtNom" promptText="Nom du produit" styleClass="modern-input"
+                                      prefHeight="44">
+                                <font>
+                                    <Font name="Segoe UI" size="14"/>
+                                </font>
+                            </TextField>
+                        </VBox>
+                        
+                        <!-- Description -->
+                        <VBox spacing="8">
+                            <Label text="Description" styleClass="subsection-title">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="12"/>
+                                </font>
+                            </Label>
+                            <TextArea fx:id="txtDescription" promptText="Description détaillée" 
+                                     styleClass="glass-textarea" prefRowCount="3">
+                                <font>
+                                    <Font name="Segoe UI" size="14"/>
+                                </font>
+                            </TextArea>
+                        </VBox>
+                        
+                        <!-- Prix & Stock Row -->
+                        <HBox spacing="12">
+                            <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                <Label text="Prix (DH) *" styleClass="subsection-title">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <TextField fx:id="txtPrix" promptText="0.00" styleClass="modern-input"
+                                          prefHeight="44">
+                                    <font>
+                                        <Font name="Segoe UI" size="14"/>
+                                    </font>
+                                </TextField>
+                            </VBox>
+                            <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                <Label text="Stock *" styleClass="subsection-title">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <TextField fx:id="txtStock" promptText="0" styleClass="modern-input"
+                                          prefHeight="44">
+                                    <font>
+                                        <Font name="Segoe UI" size="14"/>
+                                    </font>
+                                </TextField>
+                            </VBox>
+                        </HBox>
+                        
+                        <!-- Seuil & Unité Row -->
+                        <HBox spacing="12">
+                            <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                <Label text="Seuil Alerte *" styleClass="subsection-title">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <TextField fx:id="txtSeuilAlerte" promptText="10" styleClass="modern-input"
+                                          prefHeight="44">
+                                    <font>
+                                        <Font name="Segoe UI" size="14"/>
+                                    </font>
+                                </TextField>
+                            </VBox>
+                            <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                <Label text="Unité" styleClass="subsection-title">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <TextField fx:id="txtUnite" promptText="Ex: kg" styleClass="modern-input"
+                                          prefHeight="44">
+                                    <font>
+                                        <Font name="Segoe UI" size="14"/>
+                                    </font>
+                                </TextField>
+                            </VBox>
+                        </HBox>
+                        
+                        <!-- Catégorie -->
+                        <VBox spacing="8">
+                            <Label text="Catégorie *" styleClass="subsection-title">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="12"/>
+                                </font>
+                            </Label>
+                            <ComboBox fx:id="cmbCategorie" promptText="Sélectionner une catégorie" 
+                                     styleClass="modern-combo" prefHeight="44" maxWidth="Infinity"/>
+                        </VBox>
+                        
+                        <!-- Date Expiration -->
+                        <VBox spacing="8">
+                            <Label text="Date d'Expiration" styleClass="subsection-title">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="12"/>
+                                </font>
+                            </Label>
+                            <DatePicker fx:id="dateExpiration" promptText="JJ/MM/AAAA" 
+                                       styleClass="glass-date-picker" prefHeight="44" maxWidth="Infinity"/>
+                        </VBox>
+                        
+                        <!-- Fournisseur -->
+                        <VBox spacing="8">
+                            <Label text="Fournisseur" styleClass="subsection-title">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="12"/>
+                                </font>
+                            </Label>
+                            <TextField fx:id="txtFournisseur" promptText="Nom du fournisseur" 
+                                      styleClass="modern-input" prefHeight="44">
+                                <font>
+                                    <Font name="Segoe UI" size="14"/>
+                                </font>
+                            </TextField>
+                        </VBox>
+                        
+                        <!-- Emplacement -->
+                        <VBox spacing="8">
+                            <Label text="Emplacement" styleClass="subsection-title">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="12"/>
+                                </font>
+                            </Label>
+                            <TextField fx:id="txtEmplacement" promptText="Ex: Allée 3, Rayon A" 
+                                      styleClass="modern-input" prefHeight="44">
+                                <font>
+                                    <Font name="Segoe UI" size="14"/>
+                                </font>
+                            </TextField>
+                        </VBox>
+                        
+                        <!-- Actif Checkbox -->
+                        <CheckBox fx:id="chkActif" text="Produit actif" selected="true" 
+                                 styleClass="glass-checkbox">
+                            <font>
+                                <Font name="Segoe UI Semibold" size="13"/>
+                            </font>
+                        </CheckBox>
+                </VBox>
+                
+                <!-- Action Buttons -->
+                <VBox spacing="12">
+                    <Button fx:id="btnAjouter" text="➕ Ajouter" styleClass="btn-primary" 
+                           onAction="#handleAjouter" maxWidth="Infinity" prefHeight="46">
+                        <font>
+                            <Font name="Segoe UI Semibold" size="14"/>
+                        </font>
+                    </Button>
+                    <Button fx:id="btnModifier" text="✏️ Modifier" styleClass="btn-primary" 
+                           onAction="#handleModifier" maxWidth="Infinity" prefHeight="46">
+                        <font>
+                            <Font name="Segoe UI Semibold" size="14"/>
+                        </font>
+                    </Button>
+                    <HBox spacing="12">
+                        <Button fx:id="btnSupprimer" text="🗑️ Supprimer" styleClass="btn-danger-glass" 
+                               onAction="#handleSupprimer" HBox.hgrow="ALWAYS" prefHeight="46">
+                            <font>
+                                <Font name="Segoe UI Semibold" size="14"/>
+                            </font>
+                        </Button>
                         <Button text="🔄 Réinitialiser" styleClass="btn-secondary" 
-                               onAction="#handleReinitialiser" prefWidth="120"/>
+                               onAction="#handleReinitialiser" HBox.hgrow="ALWAYS" prefHeight="46">
+                            <font>
+                                <Font name="Segoe UI Semibold" size="14"/>
+                            </font>
+                        </Button>
                     </HBox>
                 </VBox>
             </VBox>
-        </HBox>
-    </center>
-</BorderPane>
+        </VBox>
+    </HBox>
+</VBox>

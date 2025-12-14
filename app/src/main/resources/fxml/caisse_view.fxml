@@ -4,230 +4,263 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.SVGPath?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.CaisseController"
-            styleClass="caisse-container" stylesheets="@../css/styles.css">
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="org.example.controller.CaisseController"
+      styleClass="content-container" stylesheets="@../css/styles.css" spacing="16" fillWidth="true">
+    <padding>
+        <Insets top="20" right="24" bottom="20" left="24"/>
+    </padding>
     
-    <!-- Top: Product Search Section -->
-    <top>
-        <VBox styleClass="search-section" spacing="10">
-            <padding>
-                <Insets top="15" right="15" bottom="15" left="15"/>
-            </padding>
-            
-            <Label text="Recherche Produit" styleClass="section-title">
-                <font>
-                    <Font name="System Bold" size="16"/>
-                </font>
+    <!-- Header Row -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <VBox spacing="2" HBox.hgrow="ALWAYS">
+            <Label text="Point de Vente" styleClass="page-title">
+                <font><Font name="Segoe UI Bold" size="24"/></font>
             </Label>
-            
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <TextField fx:id="productCodeField" promptText="Code produit ou code-barres" 
-                          styleClass="search-field" prefWidth="300"/>
-                <Button fx:id="searchProductButton" text="Rechercher" styleClass="btn-primary"
-                       onAction="#handleSearchProduct"/>
-                <Button fx:id="scanBarcodeButton" text="Scanner" styleClass="btn-secondary"/>
-                <TextField fx:id="quantityField" promptText="Qté" prefWidth="80" text="1"/>
-                <Button fx:id="addToCartButton" text="Ajouter au panier" styleClass="btn-success"
-                       onAction="#handleAddToCart"/>
-            </HBox>
-            
-            <Label fx:id="productInfoLabel" text="" styleClass="product-info"/>
+            <Label text="Gestion des ventes et encaissement" styleClass="page-subtitle" style="-fx-text-fill: #6b7280;">
+                <font><Font name="Segoe UI" size="13"/></font>
+            </Label>
         </VBox>
-    </top>
+        <HBox spacing="8" alignment="CENTER_RIGHT" styleClass="glass-stat-card">
+            <padding><Insets top="8" right="14" bottom="8" left="14"/></padding>
+            <Circle radius="5" style="-fx-fill: #22c55e;"/>
+            <Label fx:id="cashierLabel" text="Caissier: -" style="-fx-text-fill: #1e3a5f; -fx-font-weight: bold;">
+                <font><Font name="Segoe UI Semibold" size="12"/></font>
+            </Label>
+        </HBox>
+    </HBox>
     
-    <!-- Center: Cart and Payment -->
-    <center>
-        <HBox spacing="15" HBox.hgrow="ALWAYS">
-            <padding>
-                <Insets top="10" right="15" bottom="15" left="15"/>
-            </padding>
+    <!-- Main 2-Column Layout -->
+    <HBox spacing="16" VBox.vgrow="ALWAYS">
+        
+        <!-- LEFT COLUMN: Product Search + Cart -->
+        <VBox spacing="12" HBox.hgrow="ALWAYS" minWidth="500">
             
-            <!-- Left: Cart Table -->
-            <VBox spacing="10" HBox.hgrow="ALWAYS" prefWidth="600">
-                <HBox alignment="CENTER_LEFT">
-                    <Label text="Panier" styleClass="section-title">
-                        <font>
-                            <Font name="System Bold" size="16"/>
-                        </font>
+            <!-- Product Search Card -->
+            <VBox styleClass="content-card" spacing="12">
+                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
+                
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <StackPane prefWidth="32" prefHeight="32" style="-fx-background-color: linear-gradient(to bottom right, #3b82f6, #1d4ed8); -fx-background-radius: 16;">
+                        <SVGPath content="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" 
+                                style="-fx-fill: white;" scaleX="0.8" scaleY="0.8"/>
+                    </StackPane>
+                    <Label text="Recherche Produit" styleClass="card-title">
+                        <font><Font name="Segoe UI Bold" size="15"/></font>
                     </Label>
-                    <Region HBox.hgrow="ALWAYS"/>
-                    <Button fx:id="removeFromCartButton" text="Supprimer" styleClass="btn-danger"
-                           onAction="#handleRemoveFromCart"/>
-                    <Button fx:id="clearCartButton" text="Vider" styleClass="btn-cancel"
-                           onAction="#handleClearCart">
-                        <HBox.margin>
-                            <Insets left="5"/>
-                        </HBox.margin>
+                </HBox>
+                
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <TextField fx:id="productCodeField" promptText="Code produit ou code-barres..." 
+                              styleClass="modern-input" prefHeight="40" HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="searchProductButton" text="Rechercher" styleClass="btn-primary"
+                           onAction="#handleSearchProduct" prefHeight="40" minWidth="130" prefWidth="130">
+                        <font><Font name="Segoe UI Semibold" size="12"/></font>
+                    </Button>
+                    <Button fx:id="scanBarcodeButton" text="Scanner" styleClass="btn-secondary"
+                           prefHeight="40" minWidth="100" prefWidth="100">
+                        <font><Font name="Segoe UI Semibold" size="12"/></font>
                     </Button>
                 </HBox>
                 
-                <TableView fx:id="cartTable" VBox.vgrow="ALWAYS" styleClass="cart-table">
+                <Label fx:id="productInfoLabel" text="" style="-fx-text-fill: #3b82f6;">
+                    <font><Font name="Segoe UI Semibold" size="12"/></font>
+                </Label>
+                
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <VBox spacing="4">
+                        <Label text="Quantité" style="-fx-text-fill: #6b7280; -fx-font-size: 11;"/>
+                        <TextField fx:id="quantityField" text="1" prefWidth="70" styleClass="modern-input" prefHeight="38" alignment="CENTER"/>
+                    </VBox>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="addToCartButton" text="Ajouter au panier" styleClass="btn-primary"
+                           onAction="#handleAddToCart" prefHeight="42" prefWidth="180">
+                        <font><Font name="Segoe UI Bold" size="13"/></font>
+                    </Button>
+                </HBox>
+            </VBox>
+            
+            <!-- Cart Table Card -->
+            <VBox styleClass="content-card" spacing="12" VBox.vgrow="ALWAYS">
+                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
+                
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <StackPane prefWidth="32" prefHeight="32" style="-fx-background-color: linear-gradient(to bottom right, #22c55e, #16a34a); -fx-background-radius: 16;">
+                        <SVGPath content="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1.003 1.003 0 0 0 20 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" 
+                                style="-fx-fill: white;" scaleX="0.75" scaleY="0.75"/>
+                    </StackPane>
+                    <Label text="Panier" styleClass="card-title">
+                        <font><Font name="Segoe UI Bold" size="15"/></font>
+                    </Label>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="removeFromCartButton" text="Retirer" styleClass="btn-danger-glass"
+                           onAction="#handleRemoveFromCart" prefHeight="34" minWidth="100" prefWidth="100">
+                        <font><Font name="Segoe UI Semibold" size="12"/></font>
+                    </Button>
+                    <Button fx:id="clearCartButton" text="Vider tout" styleClass="btn-secondary"
+                           onAction="#handleClearCart" prefHeight="34" minWidth="120" prefWidth="120">
+                        <font><Font name="Segoe UI Semibold" size="12"/></font>
+                    </Button>
+                </HBox>
+                
+                <TableView fx:id="cartTable" VBox.vgrow="ALWAYS" styleClass="modern-table" minHeight="200">
                     <columns>
-                        <TableColumn fx:id="codeColumn" text="Code" prefWidth="80"/>
-                        <TableColumn fx:id="nameColumn" text="Produit" prefWidth="200"/>
-                        <TableColumn fx:id="quantityColumn" text="Qté" prefWidth="60"/>
-                        <TableColumn fx:id="unitPriceColumn" text="Prix U." prefWidth="80"/>
-                        <TableColumn fx:id="subtotalColumn" text="Sous-total" prefWidth="100"/>
+                        <TableColumn fx:id="codeColumn" text="Code" prefWidth="80" minWidth="70"/>
+                        <TableColumn fx:id="nameColumn" text="Produit" prefWidth="200" minWidth="160"/>
+                        <TableColumn fx:id="quantityColumn" text="Qté" prefWidth="60" minWidth="50"/>
+                        <TableColumn fx:id="unitPriceColumn" text="Prix U." prefWidth="90" minWidth="80"/>
+                        <TableColumn fx:id="subtotalColumn" text="Total" prefWidth="100" minWidth="90"/>
                     </columns>
                 </TableView>
             </VBox>
+        </VBox>
+        
+        <!-- RIGHT COLUMN: Client + Payment + Receipt -->
+        <VBox spacing="12" prefWidth="400" minWidth="380" maxWidth="450">
             
-            <!-- Right: Client & Payment Section -->
-            <VBox spacing="15" prefWidth="350">
+            <!-- Client Card -->
+            <VBox styleClass="content-card" spacing="10">
+                <padding><Insets top="14" right="16" bottom="14" left="16"/></padding>
                 
-                <!-- Client Section -->
-                <VBox spacing="10" styleClass="card">
-                    <padding>
-                        <Insets top="15" right="15" bottom="15" left="15"/>
-                    </padding>
-                    
-                    <Label text="Client" styleClass="section-title">
-                        <font>
-                            <Font name="System Bold" size="14"/>
-                        </font>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <StackPane prefWidth="28" prefHeight="28" style="-fx-background-color: linear-gradient(to bottom right, #f59e0b, #d97706); -fx-background-radius: 14;">
+                        <SVGPath content="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" 
+                                style="-fx-fill: white;" scaleX="0.7" scaleY="0.7"/>
+                    </StackPane>
+                    <Label text="Client" styleClass="card-title">
+                        <font><Font name="Segoe UI Bold" size="14"/></font>
                     </Label>
-                    
-                    <HBox spacing="10">
-                        <TextField fx:id="clientSearchField" promptText="Code, tél ou email" 
-                                  HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="searchClientButton" text="Chercher" styleClass="btn-primary"
-                               onAction="#handleSearchClient"/>
+                </HBox>
+                
+                <HBox spacing="8">
+                    <TextField fx:id="clientSearchField" promptText="Code ou téléphone" 
+                             styleClass="modern-input" prefHeight="36" HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="searchClientButton" styleClass="btn-primary"
+                           onAction="#handleSearchClient" prefHeight="36" prefWidth="40">
+                        <graphic>
+                            <SVGPath content="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" 
+                                    style="-fx-fill: white;" scaleX="0.8" scaleY="0.8"/>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="clearClientButton" styleClass="btn-secondary"
+                           onAction="#handleClearClient" prefHeight="36" prefWidth="40">
+                        <graphic>
+                            <SVGPath content="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" 
+                                    style="-fx-fill: #64748b;" scaleX="0.8" scaleY="0.8"/>
+                        </graphic>
+                    </Button>
+                </HBox>
+                
+                <VBox spacing="6" style="-fx-background-color: linear-gradient(to right, rgba(59, 130, 246, 0.08), rgba(59, 130, 246, 0.02)); -fx-background-radius: 10; -fx-padding: 12; -fx-border-color: rgba(59, 130, 246, 0.15); -fx-border-radius: 10;">
+                    <HBox alignment="CENTER_LEFT">
+                        <Label text="Nom:" style="-fx-text-fill: #6b7280; -fx-font-size: 11;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="clientNameLabel" text="Aucun client" style="-fx-text-fill: #1e3a5f; -fx-font-weight: bold; -fx-font-size: 13;"/>
                     </HBox>
-                    
-                    <GridPane hgap="10" vgap="5">
-                        <Label text="Nom:" GridPane.rowIndex="0" GridPane.columnIndex="0" 
-                              styleClass="form-label"/>
-                        <Label fx:id="clientNameLabel" text="Aucun client" 
-                              GridPane.rowIndex="0" GridPane.columnIndex="1" 
-                              styleClass="client-info-value"/>
-                        
-                        <Label text="Type:" GridPane.rowIndex="1" GridPane.columnIndex="0" 
-                              styleClass="form-label"/>
-                        <Label fx:id="clientTypeLabel" text="-" 
-                              GridPane.rowIndex="1" GridPane.columnIndex="1"
-                              styleClass="client-info-value"/>
-                        
-                        <Label text="Points:" GridPane.rowIndex="2" GridPane.columnIndex="0" 
-                              styleClass="form-label"/>
-                        <Label fx:id="clientPointsLabel" text="0 points" 
-                              GridPane.rowIndex="2" GridPane.columnIndex="1"
-                              styleClass="points-label"/>
-                    </GridPane>
-                    
-                    <Button fx:id="clearClientButton" text="Effacer client" styleClass="btn-cancel"
-                           onAction="#handleClearClient" maxWidth="Infinity"/>
-                </VBox>
-                
-                <!-- Payment Section -->
-                <VBox spacing="10" styleClass="card" VBox.vgrow="ALWAYS">
-                    <padding>
-                        <Insets top="15" right="15" bottom="15" left="15"/>
-                    </padding>
-                    
-                    <Label text="Paiement" styleClass="section-title">
-                        <font>
-                            <Font name="System Bold" size="14"/>
-                        </font>
-                    </Label>
-                    
-                    <GridPane hgap="10" vgap="10">
-                        <Label text="Mode de paiement:" GridPane.rowIndex="0" GridPane.columnIndex="0" 
-                              styleClass="form-label"/>
-                        <ComboBox fx:id="paymentMethodCombo" GridPane.rowIndex="0" GridPane.columnIndex="1"
-                                 maxWidth="Infinity"/>
-                        
-                        <Label text="Remise (%):" GridPane.rowIndex="1" GridPane.columnIndex="0" 
-                              styleClass="form-label"/>
-                        <TextField fx:id="discountField" text="0" GridPane.rowIndex="1" GridPane.columnIndex="1"
-                                  promptText="0-15%"/>
-                    </GridPane>
-                    
-                    <Separator/>
-                    
-                    <!-- Totals -->
-                    <GridPane hgap="10" vgap="8">
-                        <Label text="Sous-total:" GridPane.rowIndex="0" GridPane.columnIndex="0" 
-                              styleClass="total-label"/>
-                        <Label fx:id="subtotalLabel" text="0.00 DH" GridPane.rowIndex="0" GridPane.columnIndex="1"
-                              styleClass="total-value" GridPane.halignment="RIGHT"/>
-                        
-                        <Label text="Remise:" GridPane.rowIndex="1" GridPane.columnIndex="0" 
-                              styleClass="total-label"/>
-                        <Label fx:id="discountLabel" text="-0.00 DH (0%)" GridPane.rowIndex="1" GridPane.columnIndex="1"
-                              styleClass="discount-value" GridPane.halignment="RIGHT"/>
-                        
-                        <Label text="TVA (20%):" GridPane.rowIndex="2" GridPane.columnIndex="0" 
-                              styleClass="total-label"/>
-                        <Label fx:id="tvaLabel" text="0.00 DH" GridPane.rowIndex="2" GridPane.columnIndex="1"
-                              styleClass="total-value" GridPane.halignment="RIGHT"/>
-                        
-                        <Separator GridPane.rowIndex="3" GridPane.columnSpan="2"/>
-                        
-                        <Label text="TOTAL:" GridPane.rowIndex="4" GridPane.columnIndex="0" 
-                              styleClass="total-final-label">
-                            <font>
-                                <Font name="System Bold" size="18"/>
-                            </font>
-                        </Label>
-                        <Label fx:id="totalLabel" text="0.00 DH" GridPane.rowIndex="4" GridPane.columnIndex="1"
-                              styleClass="total-final-value" GridPane.halignment="RIGHT">
-                            <font>
-                                <Font name="System Bold" size="20"/>
-                            </font>
-                        </Label>
-                        
-                        <columnConstraints>
-                            <ColumnConstraints percentWidth="50"/>
-                            <ColumnConstraints percentWidth="50"/>
-                        </columnConstraints>
-                    </GridPane>
-                    
-                    <Region VBox.vgrow="ALWAYS"/>
-                    
-                    <!-- Action Buttons -->
-                    <HBox spacing="10">
-                        <Button fx:id="validateSaleButton" text="Valider la vente" styleClass="btn-success"
-                               onAction="#handleValidateSale" maxWidth="Infinity" HBox.hgrow="ALWAYS">
-                            <font>
-                                <Font name="System Bold" size="14"/>
-                            </font>
-                        </Button>
-                        <Button fx:id="cancelSaleButton" text="Annuler" styleClass="btn-cancel"
-                               onAction="#handleCancelSale" prefWidth="100"/>
+                    <HBox alignment="CENTER_LEFT">
+                        <Label text="Type:" style="-fx-text-fill: #6b7280; -fx-font-size: 11;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="clientTypeLabel" text="-" style="-fx-text-fill: #1e3a5f; -fx-font-size: 11;"/>
+                    </HBox>
+                    <HBox alignment="CENTER_LEFT">
+                        <Label text="Points fidélité:" style="-fx-text-fill: #6b7280; -fx-font-size: 11;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="clientPointsLabel" text="0 pts" style="-fx-text-fill: #3b82f6; -fx-font-weight: bold; -fx-font-size: 13;"/>
                     </HBox>
                 </VBox>
             </VBox>
-        </HBox>
-    </center>
-    
-    <!-- Bottom: Receipt Preview -->
-    <bottom>
-        <VBox spacing="10" styleClass="receipt-section">
-            <padding>
-                <Insets top="10" right="15" bottom="15" left="15"/>
-            </padding>
             
-            <HBox alignment="CENTER_LEFT">
-                <Label text="Ticket de caisse" styleClass="section-title">
-                    <font>
-                        <Font name="System Bold" size="14"/>
-                    </font>
-                </Label>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="printReceiptButton" text="Imprimer" styleClass="btn-primary"
-                       onAction="#handlePrintReceipt"/>
-            </HBox>
+            <!-- Payment Card -->
+            <VBox styleClass="content-card" spacing="10">
+                <padding><Insets top="14" right="16" bottom="14" left="16"/></padding>
+                
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <StackPane prefWidth="28" prefHeight="28" style="-fx-background-color: linear-gradient(to bottom right, #06b6d4, #0891b2); -fx-background-radius: 14;">
+                        <SVGPath content="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" 
+                                style="-fx-fill: white;" scaleX="0.7" scaleY="0.7"/>
+                    </StackPane>
+                    <Label text="Paiement" styleClass="card-title">
+                        <font><Font name="Segoe UI Bold" size="14"/></font>
+                    </Label>
+                </HBox>
+                
+                <VBox spacing="4">
+                    <Label text="Mode de paiement" style="-fx-text-fill: #6b7280; -fx-font-size: 11;"/>
+                    <ComboBox fx:id="paymentMethodCombo" styleClass="modern-combo" prefHeight="38" maxWidth="Infinity"/>
+                </VBox>
+            </VBox>
             
-            <TextArea fx:id="receiptArea" editable="false" prefHeight="150" 
-                     styleClass="receipt-area" wrapText="true">
-                <font>
-                    <Font family="Courier New" size="11"/>
-                </font>
-            </TextArea>
+            <!-- Total Summary Card -->
+            <VBox styleClass="content-card" spacing="8" style="-fx-background-color: linear-gradient(to bottom right, #ffffff, #f0f9ff); -fx-border-color: #3b82f6; -fx-border-width: 2; -fx-border-radius: 12; -fx-background-radius: 12;">
+                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
+                
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Sous-total" style="-fx-text-fill: #6b7280; -fx-font-size: 12;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="subtotalLabel" text="0.00 DH" style="-fx-text-fill: #1e3a5f; -fx-font-weight: bold; -fx-font-size: 14;"/>
+                </HBox>
+                
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <Label text="Remise" style="-fx-text-fill: #6b7280; -fx-font-size: 12;"/>
+                    <TextField fx:id="discountField" text="0" prefWidth="55" styleClass="modern-input" prefHeight="28" alignment="CENTER" style="-fx-font-size: 11;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="discountLabel" text="-0.00 DH" style="-fx-text-fill: #f59e0b; -fx-font-size: 12;"/>
+                </HBox>
+                
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="TVA (20 pour cent)" style="-fx-text-fill: #6b7280; -fx-font-size: 12;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="tvaLabel" text="0.00 DH" style="-fx-text-fill: #6b7280; -fx-font-size: 12;"/>
+                </HBox>
+                
+                <Separator style="-fx-background-color: #e2e8f0;"/>
+                
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="TOTAL" style="-fx-text-fill: #1e3a5f; -fx-font-weight: bold; -fx-font-size: 18;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="totalLabel" text="0.00 DH" style="-fx-text-fill: #3b82f6; -fx-font-weight: bold; -fx-font-size: 24;"/>
+                </HBox>
+            </VBox>
+            
+            <!-- Action Buttons -->
+            <VBox spacing="10">
+                <Button fx:id="validateSaleButton" text="VALIDER LA VENTE" styleClass="btn-primary"
+                       onAction="#handleValidateSale" maxWidth="Infinity" prefHeight="50">
+                    <font><Font name="Segoe UI Bold" size="15"/></font>
+                </Button>
+                <HBox spacing="10">
+                    <Button fx:id="printReceiptButton" text="Imprimer Ticket" styleClass="btn-secondary"
+                           onAction="#handlePrintReceipt" HBox.hgrow="ALWAYS" prefHeight="40">
+                        <font><Font name="Segoe UI Semibold" size="12"/></font>
+                    </Button>
+                    <Button fx:id="cancelSaleButton" text="Annuler" styleClass="btn-danger-glass"
+                           onAction="#handleCancelSale" HBox.hgrow="ALWAYS" prefHeight="40">
+                        <font><Font name="Segoe UI Semibold" size="12"/></font>
+                    </Button>
+                </HBox>
+            </VBox>
+            
+            <!-- Receipt Preview Card -->
+            <VBox styleClass="content-card" spacing="10" VBox.vgrow="ALWAYS">
+                <padding><Insets top="14" right="16" bottom="14" left="16"/></padding>
+                
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <StackPane prefWidth="28" prefHeight="28" style="-fx-background-color: linear-gradient(to bottom right, #6b7280, #4b5563); -fx-background-radius: 14;">
+                        <SVGPath content="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" 
+                                style="-fx-fill: white;" scaleX="0.7" scaleY="0.7"/>
+                    </StackPane>
+                    <Label text="Ticket de Caisse" styleClass="card-title">
+                        <font><Font name="Segoe UI Bold" size="14"/></font>
+                    </Label>
+                </HBox>
+                
+                <TextArea fx:id="receiptArea" wrapText="true" editable="false" VBox.vgrow="ALWAYS"
+                         styleClass="glass-textarea" prefRowCount="6"
+                         style="-fx-font-family: 'Consolas', 'Courier New', monospace; -fx-font-size: 10;"/>
+            </VBox>
         </VBox>
-    </bottom>
-    
-</BorderPane>
-    
-</BorderPane>
+    </HBox>
+</VBox>

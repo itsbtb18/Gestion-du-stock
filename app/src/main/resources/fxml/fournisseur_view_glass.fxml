@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.FournisseurController"
+      styleClass="content-container" stylesheets="@../css/styles.css" spacing="28">
+    <padding>
+        <Insets top="32" right="32" bottom="32" left="32"/>
+    </padding>
+        
+        <!-- Header Section -->
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="">
+            <VBox spacing="6">
+                <Label text="🏢 Gestion des Fournisseurs" styleClass="page-title">
+                    <font>
+                        <Font name="Segoe UI Black" size="32"/>
+                    </font>
+                </Label>
+                <Label text="Gérer vos fournisseurs et partenaires" styleClass="page-subtitle">
+                    <font>
+                        <Font name="Segoe UI" size="14"/>
+                    </font>
+                </Label>
+            </VBox>
+        </HBox>
+        
+        <!-- Search and Actions Section -->
+        <VBox spacing="16" styleClass="content-card">
+            <padding>
+                <Insets top="24" right="24" bottom="24" left="24"/>
+            </padding>
+            
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <TextField fx:id="searchField" promptText="Rechercher par code, nom ou contact" 
+                          styleClass="modern-search" prefWidth="400" prefHeight="48">
+                    <font>
+                        <Font name="Segoe UI" size="14"/>
+                    </font>
+                </TextField>
+                <Button fx:id="searchButton" text="🔍 Rechercher" styleClass="btn-primary"
+                       onAction="#handleSearch" prefHeight="48" prefWidth="140">
+                    <font>
+                        <Font name="Segoe UI Semibold" size="14"/>
+                    </font>
+                </Button>
+                <Button fx:id="refreshButton" text="🔄 Actualiser" styleClass="btn-secondary"
+                       onAction="#handleRefresh" prefHeight="48" prefWidth="140">
+                    <font>
+                        <Font name="Segoe UI Semibold" size="14"/>
+                    </font>
+                </Button>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="showActiveButton" text="✓ Actifs" styleClass="btn-primary"
+                       onAction="#handleShowActive" prefHeight="48" prefWidth="100">
+                    <font>
+                        <Font name="Segoe UI Semibold" size="13"/>
+                    </font>
+                </Button>
+                <Button fx:id="showAllButton" text="📋 Tous" styleClass="btn-secondary"
+                       onAction="#handleShowAll" prefHeight="48" prefWidth="100">
+                    <font>
+                        <Font name="Segoe UI Semibold" size="13"/>
+                    </font>
+                </Button>
+                <Button fx:id="newButton" text="➕ Nouveau" styleClass="btn-primary"
+                       onAction="#handleNew" prefHeight="48" prefWidth="140">
+                    <font>
+                        <Font name="Segoe UI Bold" size="14"/>
+                    </font>
+                </Button>
+            </HBox>
+        </VBox>
+        
+        <!-- Main Content: Table and Form -->
+        <HBox spacing="28" HBox.hgrow="ALWAYS">
+            
+            <!-- Left: Supplier Table -->
+            <VBox spacing="16" HBox.hgrow="ALWAYS" prefWidth="700">
+                <VBox styleClass="content-card" VBox.vgrow="ALWAYS" spacing="16">
+                    <padding>
+                        <Insets top="24" right="24" bottom="24" left="24"/>
+                    </padding>
+                    
+                    <Label text="Liste des Fournisseurs" styleClass="card-title">
+                        <font>
+                            <Font name="Segoe UI Bold" size="18"/>
+                        </font>
+                    </Label>
+                    
+                    <TableView fx:id="fournisseurTable" VBox.vgrow="ALWAYS" styleClass="modern-table" prefHeight="500">
+                        <columns>
+                            <TableColumn fx:id="codeColumn" text="Code" prefWidth="80"/>
+                            <TableColumn fx:id="nomColumn" text="Nom" prefWidth="180"/>
+                            <TableColumn fx:id="contactColumn" text="Contact" prefWidth="140"/>
+                            <TableColumn fx:id="telephoneColumn" text="Téléphone" prefWidth="120"/>
+                            <TableColumn fx:id="emailColumn" text="Email" prefWidth="160"/>
+                            <TableColumn fx:id="ratingColumn" text="Note" prefWidth="70"/>
+                            <TableColumn fx:id="actifColumn" text="Actif" prefWidth="60"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </VBox>
+            
+            <!-- Right: Form -->
+            <VBox spacing="20" prefWidth="450">
+                <VBox spacing="16" styleClass="content-card" VBox.vgrow="ALWAYS">
+                    <padding>
+                        <Insets top="24" right="24" bottom="24" left="24"/>
+                    </padding>
+                    
+                    <Label text="Informations Fournisseur" styleClass="card-title">
+                        <font>
+                            <Font name="Segoe UI Bold" size="18"/>
+                        </font>
+                    </Label>
+                    
+                    <Separator styleClass="glass-separator"/>
+                    
+                    <VBox spacing="16" VBox.vgrow="ALWAYS">
+                        <VBox spacing="8">
+                                <Label text="Code:" style="-fx-text-fill: #4F5668; -fx-font-size: 12px; -fx-font-weight: 700;">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <TextField fx:id="codeField" promptText="Code fournisseur" 
+                                          styleClass="modern-input" prefHeight="44">
+                                    <font>
+                                        <Font name="Segoe UI" size="14"/>
+                                    </font>
+                                </TextField>
+                            </VBox>
+                            
+                            <VBox spacing="8">
+                                <Label text="Nom:" style="-fx-text-fill: #4F5668; -fx-font-size: 12px; -fx-font-weight: 700;">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <TextField fx:id="nomField" promptText="Nom du fournisseur" 
+                                          styleClass="modern-input" prefHeight="44">
+                                    <font>
+                                        <Font name="Segoe UI" size="14"/>
+                                    </font>
+                                </TextField>
+                            </VBox>
+                            
+                            <VBox spacing="8">
+                                <Label text="Contact:" style="-fx-text-fill: #4F5668; -fx-font-size: 12px; -fx-font-weight: 700;">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <TextField fx:id="contactField" promptText="Personne de contact" 
+                                          styleClass="modern-input" prefHeight="44">
+                                    <font>
+                                        <Font name="Segoe UI" size="14"/>
+                                    </font>
+                                </TextField>
+                            </VBox>
+                            
+                            <VBox spacing="8">
+                                <Label text="Téléphone:" style="-fx-text-fill: #4F5668; -fx-font-size: 12px; -fx-font-weight: 700;">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <TextField fx:id="telephoneField" promptText="Téléphone" 
+                                          styleClass="modern-input" prefHeight="44">
+                                    <font>
+                                        <Font name="Segoe UI" size="14"/>
+                                    </font>
+                                </TextField>
+                            </VBox>
+                            
+                            <VBox spacing="8">
+                                <Label text="Email:" style="-fx-text-fill: #4F5668; -fx-font-size: 12px; -fx-font-weight: 700;">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <TextField fx:id="emailField" promptText="Email" 
+                                          styleClass="modern-input" prefHeight="44">
+                                    <font>
+                                        <Font name="Segoe UI" size="14"/>
+                                    </font>
+                                </TextField>
+                            </VBox>
+                            
+                            <VBox spacing="8">
+                                <Label text="Adresse:" style="-fx-text-fill: #4F5668; -fx-font-size: 12px; -fx-font-weight: 700;">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <TextField fx:id="adresseField" promptText="Adresse" 
+                                          styleClass="modern-input" prefHeight="44">
+                                    <font>
+                                        <Font name="Segoe UI" size="14"/>
+                                    </font>
+                                </TextField>
+                            </VBox>
+                            
+                            <HBox spacing="12">
+                                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                    <Label text="Ville:" style="-fx-text-fill: #4F5668; -fx-font-size: 12px; -fx-font-weight: 700;">
+                                        <font>
+                                            <Font name="Segoe UI Semibold" size="12"/>
+                                        </font>
+                                    </Label>
+                                    <TextField fx:id="villeField" promptText="Ville" 
+                                              styleClass="modern-input" prefHeight="44">
+                                        <font>
+                                            <Font name="Segoe UI" size="14"/>
+                                        </font>
+                                    </TextField>
+                                </VBox>
+                                
+                                <VBox spacing="8" prefWidth="120">
+                                    <Label text="Code Postal:" style="-fx-text-fill: #4F5668; -fx-font-size: 12px; -fx-font-weight: 700;">
+                                        <font>
+                                            <Font name="Segoe UI Semibold" size="12"/>
+                                        </font>
+                                    </Label>
+                                    <TextField fx:id="codePostalField" promptText="CP" 
+                                              styleClass="modern-input" prefHeight="44">
+                                        <font>
+                                            <Font name="Segoe UI" size="14"/>
+                                        </font>
+                                    </TextField>
+                                </VBox>
+                            </HBox>
+                            
+                            <VBox spacing="8">
+                                <Label text="Pays:" style="-fx-text-fill: #4F5668; -fx-font-size: 12px; -fx-font-weight: 700;">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <TextField fx:id="paysField" promptText="Pays" 
+                                          styleClass="modern-input" prefHeight="44">
+                                    <font>
+                                        <Font name="Segoe UI" size="14"/>
+                                    </font>
+                                </TextField>
+                            </VBox>
+                            
+                            <VBox spacing="8">
+                                <Label text="Notes:" style="-fx-text-fill: #4F5668; -fx-font-size: 12px; -fx-font-weight: 700;">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <TextArea fx:id="notesArea" promptText="Notes" prefRowCount="3" 
+                                         styleClass="modern-input">
+                                    <font>
+                                        <Font name="Segoe UI" size="14"/>
+                                    </font>
+                                </TextArea>
+                            </VBox>
+                            
+                            <HBox spacing="12" alignment="CENTER_LEFT">
+                                <Label text="Actif:" style="-fx-text-fill: #4F5668; -fx-font-size: 12px; -fx-font-weight: 700;">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <CheckBox fx:id="actifCheckBox" styleClass="glass-checkbox"/>
+                            </HBox>
+                            
+                            <VBox spacing="8">
+                                <Label text="Note de qualité:" style="-fx-text-fill: #4F5668; -fx-font-size: 12px; -fx-font-weight: 700;">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <Slider fx:id="ratingSlider" min="0" max="5" value="3" 
+                                       showTickLabels="true" showTickMarks="true" 
+                                       styleClass="glass-slider"/>
+                                <Label fx:id="ratingLabel" text="3.0 / 5.0" 
+                                      style="-fx-text-fill: #5A6FF1; -fx-font-size: 14px; -fx-font-weight: 700;"/>
+                            </VBox>
+                    </VBox>
+                </VBox>
+                
+                <!-- Action Buttons -->
+                <HBox spacing="10">
+                    <Button fx:id="saveButton" text="💾 Enregistrer" styleClass="btn-primary"
+                           onAction="#handleSave" HBox.hgrow="ALWAYS" prefHeight="48">
+                        <font>
+                            <Font name="Segoe UI Bold" size="14"/>
+                        </font>
+                    </Button>
+                    <Button fx:id="updateButton" text="✏️ Modifier" styleClass="btn-primary"
+                           onAction="#handleUpdate" HBox.hgrow="ALWAYS" prefHeight="48">
+                        <font>
+                            <Font name="Segoe UI Semibold" size="14"/>
+                        </font>
+                    </Button>
+                </HBox>
+                
+                <HBox spacing="10">
+                    <Button fx:id="rateButton" text="⭐ Noter" styleClass="btn-secondary"
+                           onAction="#handleRate" HBox.hgrow="ALWAYS" prefHeight="44">
+                        <font>
+                            <Font name="Segoe UI Semibold" size="13"/>
+                        </font>
+                    </Button>
+                    <Button fx:id="deleteButton" text="🗑️ Désactiver" styleClass="btn-danger-glass"
+                           onAction="#handleDelete" HBox.hgrow="ALWAYS" prefHeight="44">
+                        <font>
+                            <Font name="Segoe UI Semibold" size="13"/>
+                        </font>
+                    </Button>
+                    <Button fx:id="clearFormButton" text="🔄 Vider" styleClass="btn-secondary"
+                           onAction="#handleClearForm" HBox.hgrow="ALWAYS" prefHeight="44">
+                        <font>
+                            <Font name="Segoe UI Semibold" size="13"/>
+                        </font>
+                    </Button>
+                </HBox>
+            </VBox>
+        </HBox>
+        
+</VBox>

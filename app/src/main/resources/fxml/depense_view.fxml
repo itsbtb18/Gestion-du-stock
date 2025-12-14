@@ -6,127 +6,244 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.chart.PieChart?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.DepenseController"
-            styleClass="main-container" stylesheets="@../css/styles.css">
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.DepenseController"
+      styleClass="content-container" stylesheets="@../css/styles.css" spacing="16" fillWidth="true">
+    <padding>
+        <Insets top="20" right="24" bottom="20" left="24"/>
+    </padding>
     
-    <top>
-        <VBox spacing="15" styleClass="search-section">
-            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+    <!-- Header Row -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <VBox spacing="2" HBox.hgrow="ALWAYS">
+            <Label text="💰 Gestion des Dépenses" styleClass="page-title">
+                <font><Font name="Segoe UI Bold" size="24"/></font>
+            </Label>
+            <Label text="Suivre et gérer vos dépenses" styleClass="page-subtitle" style="-fx-text-fill: #6b7280;">
+                <font><Font name="Segoe UI" size="13"/></font>
+            </Label>
+        </VBox>
+        <Button fx:id="newButton" text="＋ Nouvelle Dépense" styleClass="btn-primary"
+               prefHeight="40" prefWidth="180" onAction="#handleNew">
+            <font><Font name="Segoe UI Semibold" size="13"/></font>
+        </Button>
+    </HBox>
+    
+    <!-- Filters Card -->
+    <HBox spacing="12" styleClass="content-card" alignment="CENTER_LEFT">
+        <padding><Insets top="14" right="16" bottom="14" left="16"/></padding>
+        
+        <Label text="🔍" style="-fx-font-size: 16;"/>
+        
+        <DatePicker fx:id="dateDebutPicker" promptText="Date début" styleClass="glass-date-picker" 
+                   prefHeight="36" prefWidth="130"/>
+        <DatePicker fx:id="dateFinPicker" promptText="Date fin" styleClass="glass-date-picker" 
+                   prefHeight="36" prefWidth="130"/>
+        <ComboBox fx:id="categorieFilterCombo" promptText="Toutes catégories" styleClass="modern-combo" 
+                 prefHeight="36" prefWidth="160"/>
+        
+        <Region HBox.hgrow="ALWAYS"/>
+        
+        <Button fx:id="filterButton" text="🔎 Filtrer" styleClass="btn-primary" 
+               prefHeight="36" prefWidth="110" onAction="#handleFilter">
+            <font><Font name="Segoe UI Semibold" size="12"/></font>
+        </Button>
+        <Button fx:id="clearFilterButton" text="✖ Effacer" styleClass="btn-secondary" 
+               prefHeight="36" prefWidth="130" onAction="#handleClearFilter">
+            <font><Font name="Segoe UI Semibold" size="12"/></font>
+        </Button>
+        <Button fx:id="refreshButton" text="🔄 Actualiser" styleClass="btn-secondary" 
+               prefHeight="36" prefWidth="130" onAction="#handleRefresh">
+            <font><Font name="Segoe UI Semibold" size="12"/></font>
+        </Button>
+    </HBox>
+    
+    <!-- KPIs Row -->
+    <HBox spacing="12">
+        <VBox styleClass="glass-stat-card" spacing="4" alignment="CENTER" HBox.hgrow="ALWAYS">
+            <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+            <Label text="📅 Période" style="-fx-text-fill: #6b7280;">
+                <font><Font name="Segoe UI Semibold" size="11"/></font>
+            </Label>
+            <Label fx:id="totalPeriodeLabel" text="0.00 DH" style="-fx-text-fill: #1e3a5f;">
+                <font><Font name="Segoe UI Bold" size="18"/></font>
+            </Label>
+        </VBox>
+        
+        <VBox styleClass="glass-stat-card" spacing="4" alignment="CENTER" HBox.hgrow="ALWAYS">
+            <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+            <Label text="📆 Ce Mois" style="-fx-text-fill: #6b7280;">
+                <font><Font name="Segoe UI Semibold" size="11"/></font>
+            </Label>
+            <Label fx:id="totalMoisLabel" text="0.00 DH" style="-fx-text-fill: #1e3a5f;">
+                <font><Font name="Segoe UI Bold" size="18"/></font>
+            </Label>
+        </VBox>
+        
+        <VBox styleClass="glass-stat-card" spacing="4" alignment="CENTER" HBox.hgrow="ALWAYS">
+            <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+            <Label text="📊 Cette Année" style="-fx-text-fill: #6b7280;">
+                <font><Font name="Segoe UI Semibold" size="11"/></font>
+            </Label>
+            <Label fx:id="totalAnneeLabel" text="0.00 DH" style="-fx-text-fill: #1e3a5f;">
+                <font><Font name="Segoe UI Bold" size="18"/></font>
+            </Label>
+        </VBox>
+        
+        <VBox styleClass="glass-stat-card" spacing="4" alignment="CENTER" HBox.hgrow="ALWAYS">
+            <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+            <Label text="📈 Moyenne/Mois" style="-fx-text-fill: #6b7280;">
+                <font><Font name="Segoe UI Semibold" size="11"/></font>
+            </Label>
+            <Label fx:id="moyenneMoisLabel" text="0.00 DH" style="-fx-text-fill: #1e3a5f;">
+                <font><Font name="Segoe UI Bold" size="18"/></font>
+            </Label>
+        </VBox>
+    </HBox>
+    
+    <!-- Main Content -->
+    <HBox spacing="16" VBox.vgrow="ALWAYS">
+        
+        <!-- Table Section -->
+        <VBox styleClass="content-card" spacing="12" HBox.hgrow="ALWAYS">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
             
-            <Label text="Gestion des Dépenses" styleClass="section-title">
-                <font><Font name="System Bold" size="20"/></font>
+            <Label text="📋 Liste des Dépenses" styleClass="card-title">
+                <font><Font name="Segoe UI Bold" size="15"/></font>
             </Label>
             
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="Période:"/>
-                <DatePicker fx:id="dateDebutPicker" promptText="Du"/>
-                <DatePicker fx:id="dateFinPicker" promptText="Au"/>
-                <ComboBox fx:id="categorieFilterCombo" promptText="Catégorie" prefWidth="150"/>
-                <Button fx:id="filterButton" text="Filtrer" styleClass="btn-primary" onAction="#handleFilter"/>
-                <Button fx:id="clearFilterButton" text="Effacer" styleClass="btn-secondary" onAction="#handleClearFilter"/>
-                <Button fx:id="refreshButton" text="Actualiser" styleClass="btn-secondary" onAction="#handleRefresh"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="newButton" text="+ Nouvelle Dépense" styleClass="btn-success" onAction="#handleNew"/>
-            </HBox>
-            
-            <!-- Summary Cards -->
-            <HBox spacing="15">
-                <VBox styleClass="stat-card" spacing="5" HBox.hgrow="ALWAYS">
-                    <Label text="Total Période" styleClass="stat-label"/>
-                    <Label fx:id="totalPeriodeLabel" text="0.00" styleClass="stat-value"/>
-                </VBox>
-                <VBox styleClass="stat-card" spacing="5" HBox.hgrow="ALWAYS">
-                    <Label text="Total Mois" styleClass="stat-label"/>
-                    <Label fx:id="totalMoisLabel" text="0.00" styleClass="stat-value"/>
-                </VBox>
-                <VBox styleClass="stat-card" spacing="5" HBox.hgrow="ALWAYS">
-                    <Label text="Total Année" styleClass="stat-label"/>
-                    <Label fx:id="totalAnneeLabel" text="0.00" styleClass="stat-value"/>
-                </VBox>
-                <VBox styleClass="stat-card" spacing="5" HBox.hgrow="ALWAYS">
-                    <Label text="Moyenne/Mois" styleClass="stat-label"/>
-                    <Label fx:id="moyenneMoisLabel" text="0.00" styleClass="stat-value"/>
-                </VBox>
-            </HBox>
+            <TableView fx:id="depenseTable" VBox.vgrow="ALWAYS" styleClass="modern-table" minHeight="300">
+                <columns>
+                    <TableColumn fx:id="numeroColumn" text="N°" prefWidth="70" minWidth="60"/>
+                    <TableColumn fx:id="dateColumn" text="Date" prefWidth="90" minWidth="80"/>
+                    <TableColumn fx:id="categorieColumn" text="Catégorie" prefWidth="120" minWidth="100"/>
+                    <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="180" minWidth="150"/>
+                    <TableColumn fx:id="montantColumn" text="Montant (DH)" prefWidth="100" minWidth="90"/>
+                    <TableColumn fx:id="recurrentColumn" text="Récurrent" prefWidth="80" minWidth="70"/>
+                </columns>
+            </TableView>
         </VBox>
-    </top>
-    
-    <center>
-        <HBox spacing="15" HBox.hgrow="ALWAYS">
-            <padding><Insets top="10" right="15" bottom="15" left="15"/></padding>
+        
+        <!-- Right Panel: Form + Chart -->
+        <VBox spacing="12" prefWidth="340" minWidth="320" maxWidth="380">
             
-            <!-- Left: Table and Chart -->
-            <VBox spacing="15" HBox.hgrow="ALWAYS" prefWidth="700">
-                <Label text="Liste des Dépenses" styleClass="section-title">
-                    <font><Font name="System Bold" size="14"/></font>
-                </Label>
+            <!-- Form Card -->
+            <VBox styleClass="content-card" spacing="10" VBox.vgrow="ALWAYS">
+                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
                 
-                <TableView fx:id="depenseTable" VBox.vgrow="SOMETIMES" prefHeight="350" styleClass="cart-table">
-                    <columns>
-                        <TableColumn fx:id="numeroColumn" text="Numéro" prefWidth="100"/>
-                        <TableColumn fx:id="dateColumn" text="Date" prefWidth="100"/>
-                        <TableColumn fx:id="categorieColumn" text="Catégorie" prefWidth="120"/>
-                        <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="200"/>
-                        <TableColumn fx:id="montantColumn" text="Montant" prefWidth="90"/>
-                        <TableColumn fx:id="recurrentColumn" text="Récurrent" prefWidth="80"/>
-                    </columns>
-                </TableView>
-                
-                <PieChart fx:id="categoryPieChart" VBox.vgrow="SOMETIMES" prefHeight="250"/>
-            </VBox>
-            
-            <!-- Right: Form -->
-            <VBox spacing="15" prefWidth="400">
-                <VBox spacing="15" styleClass="card" VBox.vgrow="ALWAYS">
-                    <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
-                    
-                    <Label text="Informations Dépense" styleClass="section-title">
-                        <font><Font name="System Bold" size="14"/></font>
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <Label text="✏️"/>
+                    <Label text="Détails" styleClass="card-title">
+                        <font><Font name="Segoe UI Bold" size="14"/></font>
                     </Label>
-                    <Separator/>
-                    
-                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
-                        <GridPane hgap="10" vgap="12">
-                            <Label text="Numéro:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <Label fx:id="numeroLabel" text="Nouveau" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="form-value"/>
-                            
-                            <Label text="Date:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <DatePicker fx:id="dateDepensePicker" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-                            
-                            <Label text="Catégorie:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <ComboBox fx:id="categorieCombo" GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="Catégorie"/>
-                            
-                            <Label text="Montant:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <TextField fx:id="montantField" GridPane.rowIndex="3" GridPane.columnIndex="1" promptText="Montant"/>
-                            
-                            <Label text="Description:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <TextField fx:id="descriptionField" GridPane.rowIndex="4" GridPane.columnIndex="1" promptText="Description"/>
-                            
-                            <Label text="Bénéficiaire:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <TextField fx:id="beneficiaireField" GridPane.rowIndex="5" GridPane.columnIndex="1" promptText="Bénéficiaire"/>
-                            
-                            <Label text="N° Facture:" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <TextField fx:id="numeroFactureField" GridPane.rowIndex="6" GridPane.columnIndex="1" promptText="Numéro facture"/>
-                            
-                            <Label text="Mode Paiement:" GridPane.rowIndex="7" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <ComboBox fx:id="modePaiementCombo" GridPane.rowIndex="7" GridPane.columnIndex="1" promptText="Mode paiement"/>
-                            
-                            <Label text="Récurrent:" GridPane.rowIndex="8" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <CheckBox fx:id="recurrentCheckBox" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
-                            
-                            <Label text="Notes:" GridPane.rowIndex="9" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <TextArea fx:id="notesArea" GridPane.rowIndex="9" GridPane.columnIndex="1" promptText="Notes" prefRowCount="3"/>
-                        </GridPane>
-                    </ScrollPane>
-                </VBox>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="numeroLabel" text="Nouveau" style="-fx-text-fill: #3b82f6; -fx-font-weight: bold;">
+                        <font><Font name="Segoe UI Bold" size="12"/></font>
+                    </Label>
+                </HBox>
                 
-                <HBox spacing="10">
-                    <Button fx:id="saveButton" text="Enregistrer" styleClass="btn-success" onAction="#handleSave"/>
-                    <Button fx:id="updateButton" text="Mettre à jour" styleClass="btn-primary" onAction="#handleUpdate"/>
-                    <Button fx:id="deleteButton" text="Supprimer" styleClass="btn-danger" onAction="#handleDelete"/>
-                    <Button fx:id="clearFormButton" text="Vider" styleClass="btn-secondary" onAction="#handleClearForm"/>
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" 
+                           VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+                    <VBox spacing="8">
+                        <!-- Row 1: Date + Category -->
+                        <HBox spacing="8">
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+                                <Label text="Date *" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
+                                <DatePicker fx:id="dateDepensePicker" styleClass="glass-date-picker" 
+                                           prefHeight="32" maxWidth="Infinity"/>
+                            </VBox>
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+                                <Label text="Catégorie *" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
+                                <ComboBox fx:id="categorieCombo" promptText="Choisir" 
+                                         styleClass="modern-combo" prefHeight="32" maxWidth="Infinity"/>
+                            </VBox>
+                        </HBox>
+                        
+                        <!-- Row 2: Montant + Mode -->
+                        <HBox spacing="8">
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+                                <Label text="Montant (DH) *" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
+                                <TextField fx:id="montantField" promptText="0.00" 
+                                          styleClass="modern-input" prefHeight="32"/>
+                            </VBox>
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+                                <Label text="Mode Paiement" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
+                                <ComboBox fx:id="modePaiementCombo" promptText="Choisir" 
+                                         styleClass="modern-combo" prefHeight="32" maxWidth="Infinity"/>
+                            </VBox>
+                        </HBox>
+                        
+                        <!-- Description -->
+                        <VBox spacing="3">
+                            <Label text="Description *" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
+                            <TextField fx:id="descriptionField" promptText="Description de la dépense" 
+                                      styleClass="modern-input" prefHeight="32"/>
+                        </VBox>
+                        
+                        <!-- Row 3: Beneficiaire + Facture -->
+                        <HBox spacing="8">
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+                                <Label text="Bénéficiaire" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
+                                <TextField fx:id="beneficiaireField" promptText="Nom" 
+                                          styleClass="modern-input" prefHeight="32"/>
+                            </VBox>
+                            <VBox spacing="3" HBox.hgrow="ALWAYS">
+                                <Label text="N° Facture" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
+                                <TextField fx:id="numeroFactureField" promptText="FAC-XXX" 
+                                          styleClass="modern-input" prefHeight="32"/>
+                            </VBox>
+                        </HBox>
+                        
+                        <!-- Recurrent checkbox -->
+                        <CheckBox fx:id="recurrentCheckBox" text="🔁 Dépense récurrente (mensuelle)" 
+                                 styleClass="glass-checkbox">
+                            <font><Font name="Segoe UI" size="11"/></font>
+                        </CheckBox>
+                        
+                        <!-- Notes -->
+                        <VBox spacing="3">
+                            <Label text="Notes" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
+                            <TextArea fx:id="notesArea" promptText="Notes..." 
+                                     styleClass="glass-textarea" prefRowCount="2" wrapText="true"/>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+                
+                <Separator style="-fx-background-color: #e5e7eb;"/>
+                
+                <!-- Action Buttons -->
+                <HBox spacing="8">
+                    <Button fx:id="saveButton" text="💾 Enregistrer" styleClass="btn-primary" 
+                            prefHeight="34" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#handleSave">
+                        <font><Font name="Segoe UI Semibold" size="11"/></font>
+                    </Button>
+                    <Button fx:id="updateButton" text="✏️ Modifier" styleClass="btn-primary" 
+                            prefHeight="34" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#handleUpdate">
+                        <font><Font name="Segoe UI Semibold" size="11"/></font>
+                    </Button>
+                </HBox>
+                <HBox spacing="8">
+                    <Button fx:id="deleteButton" text="🗑️ Supprimer" styleClass="btn-danger-glass" 
+                            prefHeight="34" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#handleDelete">
+                        <font><Font name="Segoe UI Semibold" size="11"/></font>
+                    </Button>
+                    <Button fx:id="clearFormButton" text="🔄 Effacer" styleClass="btn-secondary" 
+                            prefHeight="34" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#handleClearForm">
+                        <font><Font name="Segoe UI Semibold" size="11"/></font>
+                    </Button>
                 </HBox>
             </VBox>
-        </HBox>
-    </center>
-</BorderPane>
+            
+            <!-- Chart Card -->
+            <VBox styleClass="content-card" spacing="8" prefHeight="200" minHeight="180">
+                <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+                
+                <Label text="📊 Répartition par Catégorie" styleClass="card-title">
+                    <font><Font name="Segoe UI Bold" size="13"/></font>
+                </Label>
+                
+                <PieChart fx:id="categoryPieChart" VBox.vgrow="ALWAYS" legendVisible="false"/>
+            </VBox>
+        </VBox>
+    </HBox>
+</VBox>
+

@@ -5,132 +5,116 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.LoginController"
            styleClass="login-container" stylesheets="@../css/styles.css"
            prefWidth="1280" prefHeight="720">
     
-    <!-- Gradient Background -->
-    <VBox styleClass="gradient-background" StackPane.alignment="CENTER"/>
-    
-    <!-- Login Card -->
-    <VBox styleClass="login-card" spacing="25" alignment="CENTER" maxWidth="450" maxHeight="600">
-        <padding>
-            <Insets top="40" right="40" bottom="40" left="40"/>
-        </padding>
+    <VBox spacing="20" alignment="CENTER" maxWidth="420">
         
-        <!-- Logo/Title -->
-        <VBox alignment="CENTER" spacing="10">
-            <Label text="REB7A" styleClass="app-title">
+        <!-- Logo -->
+        <ImageView fitWidth="130" fitHeight="130" preserveRatio="true" styleClass="login-logo">
+            <image><Image url="@../images/reb7a_logo.png"/></image>
+        </ImageView>
+        
+        <!-- Title -->
+        <VBox alignment="CENTER" spacing="4">
+            <Label text="Bienvenue sur REB7A" styleClass="login-title">
                 <font>
-                    <Font name="System Bold" size="42"/>
+                    <Font name="Segoe UI Black" size="28"/>
                 </font>
             </Label>
-            <Label text="Point de Vente" styleClass="app-subtitle">
+            <Label text="Connectez-vous pour acceder au systeme" styleClass="login-subtitle">
                 <font>
-                    <Font name="System" size="18"/>
+                    <Font name="Segoe UI" size="13"/>
                 </font>
             </Label>
-            <Separator prefWidth="200"/>
         </VBox>
         
         <!-- Login Form -->
-        <VBox spacing="20" VBox.vgrow="ALWAYS">
+        <VBox spacing="14" maxWidth="420">
             
             <!-- Username Field -->
-            <VBox spacing="8">
-                <Label text="Nom d'utilisateur" styleClass="form-label">
+            <VBox spacing="6">
+                <Label text="Nom d'utilisateur" styleClass="filter-label">
                     <font>
-                        <Font name="System Bold" size="13"/>
+                        <Font name="Segoe UI Semibold" size="12"/>
                     </font>
                 </Label>
-                <TextField fx:id="txtUsername" promptText="Entrez votre nom d'utilisateur" 
-                          styleClass="login-field" prefHeight="45">
+                <TextField fx:id="txtUsername" promptText="Entrez votre identifiant" 
+                          styleClass="glass-input" prefHeight="44">
                     <font>
-                        <Font size="14"/>
+                        <Font name="Segoe UI" size="13"/>
                     </font>
                 </TextField>
             </VBox>
             
             <!-- Password Field -->
-            <VBox spacing="8">
-                <Label text="Mot de passe" styleClass="form-label">
+            <VBox spacing="6">
+                <Label text="Mot de passe" styleClass="filter-label">
                     <font>
-                        <Font name="System Bold" size="13"/>
+                        <Font name="Segoe UI Semibold" size="12"/>
                     </font>
                 </Label>
                 <PasswordField fx:id="txtPassword" promptText="Entrez votre mot de passe" 
-                              styleClass="login-field" prefHeight="45">
+                              styleClass="glass-input" prefHeight="44">
                     <font>
-                        <Font size="14"/>
+                        <Font name="Segoe UI" size="13"/>
                     </font>
                 </PasswordField>
             </VBox>
             
-            <!-- Remember Me -->
+            <!-- Remember Me & Forgot Password -->
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <CheckBox fx:id="chkRememberMe" text="Se souvenir de moi" styleClass="remember-checkbox">
                     <font>
-                        <Font size="12"/>
+                        <Font name="Segoe UI" size="12"/>
                     </font>
                 </CheckBox>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Hyperlink text="Mot de passe oublié?" styleClass="forgot-link">
+                <Hyperlink text="Mot de passe oublie?" styleClass="forgot-link">
                     <font>
-                        <Font size="12"/>
+                        <Font name="Segoe UI Semibold" size="12"/>
                     </font>
                 </Hyperlink>
             </HBox>
             
             <!-- Error Label -->
-            <Label fx:id="lblError" text="" styleClass="error-label" wrapText="true" 
-                   visible="false" maxWidth="Infinity">
-                <font>
-                    <Font size="13"/>
-                </font>
+            <Label fx:id="lblError" text="" wrapText="true" 
+                   visible="false" maxWidth="Infinity"
+                   style="-fx-text-fill: #DC2626; -fx-background-color: #FEE2E2; -fx-background-radius: 8; -fx-padding: 12; -fx-font-size: 12px; -fx-font-weight: 600; -fx-border-color: #FCA5A5; -fx-border-width: 1; -fx-border-radius: 8;">
             </Label>
             
             <!-- Login Button -->
             <Button fx:id="btnLogin" text="Se connecter" onAction="#handleLogin" 
-                   styleClass="btn-login" maxWidth="Infinity" prefHeight="50">
+                   styleClass="btn-primary, btn-pill" maxWidth="Infinity" prefHeight="46">
                 <font>
-                    <Font name="System Bold" size="16"/>
+                    <Font name="Segoe UI Bold" size="14"/>
                 </font>
+                <VBox.margin>
+                    <Insets top="4"/>
+                </VBox.margin>
             </Button>
             
-            <!-- Create Account Button -->
-            <Button text="Créer un compte" onAction="#handleRegister" 
-                   styleClass="btn-secondary" maxWidth="Infinity" prefHeight="40">
+            <!-- Secondary Button -->
+            <Button text="Creer un compte" onAction="#handleRegister" 
+                   styleClass="btn-secondary" maxWidth="Infinity" prefHeight="42">
                 <font>
-                    <Font name="System" size="14"/>
-                </font>
-            </Button>
-            
-            <!-- Cancel Button -->
-            <Button text="Quitter" onAction="#handleCancel" styleClass="btn-cancel" 
-                   maxWidth="Infinity" prefHeight="40">
-                <font>
-                    <Font name="System" size="14"/>
+                    <Font name="Segoe UI Semibold" size="13"/>
                 </font>
             </Button>
             
         </VBox>
         
         <!-- Footer -->
-        <VBox alignment="CENTER" spacing="5">
-            <Separator prefWidth="300"/>
-            <Label text="Gestion de Stock v1.0" styleClass="footer-label">
-                <font>
-                    <Font size="11"/>
-                </font>
-            </Label>
-            <Label text="© 2024 Reb7a Supermarché" styleClass="footer-label">
-                <font>
-                    <Font size="10"/>
-                </font>
-            </Label>
+        <VBox alignment="CENTER" spacing="4">
+            <VBox.margin>
+                <Insets top="16"/>
+            </VBox.margin>
+            <Label text="(c) 2025 REB7A - Systeme de Gestion POS" style="-fx-text-fill: #8B8B8B; -fx-font-size: 11px; -fx-font-weight: 500;"/>
+            <Label text="Version 1.0.0" style="-fx-text-fill: #9CA3AF; -fx-font-size: 10px; -fx-font-weight: 400;"/>
         </VBox>
-        
     </VBox>
     
 </StackPane>

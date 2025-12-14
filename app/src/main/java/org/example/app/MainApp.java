@@ -32,12 +32,13 @@ public class MainApp extends Application {
         Parent root = loader.load();
         
         // Configure primary stage
-        Scene scene = new Scene(root, 400, 500);
+        Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
         
         primaryStage.setTitle(APP_TITLE + " - Connexion");
         primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
     

@@ -10,6 +10,8 @@ import org.example.model.entity.Produit;
 import org.example.model.entity.Categorie;
 import org.example.model.service.MagasinService;
 import org.example.dao.ProduitDAO;
+import org.example.util.InputValidator;
+import org.example.exception.ValidationException;
 
 import java.net.URL;
 import java.util.List;
@@ -222,36 +224,60 @@ public class ProduitController implements Initializable {
     }
     
     private boolean validerFormulaire() {
-        if (txtCode.getText().isEmpty() || txtNom.getText().isEmpty()) {
-            afficherMessage("Validation", "Code et Nom sont obligatoires", Alert.AlertType.WARNING);
-            return false;
-        }
-        
         try {
-            Double.parseDouble(txtPrix.getText());
-            Integer.parseInt(txtStock.getText());
+            // Validate code (required, alphanumeric)
+            InputValidator.validateNotEmpty(txtCode.getText(), "Code");
+            InputValidator.validateCode(txtCode.getText(), "Code");
+            
+            // Validate name (required, min 3 chars)
+            InputValidator.validateMinLength(txtNom.getText(), "Nom", 3);
+            InputValidator.validateMaxLength(txtNom.getText(), "Nom", 100);
+            
+            // Validate price (positive number)
+            double prix = Double.parseDouble(txtPrix.getText());
+            InputValidator.validatePositive(prix, "Prix");
+            
+            // Validate stock (non-negative integer)
+            int stock = Integer.parseInt(txtStock.getText());
+            InputValidator.validateNonNegative(stock, "Stock");
+            
+            // Validate alert threshold (positive integer)
+            int seuil = Integer.parseInt(txtSeuilAlerte.getText());
+            InputValidator.validatePositive(seuil, "Seuil d'alerte");
+            
+            // Validate unit (required)
+            InputValidator.validateNotEmpty(txtUnite.getText(), "Unité");
+            
+            return true;
+            
+        } catch (ValidationException e) {
+            afficherMessage("Erreur de validation", e.getMessage(), Alert.AlertType.WARNING);
+            return false;
         } catch (NumberFormatException e) {
-            afficherMessage("Validation", "Prix et Stock doivent être numériques", Alert.AlertType.WARNING);
+            afficherMessage("Erreur de saisie", 
+                "Prix et Stock doivent être des nombres valides", 
+                Alert.AlertType.WARNING);
             return false;
         }
-        
-        return true;
     }
     
     private Produit creerProduitDepuisFormulaire() {
         Produit produit = new Produit();
-        produit.setCode(txtCode.getText());
-        produit.setNom(txtNom.getText());
-        produit.setDescription(txtDescription.getText());
+        
+        // Normalize and set values
+        produit.setCode(InputValidator.normalizeCode(txtCode.getText()));
+        produit.setNom(txtNom.getText().trim());
+        produit.setDescription(txtDescription.getText().trim());
         produit.setPrix(Double.parseDouble(txtPrix.getText()));
         produit.setQuantiteStock(Integer.parseInt(txtStock.getText()));
         produit.setSeuilAlerte(Integer.parseInt(txtSeuilAlerte.getText()));
         produit.setCategorie(cmbCategorie.getValue());
-        produit.setUnite(txtUnite.getText());
+        produit.setUnite(txtUnite.getText().trim());
         produit.setDateExpiration(dateExpiration.getValue());
-        produit.setFournisseur(txtFournisseur.getText());
-        produit.setEmplacement(txtEmplacement.getText());
+        produit.setFournisseur(txtFournisseur.getText().trim());
+        produit.setEmplacement(txtEmplacement.getText().trim());
         produit.setActif(chkActif.isSelected());
+        
         return produit;
     }
     

@@ -31,8 +31,7 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
     
     // FXML Components - Header
-    @FXML private Label lblUsername;
-    @FXML private Label lblRole;
+    
     @FXML private Button btnLogout;
     
     // FXML Components - Navigation Buttons
@@ -48,6 +47,7 @@ public class MainController implements Initializable {
     @FXML private Button btnDepenses;
     @FXML private Button btnRapports;
     @FXML private Button btnStatistiques;
+    @FXML private Button btnSettings; 
     
     // FXML Components - Content Area
     @FXML private StackPane contentArea;
@@ -76,8 +76,7 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Set user info - in production, get from authenticated session
-        lblUsername.setText("Admin User");
-        lblRole.setText("Administrateur");
+        
         
         // Set date
         updateDate();
@@ -263,6 +262,7 @@ public class MainController implements Initializable {
     @FXML
     private void handleSettingsView() {
         loadView("store_settings_view.fxml", "Paramètres du Magasin");
+          setActiveButton(btnSettings);
     }
     
     /**
@@ -320,23 +320,41 @@ public class MainController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + fxmlFile));
             Parent view = loader.load();
             
-            // Wrap view in ScrollPane for scrolling capability
-            javafx.scene.control.ScrollPane scrollPane = new javafx.scene.control.ScrollPane(view);
-            scrollPane.setFitToWidth(true);
-            scrollPane.setFitToHeight(true);
-            scrollPane.setHbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.AS_NEEDED);
-            scrollPane.setVbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.AS_NEEDED);
-            scrollPane.setStyle("-fx-background-color: transparent;");
-            
-            // Make the view take full available space
-            if (view instanceof javafx.scene.layout.Region) {
-                javafx.scene.layout.Region region = (javafx.scene.layout.Region) view;
-                region.prefWidthProperty().bind(contentArea.widthProperty());
-                region.prefHeightProperty().bind(contentArea.heightProperty());
+            // Check if the view is already a ScrollPane (avoid double wrapping)
+            javafx.scene.Node nodeToAdd;
+            if (view instanceof javafx.scene.control.ScrollPane) {
+                // View already has its own ScrollPane - use it directly
+                javafx.scene.control.ScrollPane existingScrollPane = (javafx.scene.control.ScrollPane) view;
+                existingScrollPane.setFitToWidth(true);
+                existingScrollPane.setFitToHeight(true);  // Fill available height
+                existingScrollPane.prefWidthProperty().bind(contentArea.widthProperty());
+                existingScrollPane.prefHeightProperty().bind(contentArea.heightProperty());
+                nodeToAdd = existingScrollPane;
+            } else {
+                // Wrap view in ScrollPane for scrolling capability
+                javafx.scene.control.ScrollPane scrollPane = new javafx.scene.control.ScrollPane(view);
+                scrollPane.setFitToWidth(true);
+                scrollPane.setFitToHeight(true);  // Fill available height initially
+                scrollPane.setHbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.NEVER);
+                scrollPane.setVbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.AS_NEEDED);
+                scrollPane.setStyle("-fx-background-color: transparent;");
+                scrollPane.getStyleClass().add("main-scroll");
+                
+                // Bind ScrollPane to fill contentArea
+                scrollPane.prefWidthProperty().bind(contentArea.widthProperty());
+                scrollPane.prefHeightProperty().bind(contentArea.heightProperty());
+                
+                // Make the view take full available width
+                if (view instanceof javafx.scene.layout.Region) {
+                    javafx.scene.layout.Region region = (javafx.scene.layout.Region) view;
+                    region.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20)); // Account for scrollbar
+                }
+                
+                nodeToAdd = scrollPane;
             }
             
             contentArea.getChildren().clear();
-            contentArea.getChildren().add(scrollPane);
+            contentArea.getChildren().add(nodeToAdd);
             
             lblStatus.setText(viewName + " chargé avec succès");
             

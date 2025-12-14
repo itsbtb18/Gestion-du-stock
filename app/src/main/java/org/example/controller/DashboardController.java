@@ -117,6 +117,9 @@ public class DashboardController implements Initializable {
         
         colSaleAmount.setCellValueFactory(cellData -> 
             new SimpleStringProperty(String.format("%.2f DH", cellData.getValue().getMontantFinal())));
+
+        // Fix: Remove extra empty column by using unconstrained resize policy
+        recentSalesTable.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
     }
     
     /**

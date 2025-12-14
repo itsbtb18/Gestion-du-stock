@@ -30,9 +30,11 @@ import java.util.Optional;
  */
 public class CaisseController {
 
-    // Constants
-    private static final double TVA_RATE = 0.20; // 20% VAT
-
+    // Services
+    private final ProduitService produitService = ProduitService.getInstance();
+    private final ClientService clientService = ClientService.getInstance();
+    private final VenteService venteService = VenteService.getInstance();
+    private final PromotionService promotionService = PromotionService.getInstance();
     // FXML UI Components - Product Search
     @FXML private TextField productCodeField;
     @FXML private Button searchProductButton;
@@ -72,12 +74,6 @@ public class CaisseController {
     // FXML UI Components - Receipt
     @FXML private TextArea receiptArea;
     @FXML private Button printReceiptButton;
-
-    // Services
-    private final ProduitService produitService = ProduitService.getInstance();
-    private final ClientService clientService = ClientService.getInstance();
-    private final VenteService venteService = VenteService.getInstance();
-    private final PromotionService promotionService = PromotionService.getInstance();
 
     // State
     private ObservableList<CartItem> cartItems = FXCollections.observableArrayList();
@@ -397,13 +393,24 @@ public class CaisseController {
 
         double discountAmount = subtotal * (discountPercent / 100.0);
         double subtotalAfterDiscount = subtotal - discountAmount;
-        double tvaAmount = subtotalAfterDiscount * TVA_RATE;
+        
+        // Get TVA rate from StoreContext
+        double tvaRate = StoreContext.getInstance().getVatRate();
+        double tvaAmount = subtotalAfterDiscount * tvaRate;
         double total = subtotalAfterDiscount + tvaAmount;
 
         subtotalLabel.setText(String.format("%.2f DH", subtotal));
         discountLabel.setText(String.format("-%.2f DH (%.1f%%)", discountAmount, discountPercent));
-        tvaLabel.setText(String.format("%.2f DH (20%%)", tvaAmount));
+        tvaLabel.setText(String.format("%.2f DH (%.0f%%)", tvaAmount, tvaRate * 100));
         totalLabel.setText(String.format("%.2f DH", total));
+    }
+
+    /**
+     * Process payment - alias for handleValidateSale
+     */
+    @FXML
+    private void handleProcessPayment() {
+        handleValidateSale();
     }
 
     /**

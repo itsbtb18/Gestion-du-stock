@@ -1,6 +1,8 @@
 package org.example.db;
 
 import org.example.app.AppConfig;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,14 +14,18 @@ import java.io.IOException;
 
 /**
  * DatabaseConnection - Singleton for managing database connections
- * Thread-safe implementation with H2 embedded database support
+ * Thread-safe implementation with H2 embedded database and HikariCP connection pooling
  */
 public class DatabaseConnection {
     
     // Singleton instance
     private static volatile DatabaseConnection instance;
     
-    // Database connection
+    // Connection pool
+    private HikariDataSource dataSource;
+    
+    // Legacy single connection (deprecated, kept for backward compatibility)
+    @Deprecated
     private Connection connection;
     
     // Database configuration
@@ -91,17 +97,42 @@ public class DatabaseConnection {
     }
     
     /**
-     * Establish database connection and initialize schema
+     * Establish database connection pool and initialize schema
      */
     private void establishConnection() {
         try {
             // Load JDBC driver
             Class.forName(driver);
             
-            // Establish connection
-            this.connection = DriverManager.getConnection(url, username, password);
+            // Configure HikariCP connection pool
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl(url);
+            config.setUsername(username);
+            config.setPassword(password);
+            config.setDriverClassName(driver);
             
-            System.out.println("Database connection established successfully");
+            // Pool configuration
+            config.setMaximumPoolSize(10);
+            config.setMinimumIdle(2);
+            config.setConnectionTimeout(30000); // 30 seconds
+            config.setIdleTimeout(600000); // 10 minutes
+            config.setMaxLifetime(1800000); // 30 minutes
+            config.setConnectionTestQuery("SELECT 1");
+            config.setPoolName("Reb7a-DB-Pool");
+            
+            // Performance settings
+            config.addDataSourceProperty("cachePrepStmts", "true");
+            config.addDataSourceProperty("prepStmtCacheSize", "250");
+            config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+            
+            // Create data source
+            this.dataSource = new HikariDataSource(config);
+            
+            // Legacy: Get single connection for backward compatibility
+            this.connection = dataSource.getConnection();
+            
+            System.out.println("Database connection pool established successfully");
+            System.out.println("Pool size: " + config.getMaximumPoolSize() + " connections");
             
             // Initialize database schema if not already done
             if (!schemaInitialized) {
@@ -189,12 +220,18 @@ public class DatabaseConnection {
     }
     
     /**
-     * Get the database connection
-     * @return the database connection
-     * @throws SQLException if connection is closed or null
+     * Get a database connection from the pool
+     * Callers MUST close the connection after use to return it to the pool
+     * @return a database connection from the pool
+     * @throws SQLException if connection cannot be obtained
      */
     public Connection getConnection() throws SQLException {
-        // Check if connection is closed or null, reconnect if needed
+        // Use connection pool if available
+        if (dataSource != null && !dataSource.isClosed()) {
+            return dataSource.getConnection();
+        }
+        
+        // Fallback to legacy single connection
         if (connection == null || connection.isClosed()) {
             establishConnection();
         }
@@ -202,10 +239,26 @@ public class DatabaseConnection {
     }
     
     /**
-     * Close the database connection
+     * Get the connection pool data source (for advanced usage)
+     * @return the HikariDataSource instance
+     */
+    public HikariDataSource getDataSource() {
+        return dataSource;
+    }
+    
+    /**
+     * Close the database connection pool
+     * This should only be called at application shutdown
      */
     public void closeConnection() {
         try {
+            // Close connection pool
+            if (dataSource != null && !dataSource.isClosed()) {
+                dataSource.close();
+                System.out.println("Database connection pool closed");
+            }
+            
+            // Close legacy connection
             if (connection != null && !connection.isClosed()) {
                 connection.close();
                 System.out.println("Database connection closed");

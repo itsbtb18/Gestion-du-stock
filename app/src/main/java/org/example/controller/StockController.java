@@ -147,6 +147,12 @@ public class StockController implements Initializable {
     }
     
     @FXML
+    private void handleActualiser() {
+        chargerMouvements();
+        mettreAJourNombreAlertes();
+    }
+    
+    @FXML
     private void handleVoirAlertes() {
         List<Produit> produitsEnAlerte = produitDAO.findAll().stream()
             .filter(p -> p.getQuantiteStock() < p.getSeuilAlerte())
@@ -187,6 +193,11 @@ public class StockController implements Initializable {
         }
         
         return true;
+    }
+    
+    @FXML
+    private void handleReinitialiser() {
+        resetForm();
     }
     
     private void resetForm() {
