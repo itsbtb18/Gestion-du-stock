@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * DAO pour la gestion des transferts de stock entre emplacements
- */
 public class TransfertStockDAO {
 
     private final DatabaseConnection dbConnection;
@@ -25,9 +22,6 @@ public class TransfertStockDAO {
     private final LotDAO lotDAO = new LotDAO();
     private final UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
 
-    /**
-     * Sauvegarde un nouveau transfert
-     */
     public TransfertStock save(TransfertStock transfert) throws SQLException {
         String sql = "INSERT INTO transferts_stock (numero_transfert, date_transfert, " +
                 "emplacement_source_id, emplacement_destination_id, produit_id, lot_id, quantite, " +
@@ -74,9 +68,6 @@ public class TransfertStockDAO {
         }
     }
 
-    /**
-     * Met Ã  jour un transfert
-     */
     public void update(TransfertStock transfert) throws SQLException {
         String sql = "UPDATE transferts_stock SET statut = ?, valide_par_user_id = ?, " +
                 "motif = ?, commentaire = ? WHERE id = ?";
@@ -100,9 +91,6 @@ public class TransfertStockDAO {
         }
     }
 
-    /**
-     * Met Ã  jour le statut d'un transfert
-     */
     public void updateStatut(Long id, StatutTransfert statut, Long validePar) throws SQLException {
         String sql = "UPDATE transferts_stock SET statut = ?, valide_par_user_id = ? WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -120,9 +108,6 @@ public class TransfertStockDAO {
         }
     }
 
-    /**
-     * Supprime un transfert
-     */
     public void delete(Long id) throws SQLException {
         String sql = "DELETE FROM transferts_stock WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -132,9 +117,6 @@ public class TransfertStockDAO {
         }
     }
 
-    /**
-     * Recherche un transfert par ID
-     */
     public Optional<TransfertStock> findById(Long id) throws SQLException {
         String sql = "SELECT * FROM transferts_stock WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -149,9 +131,6 @@ public class TransfertStockDAO {
         return Optional.empty();
     }
 
-    /**
-     * Recherche un transfert par numÃ©ro
-     */
     public Optional<TransfertStock> findByNumero(String numero) throws SQLException {
         String sql = "SELECT * FROM transferts_stock WHERE numero_transfert = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -166,9 +145,6 @@ public class TransfertStockDAO {
         return Optional.empty();
     }
 
-    /**
-     * Retourne tous les transferts
-     */
     public List<TransfertStock> findAll() throws SQLException {
         String sql = "SELECT * FROM transferts_stock ORDER BY date_transfert DESC";
         List<TransfertStock> transferts = new ArrayList<>();
@@ -184,9 +160,6 @@ public class TransfertStockDAO {
         return transferts;
     }
 
-    /**
-     * Retourne les transferts par statut
-     */
     public List<TransfertStock> findByStatut(StatutTransfert statut) throws SQLException {
         String sql = "SELECT * FROM transferts_stock WHERE statut = ? ORDER BY date_transfert DESC";
         List<TransfertStock> transferts = new ArrayList<>();
@@ -203,9 +176,6 @@ public class TransfertStockDAO {
         return transferts;
     }
 
-    /**
-     * Retourne les transferts par emplacement source
-     */
     public List<TransfertStock> findByEmplacementSource(Long emplacementId) throws SQLException {
         String sql = "SELECT * FROM transferts_stock WHERE emplacement_source_id = ? " +
                 "ORDER BY date_transfert DESC";
@@ -223,9 +193,6 @@ public class TransfertStockDAO {
         return transferts;
     }
 
-    /**
-     * Retourne les transferts par emplacement destination
-     */
     public List<TransfertStock> findByEmplacementDestination(Long emplacementId) throws SQLException {
         String sql = "SELECT * FROM transferts_stock WHERE emplacement_destination_id = ? " +
                 "ORDER BY date_transfert DESC";
@@ -243,9 +210,6 @@ public class TransfertStockDAO {
         return transferts;
     }
 
-    /**
-     * Retourne les transferts par produit
-     */
     public List<TransfertStock> findByProduit(Long produitId) throws SQLException {
         String sql = "SELECT * FROM transferts_stock WHERE produit_id = ? ORDER BY date_transfert DESC";
         List<TransfertStock> transferts = new ArrayList<>();
@@ -262,16 +226,10 @@ public class TransfertStockDAO {
         return transferts;
     }
 
-    /**
-     * Retourne les transferts en attente
-     */
     public List<TransfertStock> findEnAttente() throws SQLException {
         return findByStatut(StatutTransfert.EN_ATTENTE);
     }
 
-    /**
-     * Convertit un ResultSet en TransfertStock
-     */
     private TransfertStock mapResultSetToTransfert(ResultSet rs) throws SQLException {
         TransfertStock transfert = new TransfertStock();
         transfert.setId(rs.getLong("id"));

@@ -187,11 +187,12 @@ INSERT INTO produits (code, nom, description, prix, quantite_stock, seuil_alerte
 ('PROD009', 'Jus d''orange 1L', 'Pur jus sans sucre ajouté', 2.80, 100, 20, 2, 'L', 'FruitsFrais', 'A2-05'),
 ('PROD010', 'Lessive liquide 2L', 'Lessive concentrée 40 lavages', 12.50, 45, 10, 4, 'L', 'CleanHome', 'D2-01');
 
--- Sample Admin User
+-- Sample Admin User (passwords are BCrypt hashed)
+-- Plain text passwords: admin/admin, gerant/gerant, caissier1/caisse
 INSERT INTO utilisateurs (username, password, nom, prenom, email, role) VALUES
-('admin', 'admin123', 'Admin', 'System', 'admin@reb7a.com', 'ADMIN'),
-('gerant', 'gerant123', 'Martin', 'Sophie', 'sophie.martin@reb7a.com', 'GERANT'),
-('caissier1', 'caisse123', 'Dubois', 'Pierre', 'pierre.dubois@reb7a.com', 'CAISSIER');
+('admin', '$2a$12$oq7YVpwQBfWWJ.wZaLbqO.HslUpDWHTzCDI5FVwH3WG7iq5e8dfS', 'Admin', 'System', 'admin@reb7a.com', 'ADMIN'),
+('gerant', '$2a$12$Jo5aVpCYKVJW6oPqhePlm.X3UmYgafVgkZlWmyEihr1lxgFKXY2EG', 'Martin', 'Sophie', 'sophie.martin@reb7a.com', 'GERANT'),
+('caissier1', '$2a$12$wWc8WR9gOgsZpK/RvkdvaOwRJqGJu0I8kIebA4si1Uj9eqF6K/Hvq', 'Dubois', 'Pierre', 'pierre.dubois@reb7a.com', 'CAISSIER');
 
 -- Sample Clients
 INSERT INTO clients (code, nom, prenom, telephone, email, adresse, type_client, total_achats, points_fidelite) VALUES

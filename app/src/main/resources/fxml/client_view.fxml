@@ -221,7 +221,7 @@
                                         <Font name="Segoe UI Semibold" size="12"/>
                                     </font>
                                 </Label>
-                                <Label fx:id="totalAchatsLabel" text="0.00 DH" styleClass="glass-value-label"
+                                <Label fx:id="totalAchatsLabel" text="0.00 DZD" styleClass="glass-value-label"
                                       prefHeight="40" alignment="CENTER_LEFT">
                                     <font>
                                         <Font name="Segoe UI Bold" size="14"/>

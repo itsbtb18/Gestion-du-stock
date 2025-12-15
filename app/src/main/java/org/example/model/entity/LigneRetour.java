@@ -1,13 +1,10 @@
 package org.example.model.entity;
 
-/**
- * LigneRetour - Line item for a return
- */
 public class LigneRetour {
     
     private Long id;
     private Retour retour;
-    private LigneVente ligneVenteOriginale; // Original sale line
+    private LigneVente ligneVenteOriginale; 
     private Produit produit;
     private int quantiteRetournee;
     private int quantiteOriginale;
@@ -31,7 +28,6 @@ public class LigneRetour {
         this.montantLigne = quantiteRetournee * prixUnitaire;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

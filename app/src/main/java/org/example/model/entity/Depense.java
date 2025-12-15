@@ -2,9 +2,6 @@ package org.example.model.entity;
 
 import java.time.LocalDate;
 
-/**
- * Depense - Expense tracking entity
- */
 public class Depense {
     
     private Long id;
@@ -17,9 +14,9 @@ public class Depense {
     private Fournisseur fournisseur;
     private Utilisateur saisiParUser;
     private String numeroFacture;
-    private boolean recurrente; // Is it recurring
-    private FrequenceDepense frequence; // Daily, Weekly, Monthly
-    private String justificatif; // Path to receipt/invoice file
+    private boolean recurrente; 
+    private FrequenceDepense frequence; 
+    private String justificatif; 
     private String commentaire;
     
     public Depense() {
@@ -27,7 +24,6 @@ public class Depense {
         this.recurrente = false;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -148,13 +144,12 @@ public class Depense {
         this.commentaire = commentaire;
     }
     
-    // Alias methods for beneficiaire and notes
     public String getBeneficiaire() {
         return fournisseur != null ? fournisseur.getNom() : "";
     }
     
     public void setBeneficiaire(String beneficiaire) {
-        // This is informational only, actual fournisseur should be set via setFournisseur
+        
     }
     
     public String getNotes() {

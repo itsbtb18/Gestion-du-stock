@@ -2,26 +2,23 @@ package org.example.model.entity;
 
 import java.time.LocalDateTime;
 
-/**
- * Notification - System notification entity
- */
 public class Notification {
     
     private Long id;
     private String titre;
     private String message;
-    private TypeNotification type; // INFO, WARNING, ERROR, SUCCESS
-    private PrioriteNotification priorite; // BASSE, NORMALE, HAUTE, URGENTE
+    private TypeNotification type; 
+    private PrioriteNotification priorite; 
     private LocalDateTime dateCreation;
     private LocalDateTime dateEnvoi;
-    private Utilisateur destinataire; // Null for broadcast
+    private Utilisateur destinataire; 
     private boolean lu;
     private LocalDateTime dateLecture;
-    private String lienAction; // URL or action identifier
+    private String lienAction; 
     private boolean envoiEmail;
     private boolean envoiSMS;
-    private String entiteRelated; // Related entity type
-    private Long entiteId; // Related entity ID
+    private String entiteRelated; 
+    private Long entiteId; 
     
     public Notification() {
         this.dateCreation = LocalDateTime.now();
@@ -43,7 +40,6 @@ public class Notification {
         this.dateLecture = LocalDateTime.now();
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

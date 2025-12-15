@@ -2,20 +2,16 @@ package org.example.model.entity;
 
 import java.time.LocalDateTime;
 
-/**
- * TransactionFidelite - Entity representing a loyalty points transaction
- */
 public class TransactionFidelite {
     
     private Long id;
     private CarteFidelite carte;
-    private String type; // GAIN, UTILISATION, EXPIRATION, AJUSTEMENT
+    private String type; 
     private int points;
     private LocalDateTime dateTransaction;
-    private Vente vente; // Optional reference to related sale
+    private Vente vente; 
     private String description;
     
-    // Constructors
     public TransactionFidelite() {
         this.dateTransaction = LocalDateTime.now();
     }
@@ -28,7 +24,6 @@ public class TransactionFidelite {
         this.description = description;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

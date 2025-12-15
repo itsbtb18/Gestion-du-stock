@@ -2,9 +2,6 @@ package org.example.model.entity;
 
 import java.time.LocalDateTime;
 
-/**
- * Caisse - Cash drawer/register entity for managing cash
- */
 public class Caisse {
     
     private Long id;
@@ -18,7 +15,7 @@ public class Caisse {
     private Double totalVentesCarte;
     private Double totalVentesAutre;
     private Double totalDepenses;
-    private Double ecart; // Difference entre attendu et réel
+    private Double ecart; 
     private StatutCaisse statut;
     private String commentaire;
     
@@ -52,7 +49,6 @@ public class Caisse {
         return totalVentesEspeces + totalVentesCarte + totalVentesAutre;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

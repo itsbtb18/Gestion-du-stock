@@ -5,19 +5,13 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
-/**
- * EmailUtil - Utility class for sending emails
- */
 public class EmailUtil {
     
-    private static final String SMTP_HOST = "smtp.gmail.com"; // Configure for your email provider
+    private static final String SMTP_HOST = "smtp.gmail.com"; 
     private static final String SMTP_PORT = "587";
-    private static final String FROM_EMAIL = "noreply@reb7a.com"; // Configure
-    private static final String EMAIL_PASSWORD = "your_password"; // Use environment variable in production
+    private static final String FROM_EMAIL = "noreply@reb7a.com"; 
+    private static final String EMAIL_PASSWORD = "your_password"; 
     
-    /**
-     * Send email
-     */
     public static boolean sendEmail(String to, String subject, String body) {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -49,9 +43,6 @@ public class EmailUtil {
         }
     }
     
-    /**
-     * Send HTML email
-     */
     public static boolean sendHTMLEmail(String to, String subject, String htmlBody) {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -83,9 +74,6 @@ public class EmailUtil {
         }
     }
     
-    /**
-     * Send receipt by email
-     */
     public static boolean sendReceipt(String to, String customerName, String receiptNumber, double total) {
         String subject = "Votre reçu #" + receiptNumber;
         String body = String.format(
@@ -101,9 +89,6 @@ public class EmailUtil {
         return sendEmail(to, subject, body);
     }
     
-    /**
-     * Send low stock alert
-     */
     public static boolean sendLowStockAlert(String to, String productName, int quantity) {
         String subject = "⚠️ Alerte Stock Bas - " + productName;
         String body = String.format(
@@ -118,9 +103,6 @@ public class EmailUtil {
         return sendEmail(to, subject, body);
     }
     
-    /**
-     * Send expiration alert
-     */
     public static boolean sendExpirationAlert(String to, String productName, String expirationDate) {
         String subject = "⚠️ Alerte Expiration - " + productName;
         String body = String.format(

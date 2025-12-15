@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * DAO pour la gestion des caisses (sessions de caisse)
- */
 public class CaisseDAO {
 
     private final DatabaseConnection dbConnection;
@@ -22,9 +19,6 @@ public class CaisseDAO {
 
     private final UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
 
-    /**
-     * Ouvre une nouvelle session de caisse
-     */
     public Caisse save(Caisse caisse) throws SQLException {
         String sql = "INSERT INTO caisses (numero_caisse, caissier_id, date_ouverture, date_fermeture, " +
                 "solde_depart_especes, solde_fin_especes, total_ventes_especes, total_ventes_carte, " +
@@ -66,9 +60,6 @@ public class CaisseDAO {
         }
     }
 
-    /**
-     * Met Ã  jour une session de caisse
-     */
     public void update(Caisse caisse) throws SQLException {
         String sql = "UPDATE caisses SET date_fermeture = ?, solde_fin_especes = ?, " +
                 "total_ventes_especes = ?, total_ventes_carte = ?, total_ventes_autre = ?, " +
@@ -97,9 +88,6 @@ public class CaisseDAO {
         }
     }
 
-    /**
-     * Ferme une session de caisse
-     */
     public void fermerCaisse(Long id, double soldeFinEspeces, String commentaire) throws SQLException {
         String sql = "SELECT * FROM caisses WHERE id = ?";
         
@@ -118,9 +106,6 @@ public class CaisseDAO {
         }
     }
 
-    /**
-     * Met Ã  jour le statut d'une caisse
-     */
     public void updateStatut(Long id, StatutCaisse statut) throws SQLException {
         String sql = "UPDATE caisses SET statut = ? WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -131,9 +116,6 @@ public class CaisseDAO {
         }
     }
 
-    /**
-     * Recherche une caisse par ID
-     */
     public Optional<Caisse> findById(Long id) throws SQLException {
         String sql = "SELECT * FROM caisses WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -148,9 +130,6 @@ public class CaisseDAO {
         return Optional.empty();
     }
 
-    /**
-     * Recherche une caisse par numÃ©ro
-     */
     public Optional<Caisse> findByNumero(String numero) throws SQLException {
         String sql = "SELECT * FROM caisses WHERE numero_caisse = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -165,9 +144,6 @@ public class CaisseDAO {
         return Optional.empty();
     }
 
-    /**
-     * Retourne la caisse actuellement ouverte pour un caissier
-     */
     public Optional<Caisse> findCaisseOuverte(Long caissierId) throws SQLException {
         String sql = "SELECT * FROM caisses WHERE caissier_id = ? AND statut = 'OUVERTE' " +
                 "ORDER BY date_ouverture DESC LIMIT 1";
@@ -184,9 +160,6 @@ public class CaisseDAO {
         return Optional.empty();
     }
 
-    /**
-     * Retourne toutes les caisses
-     */
     public List<Caisse> findAll() throws SQLException {
         String sql = "SELECT * FROM caisses ORDER BY date_ouverture DESC";
         List<Caisse> caisses = new ArrayList<>();
@@ -202,9 +175,6 @@ public class CaisseDAO {
         return caisses;
     }
 
-    /**
-     * Retourne les caisses par caissier
-     */
     public List<Caisse> findByCaissier(Long caissierId) throws SQLException {
         String sql = "SELECT * FROM caisses WHERE caissier_id = ? ORDER BY date_ouverture DESC";
         List<Caisse> caisses = new ArrayList<>();
@@ -221,9 +191,6 @@ public class CaisseDAO {
         return caisses;
     }
 
-    /**
-     * Retourne les caisses par statut
-     */
     public List<Caisse> findByStatut(StatutCaisse statut) throws SQLException {
         String sql = "SELECT * FROM caisses WHERE statut = ? ORDER BY date_ouverture DESC";
         List<Caisse> caisses = new ArrayList<>();
@@ -240,9 +207,6 @@ public class CaisseDAO {
         return caisses;
     }
 
-    /**
-     * Retourne les caisses par pÃ©riode
-     */
     public List<Caisse> findByPeriode(java.time.LocalDate debut, java.time.LocalDate fin) throws SQLException {
         String sql = "SELECT * FROM caisses WHERE DATE(date_ouverture) BETWEEN ? AND ? " +
                 "ORDER BY date_ouverture DESC";
@@ -261,9 +225,6 @@ public class CaisseDAO {
         return caisses;
     }
 
-    /**
-     * Supprime une caisse
-     */
     public void delete(Long id) throws SQLException {
         String sql = "DELETE FROM caisses WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -273,9 +234,6 @@ public class CaisseDAO {
         }
     }
 
-    /**
-     * Convertit un ResultSet en Caisse
-     */
     private Caisse mapResultSetToCaisse(ResultSet rs) throws SQLException {
         Caisse caisse = new Caisse();
         caisse.setId(rs.getLong("id"));

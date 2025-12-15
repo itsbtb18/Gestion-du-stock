@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * DAO pour la gestion des fournisseurs
- */
 public class FournisseurDAO {
 
     private final DatabaseConnection dbConnection;
@@ -19,9 +16,6 @@ public class FournisseurDAO {
         this.dbConnection = DatabaseConnection.getInstance();
     }
 
-    /**
-     * Sauvegarde un nouveau fournisseur
-     */
     public Fournisseur save(Fournisseur fournisseur) throws SQLException {
         String sql = "INSERT INTO fournisseurs (code, nom, contact, telephone, email, adresse, ville, pays, " +
                 "code_postal, site_web, numero_tva, conditions_paiement, note_performe, date_creation, actif, commentaire) " +
@@ -59,9 +53,6 @@ public class FournisseurDAO {
         }
     }
 
-    /**
-     * Met Ã  jour un fournisseur existant
-     */
     public void update(Fournisseur fournisseur) throws SQLException {
         String sql = "UPDATE fournisseurs SET code = ?, nom = ?, contact = ?, telephone = ?, email = ?, " +
                 "adresse = ?, ville = ?, pays = ?, code_postal = ?, site_web = ?, numero_tva = ?, " +
@@ -91,9 +82,6 @@ public class FournisseurDAO {
         }
     }
 
-    /**
-     * Supprime un fournisseur
-     */
     public void delete(Long id) throws SQLException {
         String sql = "DELETE FROM fournisseurs WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -103,9 +91,6 @@ public class FournisseurDAO {
         }
     }
 
-    /**
-     * Recherche un fournisseur par ID
-     */
     public Optional<Fournisseur> findById(Long id) throws SQLException {
         String sql = "SELECT * FROM fournisseurs WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -120,9 +105,6 @@ public class FournisseurDAO {
         return Optional.empty();
     }
 
-    /**
-     * Recherche un fournisseur par code
-     */
     public Optional<Fournisseur> findByCode(String code) throws SQLException {
         String sql = "SELECT * FROM fournisseurs WHERE code = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -137,9 +119,6 @@ public class FournisseurDAO {
         return Optional.empty();
     }
 
-    /**
-     * Retourne tous les fournisseurs
-     */
     public List<Fournisseur> findAll() throws SQLException {
         String sql = "SELECT * FROM fournisseurs ORDER BY nom";
         List<Fournisseur> fournisseurs = new ArrayList<>();
@@ -155,9 +134,6 @@ public class FournisseurDAO {
         return fournisseurs;
     }
 
-    /**
-     * Retourne les fournisseurs actifs
-     */
     public List<Fournisseur> findActive() throws SQLException {
         String sql = "SELECT * FROM fournisseurs WHERE actif = true ORDER BY nom";
         List<Fournisseur> fournisseurs = new ArrayList<>();
@@ -173,9 +149,6 @@ public class FournisseurDAO {
         return fournisseurs;
     }
 
-    /**
-     * Recherche des fournisseurs par critÃ¨res
-     */
     public List<Fournisseur> search(String keyword) throws SQLException {
         String sql = "SELECT * FROM fournisseurs WHERE " +
                 "(LOWER(nom) LIKE ? OR LOWER(code) LIKE ? OR LOWER(contact) LIKE ?) " +
@@ -199,9 +172,6 @@ public class FournisseurDAO {
         return fournisseurs;
     }
 
-    /**
-     * Met Ã  jour la note de performance d'un fournisseur
-     */
     public void updatePerformanceRating(Long id, double rating) throws SQLException {
         String sql = "UPDATE fournisseurs SET note_performe = ? WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -212,9 +182,6 @@ public class FournisseurDAO {
         }
     }
 
-    /**
-     * Compte le nombre de fournisseurs
-     */
     public int count() throws SQLException {
         String sql = "SELECT COUNT(*) FROM fournisseurs";
         try (Connection conn = dbConnection.getConnection();
@@ -227,9 +194,6 @@ public class FournisseurDAO {
         return 0;
     }
 
-    /**
-     * Convertit un ResultSet en objet Fournisseur
-     */
     private Fournisseur mapResultSetToFournisseur(ResultSet rs) throws SQLException {
         Fournisseur fournisseur = new Fournisseur();
         fournisseur.setId(rs.getLong("id"));

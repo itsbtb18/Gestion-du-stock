@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * CategorieDAO - Data Access Object for Category entity
- */
 public class CategorieDAO {
     
     private final DatabaseConnection dbConnection;

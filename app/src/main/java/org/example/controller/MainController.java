@@ -24,17 +24,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-/**
- * MainController - Main controller for navigation and view management
- * Part of the Controller layer in MVC architecture
- */
 public class MainController implements Initializable {
-    
-    // FXML Components - Header
     
     @FXML private Button btnLogout;
     
-    // FXML Components - Navigation Buttons
     @FXML private Button btnDashboard;
     @FXML private Button btnCaisse;
     @FXML private Button btnClients;
@@ -49,48 +42,35 @@ public class MainController implements Initializable {
     @FXML private Button btnStatistiques;
     @FXML private Button btnSettings; 
     
-    // FXML Components - Content Area
     @FXML private StackPane contentArea;
     @FXML private VBox welcomeScreen;
     
-    // FXML Components - Dashboard Stats
     @FXML private Label lblTodaySales;
     @FXML private Label lblTodayRevenue;
     @FXML private Label lblTotalProducts;
     
-    // FXML Components - Sidebar Footer
     @FXML private Label lblDate;
     @FXML private Label lblRevenue;
     
-    // FXML Components - Status Bar
     @FXML private Label lblStatus;
     @FXML private Label lblTime;
     
-    // Services
     private final StatistiquesService statistiquesService = StatistiquesService.getInstance();
     
-    // State
     private Button currentActiveButton = null;
     private Timeline clockTimeline;
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Set user info - in production, get from authenticated session
         
-        
-        // Set date
         updateDate();
         
-        // Start clock
         startClock();
         
-        // Load dashboard statistics
         loadDashboardStats();
         
-        // Load dashboard view by default
         handleDashboardView();
         
-        // Update revenue periodically
         Timeline revenueTimeline = new Timeline(new KeyFrame(Duration.seconds(30), event -> {
             loadDashboardStats();
         }));
@@ -98,18 +78,12 @@ public class MainController implements Initializable {
         revenueTimeline.play();
     }
     
-    /**
-     * Update date display
-     */
     private void updateDate() {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         lblDate.setText(today.format(formatter));
     }
     
-    /**
-     * Start real-time clock
-     */
     private void startClock() {
         clockTimeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             LocalTime time = LocalTime.now();
@@ -120,24 +94,19 @@ public class MainController implements Initializable {
         clockTimeline.play();
     }
     
-    /**
-     * Load dashboard statistics
-     */
     private void loadDashboardStats() {
         try {
             Map<String, Object> stats = statistiquesService.getDashboardStatistics();
             
-            // Update dashboard
             Integer salesCount = (Integer) stats.get("todaySalesCount");
             Double revenue = (Double) stats.get("todayRevenue");
             Integer productCount = (Integer) stats.get("totalProducts");
             
             lblTodaySales.setText(String.valueOf(salesCount != null ? salesCount : 0));
-            lblTodayRevenue.setText(String.format("%.2f DH", revenue != null ? revenue : 0.0));
+            lblTodayRevenue.setText(String.format("%.2f %s", revenue != null ? revenue : 0.0, org.example.app.AppConfig.CURRENCY_CODE));
             lblTotalProducts.setText(String.valueOf(productCount != null ? productCount : 0));
             
-            // Update sidebar footer
-            lblRevenue.setText(String.format("%.2f DH", revenue != null ? revenue : 0.0));
+            lblRevenue.setText(String.format("%.2f %s", revenue != null ? revenue : 0.0, org.example.app.AppConfig.CURRENCY_CODE));
             
             lblStatus.setText("Dernière mise à jour: " + LocalTime.now().format(
                 DateTimeFormatter.ofPattern("HH:mm:ss")));
@@ -148,129 +117,87 @@ public class MainController implements Initializable {
         }
     }
     
-    /**
-     * Handle Dashboard view
-     */
     @FXML
     private void handleDashboardView() {
         loadView("dashboard_view.fxml", "Tableau de Bord");
         setActiveButton(btnDashboard);
     }
     
-    /**
-     * Handle Caisse view
-     */
     @FXML
     private void handleCaisseView() {
-        loadView("caisse_view.fxml", "Caisse");
+        loadView("caisse_pos_view.fxml", "Caisse");
         setActiveButton(btnCaisse);
     }
     
-    /**
-     * Handle Clients view
-     */
     @FXML
     private void handleClientsView() {
         loadView("client_view.fxml", "Clients");
         setActiveButton(btnClients);
     }
     
-    /**
-     * Handle Produits view
-     */
     @FXML
     private void handleProduitsView() {
         loadView("produit_view.fxml", "Produits");
         setActiveButton(btnProduits);
     }
     
-    /**
-     * Handle Stock view
-     */
     @FXML
     private void handleStockView() {
         loadView("stock_view.fxml", "Stock");
         setActiveButton(btnStock);
     }
     
-    /**
-     * Handle Fournisseurs view
-     */
     @FXML
     private void handleFournisseursView() {
         loadView("fournisseur_view.fxml", "Fournisseurs");
         setActiveButton(btnFournisseurs);
     }
     
-    /**
-     * Handle Commandes view
-     */
     @FXML
     private void handleCommandesView() {
         loadView("bon_commande_view.fxml", "Bons de Commande");
         setActiveButton(btnCommandes);
     }
     
-    /**
-     * Handle Retours view
-     */
     @FXML
     private void handleRetoursView() {
         loadView("retour_view.fxml", "Retours");
         setActiveButton(btnRetours);
     }
     
-    /**
-     * Handle Transferts view
-     */
     @FXML
     private void handleTransfertsView() {
         loadView("transfert_view.fxml", "Transferts");
         setActiveButton(btnTransferts);
     }
     
-    /**
-     * Handle Dépenses view
-     */
     @FXML
     private void handleDepensesView() {
         loadView("depense_view.fxml", "Dépenses");
         setActiveButton(btnDepenses);
     }
     
-    /**
-     * Handle Rapports view
-     */
     @FXML
     private void handleRapportsView() {
         loadView("rapport_view.fxml", "Rapports");
         setActiveButton(btnRapports);
     }
     
-    /**
-     * Handle Statistiques view
-     */
     @FXML
     private void handleStatistiquesView() {
         loadView("statistiques_view.fxml", "Statistiques");
         setActiveButton(btnStatistiques);
     }
     
-    /**
-     * Handle Settings view
-     */
     @FXML
     private void handleSettingsView() {
         loadView("store_settings_view.fxml", "Paramètres du Magasin");
           setActiveButton(btnSettings);
     }
     
-    /**
-     * Handle logout
-     */
     @FXML
     private void handleLogout() {
-        // Use DialogManager for confirmation
+        
         boolean confirmed = org.example.util.DialogManager.getInstance()
             .showConfirmation(
                 "Déconnexion",
@@ -278,12 +205,11 @@ public class MainController implements Initializable {
             );
         
         if (confirmed) {
-            // Stop timelines
+            
             if (clockTimeline != null) {
                 clockTimeline.stop();
             }
             
-            // Return to login screen
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login_view.fxml"));
                 Parent root = loader.load();
@@ -307,12 +233,9 @@ public class MainController implements Initializable {
         }
     }
     
-    /**
-     * Load a view into content area
-     */
     private void loadView(String fxmlFile, String viewName) {
         try {
-            // Hide welcome screen
+            
             if (welcomeScreen != null && welcomeScreen.isVisible()) {
                 welcomeScreen.setVisible(false);
             }
@@ -320,34 +243,31 @@ public class MainController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + fxmlFile));
             Parent view = loader.load();
             
-            // Check if the view is already a ScrollPane (avoid double wrapping)
             javafx.scene.Node nodeToAdd;
             if (view instanceof javafx.scene.control.ScrollPane) {
-                // View already has its own ScrollPane - use it directly
+                
                 javafx.scene.control.ScrollPane existingScrollPane = (javafx.scene.control.ScrollPane) view;
                 existingScrollPane.setFitToWidth(true);
-                existingScrollPane.setFitToHeight(true);  // Fill available height
+                existingScrollPane.setFitToHeight(true);  
                 existingScrollPane.prefWidthProperty().bind(contentArea.widthProperty());
                 existingScrollPane.prefHeightProperty().bind(contentArea.heightProperty());
                 nodeToAdd = existingScrollPane;
             } else {
-                // Wrap view in ScrollPane for scrolling capability
+                
                 javafx.scene.control.ScrollPane scrollPane = new javafx.scene.control.ScrollPane(view);
                 scrollPane.setFitToWidth(true);
-                scrollPane.setFitToHeight(true);  // Fill available height initially
+                scrollPane.setFitToHeight(true);  
                 scrollPane.setHbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.NEVER);
                 scrollPane.setVbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.AS_NEEDED);
                 scrollPane.setStyle("-fx-background-color: transparent;");
                 scrollPane.getStyleClass().add("main-scroll");
                 
-                // Bind ScrollPane to fill contentArea
                 scrollPane.prefWidthProperty().bind(contentArea.widthProperty());
                 scrollPane.prefHeightProperty().bind(contentArea.heightProperty());
                 
-                // Make the view take full available width
                 if (view instanceof javafx.scene.layout.Region) {
                     javafx.scene.layout.Region region = (javafx.scene.layout.Region) view;
-                    region.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20)); // Account for scrollbar
+                    region.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20)); 
                 }
                 
                 nodeToAdd = scrollPane;
@@ -371,16 +291,12 @@ public class MainController implements Initializable {
         }
     }
     
-    /**
-     * Set active navigation button
-     */
     private void setActiveButton(Button button) {
-        // Remove active style from previous button
+        
         if (currentActiveButton != null) {
             currentActiveButton.getStyleClass().remove("nav-button-active");
         }
         
-        // Add active style to new button
         if (!button.getStyleClass().contains("nav-button-active")) {
             button.getStyleClass().add("nav-button-active");
         }

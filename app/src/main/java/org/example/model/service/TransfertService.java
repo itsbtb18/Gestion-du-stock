@@ -4,15 +4,12 @@ import org.example.dao.TransfertStockDAO;
 import org.example.dao.EmplacementDAO;
 import org.example.dao.ProduitDAO;
 import org.example.model.entity.*;
+import org.example.util.SessionManager;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * TransfertService - Business logic for inter-location stock transfers
- * Handles transfer workflow and inventory synchronization
- */
 public class TransfertService {
     
     private static TransfertService instance;
@@ -33,11 +30,8 @@ public class TransfertService {
         return instance;
     }
     
-    /**
-     * Create a new transfer request
-     */
     public TransfertStock createTransfert(TransfertStock transfert) throws SQLException {
-        // Validate
+        
         if (transfert.getEmplacementSource() == null) {
             throw new IllegalArgumentException("L'emplacement source est requis");
         }
@@ -58,7 +52,6 @@ public class TransfertService {
             throw new IllegalArgumentException("La quantité doit être positive");
         }
         
-        // Verify locations exist and are active
         Optional<Emplacement> sourceOpt = emplacementDAO.findById(transfert.getEmplacementSource().getId());
         if (sourceOpt.isEmpty() || !sourceOpt.get().isActif()) {
             throw new IllegalArgumentException("L'emplacement source n'est pas valide");
@@ -69,7 +62,6 @@ public class TransfertService {
             throw new IllegalArgumentException("L'emplacement destination n'est pas valide");
         }
         
-        // Verify product exists
         Optional<Produit> produitOpt = produitDAO.findById(transfert.getProduit().getId());
         if (produitOpt.isEmpty()) {
             throw new IllegalArgumentException("Produit introuvable");
@@ -77,23 +69,17 @@ public class TransfertService {
         
         Produit produit = produitOpt.get();
         
-        // Check if source has sufficient stock
-        // Note: For full multi-location support, we would need location-specific stock tracking
-        // For now, we check global product stock as a safeguard
         if (produit.getQuantiteStock() < transfert.getQuantite()) {
             throw new IllegalArgumentException(
                 String.format("Stock insuffisant: disponible=%d, demandé=%d", 
                     produit.getQuantiteStock(), transfert.getQuantite())
             );
         }
-        // TODO: Implement location-specific stock tracking when multi-emplacement stock is fully implemented
         
-        // Generate transfer number
         if (transfert.getNumeroTransfert() == null || transfert.getNumeroTransfert().isEmpty()) {
             transfert.setNumeroTransfert(generateTransfertNumero());
         }
         
-        // Set initial status
         if (transfert.getStatut() == null) {
             transfert.setStatut(StatutTransfert.EN_ATTENTE);
         }
@@ -101,9 +87,6 @@ public class TransfertService {
         return transfertDAO.save(transfert);
     }
     
-    /**
-     * Approve transfer request
-     */
     public boolean approveTransfert(Long transfertId, Long validatorId) throws SQLException {
         Optional<TransfertStock> transfertOpt = transfertDAO.findById(transfertId);
         if (transfertOpt.isEmpty()) {
@@ -120,9 +103,6 @@ public class TransfertService {
         return true;
     }
     
-    /**
-     * Refuse transfer request
-     */
     public boolean refuseTransfert(Long transfertId, String motif, Long refusedById) throws SQLException {
         Optional<TransfertStock> transfertOpt = transfertDAO.findById(transfertId);
         if (transfertOpt.isEmpty()) {
@@ -142,9 +122,6 @@ public class TransfertService {
         return true;
     }
     
-    /**
-     * Mark transfer as in transit
-     */
     public boolean startTransfert(Long transfertId) throws SQLException {
         Optional<TransfertStock> transfertOpt = transfertDAO.findById(transfertId);
         if (transfertOpt.isEmpty()) {
@@ -157,7 +134,6 @@ public class TransfertService {
             throw new IllegalArgumentException("Seuls les transferts approuvés peuvent être démarrés");
         }
         
-        // Deduct stock from source location
         Produit produit = produitDAO.findById(transfert.getProduit().getId())
             .orElseThrow(() -> new IllegalArgumentException("Produit introuvable"));
         
@@ -172,22 +148,18 @@ public class TransfertService {
         produit.setQuantiteStock(nouveauStock);
         produitDAO.update(produit);
         
-        // Record stock movement
         StockService stockService = StockService.getInstance();
         stockService.removeStock(
             produit.getId(), 
             transfert.getQuantite(), 
             "Transfert " + transfert.getNumeroTransfert() + " vers " + transfert.getEmplacementDestination().getNom(),
-            1L // TODO: Use actual current user ID
+            getCurrentUserId()
         );
         
         transfertDAO.updateStatut(transfertId, StatutTransfert.EN_TRANSIT, null);
         return true;
     }
     
-    /**
-     * Complete transfer (mark as received)
-     */
     public boolean completeTransfert(Long transfertId) throws SQLException {
         Optional<TransfertStock> transfertOpt = transfertDAO.findById(transfertId);
         if (transfertOpt.isEmpty()) {
@@ -200,7 +172,6 @@ public class TransfertService {
             throw new IllegalArgumentException("Seuls les transferts en transit peuvent être complétés");
         }
         
-        // Add stock to destination location
         Produit produit = produitDAO.findById(transfert.getProduit().getId())
             .orElseThrow(() -> new IllegalArgumentException("Produit introuvable"));
         
@@ -208,22 +179,18 @@ public class TransfertService {
         produit.setQuantiteStock(nouveauStock);
         produitDAO.update(produit);
         
-        // Record stock movement
         StockService stockService = StockService.getInstance();
         stockService.addStock(
             produit.getId(),
             transfert.getQuantite(),
             "Réception transfert " + transfert.getNumeroTransfert() + " depuis " + transfert.getEmplacementSource().getNom(),
-            1L // TODO: Use actual receiving user ID
+            getCurrentUserId()
         );
         
         transfertDAO.updateStatut(transfertId, StatutTransfert.RECU, null);
         return true;
     }
     
-    /**
-     * Cancel transfer
-     */
     public boolean cancelTransfert(Long transfertId) throws SQLException {
         Optional<TransfertStock> transfertOpt = transfertDAO.findById(transfertId);
         if (transfertOpt.isEmpty()) {
@@ -236,7 +203,6 @@ public class TransfertService {
             throw new IllegalArgumentException("Un transfert reçu ne peut pas être annulé");
         }
         
-        // Restore stock to source if already deducted (i.e., if status is EN_TRANSIT)
         if (transfert.getStatut() == StatutTransfert.EN_TRANSIT) {
             Produit produit = produitDAO.findById(transfert.getProduit().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Produit introuvable"));
@@ -245,13 +211,12 @@ public class TransfertService {
             produit.setQuantiteStock(nouveauStock);
             produitDAO.update(produit);
             
-            // Record stock movement for restoration
             StockService stockService = StockService.getInstance();
             stockService.addStock(
                 produit.getId(),
                 transfert.getQuantite(),
                 "Annulation transfert " + transfert.getNumeroTransfert() + " - stock restauré",
-                null // TODO: Use actual cancelling user ID
+                getCurrentUserId()
             );
         }
         
@@ -259,51 +224,30 @@ public class TransfertService {
         return true;
     }
     
-    /**
-     * Get pending transfers
-     */
     public List<TransfertStock> getPendingTransferts() throws SQLException {
         return transfertDAO.findEnAttente();
     }
     
-    /**
-     * Get transfers by status
-     */
     public List<TransfertStock> getTransfertsByStatut(StatutTransfert statut) throws SQLException {
         return transfertDAO.findByStatut(statut);
     }
     
-    /**
-     * Get transfers from location
-     */
     public List<TransfertStock> getTransfertsFromLocation(Long emplacementId) throws SQLException {
         return transfertDAO.findByEmplacementSource(emplacementId);
     }
     
-    /**
-     * Get transfers to location
-     */
     public List<TransfertStock> getTransfertsToLocation(Long emplacementId) throws SQLException {
         return transfertDAO.findByEmplacementDestination(emplacementId);
     }
     
-    /**
-     * Get transfers for product
-     */
     public List<TransfertStock> getTransfertsByProduit(Long produitId) throws SQLException {
         return transfertDAO.findByProduit(produitId);
     }
     
-    /**
-     * Get all transfers
-     */
     public List<TransfertStock> getAllTransferts() throws SQLException {
         return transfertDAO.findAll();
     }
     
-    /**
-     * Get transfers by location (source or destination)
-     */
     public List<TransfertStock> getTransfertsByEmplacement(Long emplacementId) throws SQLException {
         List<TransfertStock> allTransferts = transfertDAO.findAll();
         return allTransferts.stream()
@@ -314,24 +258,23 @@ public class TransfertService {
             .toList();
     }
     
-    /**
-     * Get transfer by ID
-     */
     public Optional<TransfertStock> getTransfertById(Long id) throws SQLException {
         return transfertDAO.findById(id);
     }
     
-    /**
-     * Get transfer by number
-     */
     public Optional<TransfertStock> getTransfertByNumero(String numero) throws SQLException {
         return transfertDAO.findByNumero(numero);
     }
     
-    /**
-     * Generate transfer number
-     */
     private String generateTransfertNumero() {
         return "TRF-" + System.currentTimeMillis();
+    }
+    
+    private Long getCurrentUserId() {
+        SessionManager session = SessionManager.getInstance();
+        if (session.isLoggedIn() && session.getCurrentUser() != null) {
+            return session.getCurrentUser().getId();
+        }
+        return null;
     }
 }

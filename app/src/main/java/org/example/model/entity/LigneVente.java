@@ -1,8 +1,5 @@
 package org.example.model.entity;
 
-/**
- * LigneVente - Entity representing a line item in a sale
- */
 public class LigneVente {
     
     private Long id;
@@ -13,7 +10,6 @@ public class LigneVente {
     private double remise;
     private double sousTotal;
     
-    // Constructors
     public LigneVente() {
     }
     
@@ -33,7 +29,6 @@ public class LigneVente {
         calculerSousTotal();
     }
     
-    // Business logic
     public void calculerSousTotal() {
         double montantBrut = prixUnitaire * quantite;
         double montantRemise = montantBrut * (remise / 100.0);
@@ -55,7 +50,6 @@ public class LigneVente {
         calculerSousTotal();
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

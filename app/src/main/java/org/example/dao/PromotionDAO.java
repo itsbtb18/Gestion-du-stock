@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * PromotionDAO - Data Access Object for Promotion entity
- */
 public class PromotionDAO {
     
     private final DatabaseConnection dbConnection;
@@ -21,9 +18,6 @@ public class PromotionDAO {
         this.dbConnection = DatabaseConnection.getInstance();
     }
     
-    /**
-     * Find all promotions for a store
-     */
     public List<Promotion> findByStoreId(Long storeId) {
         List<Promotion> promotions = new ArrayList<>();
         String sql = "SELECT * FROM promotions WHERE store_id = ? ORDER BY priority DESC, created_date DESC";
@@ -45,9 +39,6 @@ public class PromotionDAO {
         return promotions;
     }
     
-    /**
-     * Find all active promotions for a store
-     */
     public List<Promotion> findActiveByStoreId(Long storeId) {
         List<Promotion> promotions = new ArrayList<>();
         String sql = "SELECT * FROM promotions WHERE store_id = ? AND active = TRUE " +
@@ -70,9 +61,6 @@ public class PromotionDAO {
         return promotions;
     }
     
-    /**
-     * Find promotion by ID
-     */
     public Optional<Promotion> findById(Long id) {
         String sql = "SELECT * FROM promotions WHERE id = ?";
         
@@ -93,9 +81,6 @@ public class PromotionDAO {
         return Optional.empty();
     }
     
-    /**
-     * Save a new promotion
-     */
     public Promotion save(Promotion promotion) {
         String sql = "INSERT INTO promotions (store_id, name, description, type, value, scope, " +
                     "target_ids, start_date, end_date, active, priority, created_date) " +
@@ -132,9 +117,6 @@ public class PromotionDAO {
         }
     }
     
-    /**
-     * Update an existing promotion
-     */
     public boolean update(Promotion promotion) {
         String sql = "UPDATE promotions SET name = ?, description = ?, type = ?, value = ?, " +
                     "scope = ?, target_ids = ?, start_date = ?, end_date = ?, active = ?, " +
@@ -164,9 +146,6 @@ public class PromotionDAO {
         }
     }
     
-    /**
-     * Delete a promotion
-     */
     public boolean delete(Long id) {
         String sql = "DELETE FROM promotions WHERE id = ?";
         
@@ -183,9 +162,6 @@ public class PromotionDAO {
         }
     }
     
-    /**
-     * Map ResultSet to Promotion entity
-     */
     private Promotion mapResultSetToPromotion(ResultSet rs) throws SQLException {
         Promotion promotion = new Promotion();
         promotion.setId(rs.getLong("id"));

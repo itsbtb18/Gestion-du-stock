@@ -194,7 +194,7 @@
                             </VBox>
                             
                             <VBox spacing="8" HBox.hgrow="ALWAYS">
-                                <Label text="Achat Minimum (DH)" styleClass="form-label"/>
+                                <Label text="Achat Minimum (DZD)" styleClass="form-label"/>
                                 <TextField fx:id="minPurchaseField" 
                                            styleClass="modern-input"
                                            prefHeight="40"/>

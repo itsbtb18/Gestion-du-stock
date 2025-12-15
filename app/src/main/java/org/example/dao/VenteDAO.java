@@ -11,10 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * VenteDAO - Data Access Object for Vente entity
- * Handles all database operations for sales
- */
 public class VenteDAO {
     
     private final DatabaseConnection dbConnection;
@@ -23,10 +19,6 @@ public class VenteDAO {
         this.dbConnection = DatabaseConnection.getInstance();
     }
     
-    /**
-     * Find all sales
-     * @return list of all sales
-     */
     public List<Vente> findAll() {
         List<Vente> ventes = new ArrayList<>();
         String sql = "SELECT * FROM ventes ORDER BY date_vente DESC";
@@ -48,11 +40,6 @@ public class VenteDAO {
         return ventes;
     }
     
-    /**
-     * Find sale by ID
-     * @param id the sale ID
-     * @return Optional containing the sale if found
-     */
     public Optional<Vente> findById(Long id) {
         String sql = "SELECT * FROM ventes WHERE id = ?";
         
@@ -75,11 +62,6 @@ public class VenteDAO {
         return Optional.empty();
     }
     
-    /**
-     * Find sale by numero
-     * @param numero the sale number
-     * @return Optional containing the sale if found
-     */
     public Optional<Vente> findByNumero(String numero) {
         String sql = "SELECT * FROM ventes WHERE numero = ?";
         
@@ -102,15 +84,9 @@ public class VenteDAO {
         return Optional.empty();
     }
     
-    /**
-     * Find sales by date range
-     * @param startDate the start date
-     * @param endDate the end date
-     * @return list of sales in the date range
-     */
     public List<Vente> findByDateRange(LocalDate startDate, LocalDate endDate) {
         List<Vente> ventes = new ArrayList<>();
-        String sql = "SELECT * FROM ventes WHERE DATE(date_vente) BETWEEN ? AND ? " +
+        String sql = "SELECT * FROM ventes WHERE CAST(date_vente AS DATE) BETWEEN ? AND ? " +
                     "ORDER BY date_vente DESC";
         
         try (Connection conn = dbConnection.getConnection();
@@ -134,11 +110,6 @@ public class VenteDAO {
         return ventes;
     }
     
-    /**
-     * Find sales by client
-     * @param clientId the client ID
-     * @return list of sales for the client
-     */
     public List<Vente> findByClient(Long clientId) {
         List<Vente> ventes = new ArrayList<>();
         String sql = "SELECT * FROM ventes WHERE client_id = ? ORDER BY date_vente DESC";
@@ -162,28 +133,18 @@ public class VenteDAO {
         return ventes;
     }
     
-    /**
-     * Find today's sales
-     * @return list of today's sales
-     */
     public List<Vente> findToday() {
         LocalDate today = LocalDate.now();
         return findByDateRange(today, today);
     }
     
-    /**
-     * Save a new sale with its line items (transaction)
-     * @param vente the sale to save
-     * @return the saved sale with generated ID
-     */
     public Vente save(Vente vente) {
         Connection conn = null;
         
         try {
             conn = dbConnection.getConnection();
-            conn.setAutoCommit(false); // Start transaction
+            conn.setAutoCommit(false); 
             
-            // Insert vente
             String venteSql = "INSERT INTO ventes (numero, date_vente, client_id, vendeur_id, " +
                             "montant_total, montant_remise, montant_tva, montant_final, " +
                             "mode_paiement, statut, commentaire) " +
@@ -216,7 +177,6 @@ public class VenteDAO {
                 }
             }
             
-            // Insert lignes vente
             if (vente.getLignes() != null && !vente.getLignes().isEmpty()) {
                 String ligneSql = "INSERT INTO lignes_vente (vente_id, produit_id, quantite, " +
                                 "prix_unitaire, remise, sous_total) VALUES (?, ?, ?, ?, ?, ?)";
@@ -240,13 +200,13 @@ public class VenteDAO {
                 }
             }
             
-            conn.commit(); // Commit transaction
+            conn.commit(); 
             System.out.println("Sale saved successfully: " + vente.getNumero());
             
         } catch (SQLException e) {
             if (conn != null) {
                 try {
-                    conn.rollback(); // Rollback on error
+                    conn.rollback(); 
                     System.err.println("Transaction rolled back");
                 } catch (SQLException ex) {
                     System.err.println("Error rolling back: " + ex.getMessage());
@@ -266,12 +226,6 @@ public class VenteDAO {
         return vente;
     }
     
-    /**
-     * Update sale status
-     * @param venteId the sale ID
-     * @param statut the new status
-     * @return true if update successful
-     */
     public boolean updateStatut(Long venteId, String statut) {
         String sql = "UPDATE ventes SET statut = ? WHERE id = ?";
         
@@ -291,18 +245,12 @@ public class VenteDAO {
         return false;
     }
     
-    /**
-     * Get sales statistics for a date range
-     * @param startDate the start date
-     * @param endDate the end date
-     * @return array with [totalSales, totalAmount, averageBasket]
-     */
     public double[] getStatistics(LocalDate startDate, LocalDate endDate) {
-        double[] stats = new double[3]; // [count, total, average]
+        double[] stats = new double[3]; 
         String sql = "SELECT COUNT(*) as nb_ventes, SUM(montant_final) as total, " +
                     "AVG(montant_final) as panier_moyen " +
                     "FROM ventes " +
-                    "WHERE DATE(date_vente) BETWEEN ? AND ? AND statut = 'VALIDEE'";
+                    "WHERE CAST(date_vente AS DATE) BETWEEN ? AND ? AND statut = 'VALIDEE'";
         
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -325,9 +273,6 @@ public class VenteDAO {
         return stats;
     }
     
-    /**
-     * Load line items for a sale
-     */
     private void loadLignesVente(Vente vente) {
         String sql = "SELECT lv.*, p.code, p.nom, p.prix " +
                     "FROM lignes_vente lv " +
@@ -350,7 +295,6 @@ public class VenteDAO {
                 ligne.setRemise(rs.getDouble("remise"));
                 ligne.setSousTotal(rs.getDouble("sous_total"));
                 
-                // Create minimal product object
                 Produit produit = new Produit();
                 produit.setId(rs.getLong("produit_id"));
                 produit.setCode(rs.getString("code"));
@@ -368,9 +312,6 @@ public class VenteDAO {
         }
     }
     
-    /**
-     * Map ResultSet to Vente object
-     */
     private Vente mapResultSetToVente(ResultSet rs) throws SQLException {
         Vente vente = new Vente();
         
@@ -394,10 +335,6 @@ public class VenteDAO {
         return vente;
     }
     
-    /**
-     * Get total sales count
-     * @return total number of sales
-     */
     public int count() {
         String sql = "SELECT COUNT(*) FROM ventes";
         
@@ -416,9 +353,6 @@ public class VenteDAO {
         return 0;
     }
     
-    /**
-     * Find recent sales (limited)
-     */
     public List<Vente> findRecent(int limit) {
         String sql = "SELECT * FROM ventes ORDER BY date_vente DESC LIMIT ?";
         List<Vente> ventes = new ArrayList<>();

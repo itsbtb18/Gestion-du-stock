@@ -1,8 +1,5 @@
 package org.example.model.entity;
 
-/**
- * CategorieAvis - Customer feedback category
- */
 public enum CategorieAvis {
     SERVICE("Service"),
     PRODUIT("Produit"),

@@ -1,8 +1,5 @@
 package org.example.exception;
 
-/**
- * ValidationException - Exception thrown when input validation fails
- */
 public class ValidationException extends RuntimeException {
     
     private final String fieldName;

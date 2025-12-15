@@ -2,9 +2,6 @@ package org.example.model.entity;
 
 import java.time.LocalDateTime;
 
-/**
- * MouvementStock - Entity representing stock movements
- */
 public class MouvementStock {
     
     private Long id;
@@ -29,7 +26,6 @@ public class MouvementStock {
         this.motif = motif;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

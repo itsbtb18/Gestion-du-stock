@@ -5,122 +5,219 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.TransfertController"
-            styleClass="main-container" stylesheets="@../css/styles.css">
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.TransfertController"
+      styleClass="content-container" stylesheets="@../css/styles.css" spacing="16" fillWidth="true">
+    <padding>
+        <Insets top="20" right="24" bottom="20" left="24"/>
+    </padding>
     
-    <top>
-        <VBox spacing="15" styleClass="search-section">
-            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+    <!-- Header Row -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <VBox spacing="2" HBox.hgrow="ALWAYS">
+            <Label text="🔄 Transferts de Stock" styleClass="page-title">
+                <font><Font name="Segoe UI Bold" size="24"/></font>
+            </Label>
+            <Label text="Gérer les transferts entre emplacements" styleClass="page-subtitle" style="-fx-text-fill: #6b7280;">
+                <font><Font name="Segoe UI" size="13"/></font>
+            </Label>
+        </VBox>
+        <Button fx:id="newButton" text="＋ Nouveau Transfert" styleClass="btn-primary"
+               prefHeight="40" prefWidth="180" onAction="#handleNew">
+            <font><Font name="Segoe UI Semibold" size="13"/></font>
+        </Button>
+    </HBox>
+    
+    <!-- Filters Card -->
+    <HBox spacing="12" styleClass="content-card" alignment="CENTER_LEFT">
+        <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+        
+        <Label text="🔍" style="-fx-font-size: 16;"/>
+        <ComboBox fx:id="statutFilterCombo" promptText="Statut" styleClass="modern-combo" 
+                 prefHeight="36" prefWidth="130"/>
+        <ComboBox fx:id="emplacementFilterCombo" promptText="Emplacement" styleClass="modern-combo" 
+                 prefHeight="36" prefWidth="150"/>
+        
+        <Region HBox.hgrow="ALWAYS"/>
+        
+        <Button fx:id="filterButton" text="🔎 Filtrer" styleClass="btn-primary" 
+               prefHeight="36" prefWidth="130" onAction="#handleFilter">
+            <font><Font name="Segoe UI Semibold" size="12"/></font>
+        </Button>
+        <Button fx:id="clearFilterButton" text="✖ Effacer" styleClass="btn-secondary" 
+               prefHeight="36" prefWidth="130" onAction="#handleClearFilter">
+            <font><Font name="Segoe UI Semibold" size="12"/></font>
+        </Button>
+        <Button fx:id="refreshButton" text="Actualiser" styleClass="btn-secondary" 
+               prefHeight="36" prefWidth="130" onAction="#handleRefresh">
+            <font><Font name="Segoe UI Bold" size="14"/></font>
+        </Button>
+    </HBox>
+    
+    <!-- Main Content -->
+    <HBox spacing="16" VBox.vgrow="ALWAYS">
+        
+        <!-- Table Section -->
+        <VBox styleClass="content-card" spacing="12" HBox.hgrow="ALWAYS">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
             
-            <Label text="Gestion des Transferts de Stock" styleClass="section-title">
-                <font><Font name="System Bold" size="20"/></font>
+            <Label text="📋 Liste des Transferts" styleClass="card-title">
+                <font><Font name="Segoe UI Bold" size="15"/></font>
             </Label>
             
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <ComboBox fx:id="statutFilterCombo" promptText="Statut" prefWidth="150"/>
-                <ComboBox fx:id="emplacementFilterCombo" promptText="Emplacement" prefWidth="200"/>
-                <Button fx:id="filterButton" text="Filtrer" styleClass="btn-primary" onAction="#handleFilter"/>
-                <Button fx:id="clearFilterButton" text="Effacer" styleClass="btn-secondary" onAction="#handleClearFilter"/>
-                <Button fx:id="refreshButton" text="Actualiser" styleClass="btn-secondary" onAction="#handleRefresh"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="newButton" text="+ Nouveau Transfert" styleClass="btn-success" onAction="#handleNew"/>
-            </HBox>
+            <TableView fx:id="transfertTable" VBox.vgrow="ALWAYS" styleClass="modern-table" minHeight="300">
+                <columns>
+                    <TableColumn fx:id="numeroColumn" text="N°" prefWidth="70" minWidth="60"/>
+                    <TableColumn fx:id="produitColumn" text="Produit" prefWidth="100" minWidth="90"/>
+                    <TableColumn fx:id="sourceColumn" text="Source" prefWidth="90" minWidth="80"/>
+                    <TableColumn fx:id="destinationColumn" text="Dest." prefWidth="90" minWidth="80"/>
+                    <TableColumn fx:id="quantiteColumn" text="Qté" prefWidth="50" minWidth="45"/>
+                    <TableColumn fx:id="statutColumn" text="Statut" prefWidth="80" minWidth="70"/>
+                    <TableColumn fx:id="dateColumn" text="Date" prefWidth="85" minWidth="75"/>
+                </columns>
+            </TableView>
         </VBox>
-    </top>
-    
-    <center>
-        <HBox spacing="15" HBox.hgrow="ALWAYS">
-            <padding><Insets top="10" right="15" bottom="15" left="15"/></padding>
+        
+        <!-- Right Panel: Form -->
+        <VBox spacing="10" styleClass="content-card" prefWidth="410" minWidth="320" maxWidth="420">
+            <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
             
-            <!-- Left: Transfer Table -->
-            <VBox spacing="10" HBox.hgrow="ALWAYS" prefWidth="800">
-                <Label text="Liste des Transferts" styleClass="section-title">
-                    <font><Font name="System Bold" size="14"/></font>
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label text="✏️"/>
+                <Label text="Détails Transfert" styleClass="card-title">
+                    <font><Font name="Segoe UI Bold" size="14"/></font>
                 </Label>
-                
-                <TableView fx:id="transfertTable" VBox.vgrow="ALWAYS" styleClass="cart-table">
-                    <columns>
-                        <TableColumn fx:id="numeroColumn" text="Numéro" prefWidth="100"/>
-                        <TableColumn fx:id="produitColumn" text="Produit" prefWidth="150"/>
-                        <TableColumn fx:id="sourceColumn" text="Source" prefWidth="120"/>
-                        <TableColumn fx:id="destinationColumn" text="Destination" prefWidth="120"/>
-                        <TableColumn fx:id="quantiteColumn" text="Quantité" prefWidth="80"/>
-                        <TableColumn fx:id="statutColumn" text="Statut" prefWidth="100"/>
-                        <TableColumn fx:id="dateColumn" text="Date" prefWidth="100"/>
-                    </columns>
-                </TableView>
-            </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="numeroLabel" text="Nouveau" style="-fx-text-fill: #3b82f6; -fx-font-weight: bold;">
+                    <font><Font name="Segoe UI Bold" size="12"/></font>
+                </Label>
+            </HBox>
             
-            <!-- Right: Form -->
-            <VBox spacing="15" prefWidth="450">
-                <VBox spacing="15" styleClass="card" VBox.vgrow="ALWAYS">
-                    <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" 
+                       VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+                <VBox spacing="8">
+                    <!-- Produit -->
+                    <VBox spacing="3">
+                        <Label text="Produit *" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
+                        <ComboBox fx:id="produitCombo" promptText="Sélectionner" 
+                                 styleClass="modern-combo" prefHeight="32" maxWidth="Infinity"/>
+                    </VBox>
                     
-                    <Label text="Détails du Transfert" styleClass="section-title">
-                        <font><Font name="System Bold" size="14"/></font>
-                    </Label>
-                    <Separator/>
+                    <!-- Source + Destination -->
+                    <HBox spacing="8">
+                        <VBox spacing="3" HBox.hgrow="ALWAYS">
+                            <Label text="Source *" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
+                            <ComboBox fx:id="sourceCombo" promptText="Source" 
+                                     styleClass="modern-combo" prefHeight="32" maxWidth="Infinity"/>
+                        </VBox>
+                        <VBox spacing="3" HBox.hgrow="ALWAYS">
+                            <Label text="Destination *" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
+                            <ComboBox fx:id="destinationCombo" promptText="Dest." 
+                                     styleClass="modern-combo" prefHeight="32" maxWidth="Infinity"/>
+                        </VBox>
+                    </HBox>
                     
-                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
-                        <GridPane hgap="10" vgap="12">
-                            <Label text="Numéro:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <Label fx:id="numeroLabel" text="Nouveau" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="form-value"/>
-                            
-                            <Label text="Produit:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <ComboBox fx:id="produitCombo" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="Sélectionner" prefWidth="250"/>
-                            
-                            <Label text="Source:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <ComboBox fx:id="sourceCombo" GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="Emplacement source" prefWidth="250"/>
-                            
-                            <Label text="Destination:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <ComboBox fx:id="destinationCombo" GridPane.rowIndex="3" GridPane.columnIndex="1" promptText="Emplacement destination" prefWidth="250"/>
-                            
-                            <Label text="Quantité:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <TextField fx:id="quantiteField" GridPane.rowIndex="4" GridPane.columnIndex="1" promptText="Quantité"/>
-                            
-                            <Label text="Date:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <DatePicker fx:id="dateTransfertPicker" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-                            
-                            <Label text="Demandeur:" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <TextField fx:id="demandeurField" GridPane.rowIndex="6" GridPane.columnIndex="1" promptText="Nom du demandeur"/>
-                            
-                            <Label text="Statut:" GridPane.rowIndex="7" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <ComboBox fx:id="statutCombo" GridPane.rowIndex="7" GridPane.columnIndex="1" promptText="Statut" disable="true"/>
-                            
-                            <Label text="Motif:" GridPane.rowIndex="8" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <TextArea fx:id="motifArea" GridPane.rowIndex="8" GridPane.columnIndex="1" promptText="Motif du transfert" prefRowCount="2"/>
-                            
-                            <Label text="Notes:" GridPane.rowIndex="9" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <TextArea fx:id="notesArea" GridPane.rowIndex="9" GridPane.columnIndex="1" promptText="Notes" prefRowCount="2"/>
-                        </GridPane>
-                    </ScrollPane>
+                    <!-- Quantité + Date -->
+                    <HBox spacing="8">
+                        <VBox spacing="3" HBox.hgrow="ALWAYS">
+                            <Label text="Quantité *" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
+                            <TextField fx:id="quantiteField" promptText="Qté" 
+                                      styleClass="modern-input" prefHeight="32"/>
+                        </VBox>
+                        <VBox spacing="3" HBox.hgrow="ALWAYS">
+                            <Label text="Date" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
+                            <DatePicker fx:id="dateTransfertPicker" styleClass="glass-date-picker" 
+                                       prefHeight="32" maxWidth="Infinity"/>
+                        </VBox>
+                    </HBox>
                     
-                    <Separator/>
+                    <!-- Demandeur + Statut -->
+                    <HBox spacing="8">
+                        <VBox spacing="3" HBox.hgrow="ALWAYS">
+                            <Label text="Demandeur" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
+                            <TextField fx:id="demandeurField" promptText="Nom" 
+                                      styleClass="modern-input" prefHeight="32"/>
+                        </VBox>
+                        <VBox spacing="3" HBox.hgrow="ALWAYS">
+                            <Label text="Statut" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
+                            <ComboBox fx:id="statutCombo" promptText="Statut" 
+                                     styleClass="modern-combo" prefHeight="32" maxWidth="Infinity" disable="true"/>
+                        </VBox>
+                    </HBox>
                     
-                    <VBox spacing="5">
-                        <Label fx:id="stockSourceLabel" text="Stock source: -" styleClass="info-label"/>
-                        <Label fx:id="stockDestLabel" text="Stock destination: -" styleClass="info-label"/>
-                        <Label fx:id="validatorLabel" text="Non validé" styleClass="info-label"/>
+                    <!-- Motif -->
+                    <VBox spacing="3">
+                        <Label text="Motif" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
+                        <TextArea fx:id="motifArea" promptText="Motif du transfert" 
+                                 styleClass="glass-textarea" prefRowCount="2" wrapText="true"/>
+                    </VBox>
+                    
+                    <!-- Notes -->
+                    <VBox spacing="3">
+                        <Label text="Notes" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
+                        <TextArea fx:id="notesArea" promptText="Notes..." 
+                                 styleClass="glass-textarea" prefRowCount="2" wrapText="true"/>
+                    </VBox>
+                    
+                    <!-- Stock Info -->
+                    <VBox spacing="4" style="-fx-background-color: #f0f9ff; -fx-background-radius: 8; -fx-padding: 10;">
+                        <Label fx:id="stockSourceLabel" text="📦 Stock source: -" 
+                               style="-fx-text-fill: #344054; -fx-font-size: 11;"/>
+                        <Label fx:id="stockDestLabel" text="📦 Stock destination: -" 
+                               style="-fx-text-fill: #344054; -fx-font-size: 11;"/>
+                        <Label fx:id="validatorLabel" text="⏳ Non validé" 
+                               style="-fx-text-fill: #667085; -fx-font-size: 11;"/>
                     </VBox>
                 </VBox>
-                
-                <!-- Action Buttons -->
-                <VBox spacing="10">
-                    <HBox spacing="10">
-                        <Button fx:id="saveButton" text="Créer" styleClass="btn-success" onAction="#handleSave" HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="clearFormButton" text="Vider" styleClass="btn-secondary" onAction="#handleClearForm" HBox.hgrow="ALWAYS"/>
-                    </HBox>
-                    <HBox spacing="10">
-                        <Button fx:id="approveButton" text="Approuver" styleClass="btn-primary" onAction="#handleApprove" HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="refuseButton" text="Refuser" styleClass="btn-danger" onAction="#handleRefuse" HBox.hgrow="ALWAYS"/>
-                    </HBox>
-                    <HBox spacing="10">
-                        <Button fx:id="startButton" text="Démarrer" styleClass="btn-primary" onAction="#handleStart" HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="completeButton" text="Compléter" styleClass="btn-success" onAction="#handleComplete" HBox.hgrow="ALWAYS"/>
-                    </HBox>
-                    <Button fx:id="cancelButton" text="Annuler" styleClass="btn-danger" onAction="#handleCancel"/>
-                </VBox>
-            </VBox>
-        </HBox>
-    </center>
-</BorderPane>
+            </ScrollPane>
+            
+            <Separator style="-fx-background-color: #e5e7eb;"/>
+            
+            <!-- Action Buttons -->
+            <HBox spacing="8">
+                <Button fx:id="saveButton" text="💾 Créer" styleClass="btn-primary" 
+                        prefHeight="34"  prefWidth="215" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#handleSave">
+                    <font><Font name="Segoe UI Semibold" size="11"/></font>
+                </Button>
+                <Button fx:id="updateButton" text="Modifier" styleClass="btn-primary" 
+                        prefHeight="34"  prefWidth="215" HBox.hgrow="ALWAYS" maxWidth="Infinity" >
+                    <font><Font name="Segoe UI Semibold" size="11"/></font>
+                </Button>
+                <Button fx:id="clearFormButton" text="Actualiser" styleClass="btn-secondary" 
+                        prefWidth="215" prefHeight="34" onAction="#handleClearForm">
+                    <font><Font name="Segoe UI Bold" size="12"/></font>
+                </Button>
+            </HBox>
+            <HBox spacing="8">
+                <Button fx:id="approveButton" text="✅ Approuver" styleClass="btn-primary" 
+                        prefHeight="34" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#handleApprove">
+                    <font><Font name="Segoe UI Semibold" size="11"/></font>
+                </Button>
+                <Button fx:id="refuseButton" text="❌ Refuser" styleClass="btn-danger-glass" 
+                        prefHeight="34" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#handleRefuse">
+                    <font><Font name="Segoe UI Semibold" size="11"/></font>
+                </Button>
+            </HBox>
+            <HBox spacing="8">
+                <Button fx:id="startButton" text="▶️ Démarrer" styleClass="btn-primary" 
+                        prefHeight="34" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#handleStart">
+                    <font><Font name="Segoe UI Semibold" size="11"/></font>
+                </Button>
+                <Button fx:id="completeButton" text="🏁 Terminer" styleClass="btn-primary" 
+                        prefHeight="34" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#handleComplete">
+                    <font><Font name="Segoe UI Semibold" size="11"/></font>
+                </Button>
+            </HBox>
+            <HBox spacing="8">
+                <Button fx:id="cancelButton" text="🚫 Annuler" styleClass="btn-danger-glass" 
+                        prefHeight="34" HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#handleCancel">
+                    <font><Font name="Segoe UI Semibold" size="11"/></font>
+                </Button>
+                <Button fx:id="deleteButton" text="🗑️ Supprimer" styleClass="btn-danger-glass" 
+                        prefHeight="34" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <font><Font name="Segoe UI Semibold" size="11"/></font>
+                </Button>
+            </HBox>
+        </VBox>
+    </HBox>
+</VBox>
+

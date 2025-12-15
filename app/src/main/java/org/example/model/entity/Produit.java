@@ -2,10 +2,6 @@ package org.example.model.entity;
 
 import java.time.LocalDate;
 
-/**
- * Produit - Entity class representing a product in the store
- * This is the Model in MVC architecture
- */
 public class Produit {
     
     private Long id;
@@ -16,13 +12,12 @@ public class Produit {
     private int quantiteStock;
     private int seuilAlerte;
     private Categorie categorie;
-    private String unite; // kg, L, pièce, etc.
+    private String unite; 
     private LocalDate dateExpiration;
     private String fournisseur;
     private String emplacement;
     private boolean actif;
     
-    // Constructors
     public Produit() {
         this.actif = true;
     }
@@ -39,7 +34,6 @@ public class Produit {
         this.actif = true;
     }
     
-    // Business logic methods
     public boolean isStockBas() {
         return quantiteStock <= seuilAlerte;
     }
@@ -65,7 +59,6 @@ public class Produit {
         this.quantiteStock -= quantite;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -170,7 +163,6 @@ public class Produit {
         this.actif = actif;
     }
     
-    // Alias method for compatibility
     public double getPrixVente() {
         return prix;
     }

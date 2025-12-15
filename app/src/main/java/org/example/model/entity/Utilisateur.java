@@ -2,14 +2,11 @@ package org.example.model.entity;
 
 import java.time.LocalDateTime;
 
-/**
- * Utilisateur - Entity class representing a system user
- */
 public class Utilisateur {
     
     private Long id;
     private String username;
-    private String password; // Should be hashed in production
+    private String password; 
     private String nom;
     private String prenom;
     private String email;
@@ -18,7 +15,6 @@ public class Utilisateur {
     private LocalDateTime derniereConnexion;
     private boolean actif;
     
-    // Constructors
     public Utilisateur() {
         this.dateCreation = LocalDateTime.now();
         this.actif = true;
@@ -33,13 +29,12 @@ public class Utilisateur {
         this.role = role;
     }
     
-    // Business logic
     public String getNomComplet() {
         return prenom + " " + nom;
     }
     
     public boolean verifierMotDePasse(String motDePasse) {
-        // In production, use proper password hashing (BCrypt, etc.)
+        
         return this.password.equals(motDePasse);
     }
     
@@ -56,7 +51,6 @@ public class Utilisateur {
         return false;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

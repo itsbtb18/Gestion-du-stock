@@ -2,9 +2,6 @@ package org.example.model.entity;
 
 import java.time.LocalDateTime;
 
-/**
- * Fournisseur - Entity representing a supplier
- */
 public class Fournisseur {
     
     private Long id;
@@ -19,8 +16,8 @@ public class Fournisseur {
     private String codePostal;
     private String siteWeb;
     private String numeroTVA;
-    private String conditions_paiement; // e.g., "30 jours", "60 jours"
-    private Double notePerforme; // 0-5 rating
+    private String conditions_paiement; 
+    private Double notePerforme; 
     private LocalDateTime dateCreation;
     private boolean actif;
     private String commentaire;
@@ -39,7 +36,6 @@ public class Fournisseur {
         this.telephone = telephone;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -176,7 +172,6 @@ public class Fournisseur {
         this.commentaire = commentaire;
     }
     
-    // Alias methods for notes/commentaire
     public String getNotes() {
         return commentaire;
     }

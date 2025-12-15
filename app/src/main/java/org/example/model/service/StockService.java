@@ -5,16 +5,15 @@ import org.example.dao.ProduitDAO;
 import org.example.model.entity.MouvementStock;
 import org.example.model.entity.Produit;
 import org.example.model.entity.TypeMouvement;
+import org.example.model.entity.TransfertStock;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * StockService - Business logic for stock management
- * Singleton service for handling stock operations
- */
 public class StockService {
     
     private static StockService instance;
@@ -33,9 +32,6 @@ public class StockService {
         return instance;
     }
     
-    /**
-     * Record a stock movement and update product stock
-     */
     public MouvementStock recordMouvement(MouvementStock mouvement) {
         if (mouvement.getProduit() == null || mouvement.getProduit().getId() == null) {
             throw new IllegalArgumentException("Le produit est requis");
@@ -49,7 +45,6 @@ public class StockService {
             throw new IllegalArgumentException("La quantité doit être positive");
         }
         
-        // Get current product
         Optional<Produit> produitOpt = produitDAO.findById(mouvement.getProduit().getId());
         if (produitOpt.isEmpty()) {
             throw new IllegalArgumentException("Produit non trouvé");
@@ -57,7 +52,6 @@ public class StockService {
         
         Produit produit = produitOpt.get();
         
-        // Check if stock is sufficient for SORTIE operations
         if (mouvement.getTypeMouvement().getCoefficient() < 0) {
             int newStock = produit.getQuantiteStock() + (mouvement.getQuantite() * mouvement.getTypeMouvement().getCoefficient());
             if (newStock < 0) {
@@ -65,23 +59,17 @@ public class StockService {
             }
         }
         
-        // Set date if not provided
         if (mouvement.getDateMouvement() == null) {
             mouvement.setDateMouvement(LocalDateTime.now());
         }
         
-        // Record stock before and after
         mouvement.setStockAvant(produit.getQuantiteStock());
         int stockChange = mouvement.getQuantite() * mouvement.getTypeMouvement().getCoefficient();
         mouvement.setStockApres(produit.getQuantiteStock() + stockChange);
         
-        // Save movement (DAO will also update product stock)
         return mouvementDAO.save(mouvement);
     }
     
-    /**
-     * Add stock to a product (ENTREE)
-     */
     public MouvementStock addStock(Long produitId, int quantite, String motif, Long utilisateurId) {
         Optional<Produit> produitOpt = produitDAO.findById(produitId);
         if (produitOpt.isEmpty()) {
@@ -98,9 +86,6 @@ public class StockService {
         return recordMouvement(mouvement);
     }
     
-    /**
-     * Remove stock from a product (SORTIE)
-     */
     public MouvementStock removeStock(Long produitId, int quantite, String motif, Long utilisateurId) {
         Optional<Produit> produitOpt = produitDAO.findById(produitId);
         if (produitOpt.isEmpty()) {
@@ -117,9 +102,6 @@ public class StockService {
         return recordMouvement(mouvement);
     }
     
-    /**
-     * Adjust stock (AJUSTEMENT)
-     */
     public MouvementStock adjustStock(Long produitId, int newQuantite, String motif, Long utilisateurId) {
         Optional<Produit> produitOpt = produitDAO.findById(produitId);
         if (produitOpt.isEmpty()) {
@@ -169,5 +151,13 @@ public class StockService {
     
     public int getMouvementCount() {
         return mouvementDAO.count();
+    }
+    
+    public List<TransfertStock> getPendingTransferts() {
+        try {
+            return TransfertService.getInstance().getPendingTransferts();
+        } catch (SQLException e) {
+            return Collections.emptyList();
+        }
     }
 }

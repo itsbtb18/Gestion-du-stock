@@ -1,8 +1,5 @@
 package org.example.model.entity;
 
-/**
- * StatutTransfert - Stock transfer status enum
- */
 public enum StatutTransfert {
     EN_ATTENTE("En Attente"),
     APPROUVE("Approuvé"),

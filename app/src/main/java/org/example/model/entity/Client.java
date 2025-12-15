@@ -2,9 +2,6 @@ package org.example.model.entity;
 
 import java.time.LocalDate;
 
-/**
- * Client - Entity class representing a customer
- */
 public class Client {
     
     private Long id;
@@ -21,7 +18,6 @@ public class Client {
     private CarteFidelite carteFidelite;
     private boolean actif;
     
-    // Constructors
     public Client() {
         this.typeClient = TypeClient.NORMAL;
         this.dateInscription = LocalDate.now();
@@ -38,7 +34,6 @@ public class Client {
         this.telephone = telephone;
     }
     
-    // Business logic
     public String getNomComplet() {
         return prenom + " " + nom;
     }
@@ -57,7 +52,7 @@ public class Client {
     
     public void enregistrerAchat(double montant) {
         this.totalAchats += montant;
-        // Award loyalty points: 10 points per euro
+        
         int pointsGagnes = (int) (montant * 10);
         ajouterPoints(pointsGagnes);
     }
@@ -66,7 +61,6 @@ public class Client {
         return typeClient.getTauxRemise();
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

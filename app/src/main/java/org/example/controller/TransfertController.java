@@ -14,13 +14,8 @@ import org.example.util.AlertUtil;
 
 import java.time.LocalDate;
 
-/**
- * Controller for Stock Transfer management
- * Handles transfer creation, approval workflow, and inter-location movements
- */
 public class TransfertController {
 
-    // FXML UI Components - Transfer List
     @FXML private TableView<TransfertStock> transfertTable;
     @FXML private TableColumn<TransfertStock, String> numeroColumn;
     @FXML private TableColumn<TransfertStock, String> produitColumn;
@@ -30,14 +25,12 @@ public class TransfertController {
     @FXML private TableColumn<TransfertStock, String> statutColumn;
     @FXML private TableColumn<TransfertStock, String> dateColumn;
     
-    // FXML UI Components - Search & Filter
     @FXML private ComboBox<StatutTransfert> statutFilterCombo;
     @FXML private ComboBox<Emplacement> emplacementFilterCombo;
     @FXML private Button filterButton;
     @FXML private Button clearFilterButton;
     @FXML private Button refreshButton;
     
-    // FXML UI Components - Form
     @FXML private Label numeroLabel;
     @FXML private ComboBox<Produit> produitCombo;
     @FXML private ComboBox<Emplacement> sourceCombo;
@@ -49,7 +42,6 @@ public class TransfertController {
     @FXML private TextArea motifArea;
     @FXML private TextArea notesArea;
     
-    // FXML UI Components - Actions
     @FXML private Button newButton;
     @FXML private Button saveButton;
     @FXML private Button updateButton;
@@ -61,31 +53,22 @@ public class TransfertController {
     @FXML private Button completeButton;
     @FXML private Button cancelButton;
     
-    // FXML UI Components - Info
     @FXML private Label stockSourceLabel;
     @FXML private Label stockDestLabel;
     @FXML private Label validatorLabel;
     
-    // Services
     private final TransfertService transfertService = TransfertService.getInstance();
     private final EmplacementService emplacementService = EmplacementService.getInstance();
     private final ProduitService produitService = ProduitService.getInstance();
     
-    // State
     private ObservableList<TransfertStock> transfertList = FXCollections.observableArrayList();
     private TransfertStock selectedTransfert = null;
     private boolean isEditMode = false;
     
-    /**
-     * Get current user ID from session
-     */
     private Long getCurrentUserId() {
         return org.example.util.SessionManager.getInstance().getCurrentUser().getId();
     }
 
-    /**
-     * Initialize the controller
-     */
     @FXML
     public void initialize() {
         setupTransfertTable();
@@ -95,9 +78,6 @@ public class TransfertController {
         updateFormState();
     }
 
-    /**
-     * Setup transfer table
-     */
     private void setupTransfertTable() {
         numeroColumn.setCellValueFactory(cellData -> 
             new SimpleStringProperty(cellData.getValue().getNumeroTransfert()));
@@ -116,18 +96,14 @@ public class TransfertController {
         
         transfertTable.setItems(transfertList);
         
-        // Selection listener
         transfertTable.getSelectionModel().selectedItemProperty().addListener(
             (observable, oldValue, newValue) -> handleTransfertSelected(newValue)
         );
     }
 
-    /**
-     * Setup combo boxes
-     */
     private void setupCombos() {
         try {
-            // Produit combo
+            
             produitCombo.setItems(FXCollections.observableArrayList(produitService.getAllProduits()));
             produitCombo.setConverter(new javafx.util.StringConverter<Produit>() {
                 @Override
@@ -140,7 +116,6 @@ public class TransfertController {
                 }
             });
             
-            // Emplacement combos
             ObservableList<Emplacement> emplacements = FXCollections.observableArrayList(
                 emplacementService.getActiveEmplacements());
             
@@ -164,7 +139,6 @@ public class TransfertController {
             destinationCombo.setConverter(emplacementConverter);
             emplacementFilterCombo.setConverter(emplacementConverter);
             
-            // Statut combos
             statutCombo.setItems(FXCollections.observableArrayList(StatutTransfert.values()));
             statutFilterCombo.setItems(FXCollections.observableArrayList(StatutTransfert.values()));
             
@@ -173,19 +147,13 @@ public class TransfertController {
         }
     }
 
-    /**
-     * Setup listeners
-     */
     private void setupListeners() {
-        // Update stock info when source/product changes
+        
         sourceCombo.valueProperty().addListener((obs, old, newVal) -> updateStockInfo());
         produitCombo.valueProperty().addListener((obs, old, newVal) -> updateStockInfo());
         destinationCombo.valueProperty().addListener((obs, old, newVal) -> updateStockInfo());
     }
 
-    /**
-     * Update stock information labels
-     */
     private void updateStockInfo() {
         if (stockSourceLabel == null || stockDestLabel == null) return;
         
@@ -195,9 +163,7 @@ public class TransfertController {
         
         if (produit != null && source != null) {
             try {
-                // Get current stock quantity for the product
-                // Note: This shows global stock, not location-specific
-                // For full multi-location support, need location-specific stock table
+                
                 int stockQty = produit.getQuantiteStock();
                 stockSourceLabel.setText("Stock source: " + stockQty + " unités");
             } catch (Exception e) {
@@ -209,9 +175,7 @@ public class TransfertController {
         
         if (produit != null && dest != null) {
             try {
-                // Get current stock quantity for the product
-                // Note: This shows global stock, not location-specific
-                // For full multi-location support, need location-specific stock table
+                
                 int stockQty = produit.getQuantiteStock();
                 stockDestLabel.setText("Stock destination: " + stockQty + " unités");
             } catch (Exception e) {
@@ -222,9 +186,6 @@ public class TransfertController {
         }
     }
 
-    /**
-     * Load all transfers
-     */
     private void loadAllTransferts() {
         try {
             transfertList.setAll(transfertService.getAllTransferts());
@@ -233,9 +194,6 @@ public class TransfertController {
         }
     }
 
-    /**
-     * Handle transfer selection
-     */
     private void handleTransfertSelected(TransfertStock transfert) {
         selectedTransfert = transfert;
         if (transfert != null) {
@@ -245,9 +203,6 @@ public class TransfertController {
         }
     }
 
-    /**
-     * Populate form with transfer data
-     */
     private void populateForm(TransfertStock transfert) {
         numeroLabel.setText(transfert.getNumeroTransfert());
         produitCombo.setValue(transfert.getProduit());
@@ -269,9 +224,6 @@ public class TransfertController {
         updateStockInfo();
     }
 
-    /**
-     * Update form state based on mode and status
-     */
     private void updateFormState() {
         boolean editing = isEditMode && selectedTransfert != null;
         
@@ -299,9 +251,6 @@ public class TransfertController {
         destinationCombo.setDisable(editing);
     }
 
-    /**
-     * Handle filter action
-     */
     @FXML
     private void handleFilter() {
         try {
@@ -320,9 +269,6 @@ public class TransfertController {
         }
     }
 
-    /**
-     * Handle clear filter
-     */
     @FXML
     private void handleClearFilter() {
         statutFilterCombo.setValue(null);
@@ -330,18 +276,12 @@ public class TransfertController {
         loadAllTransferts();
     }
 
-    /**
-     * Handle refresh
-     */
     @FXML
     private void handleRefresh() {
         loadAllTransferts();
         handleClearForm();
     }
 
-    /**
-     * Handle new transfer
-     */
     @FXML
     private void handleNew() {
         isEditMode = false;
@@ -350,9 +290,6 @@ public class TransfertController {
         updateFormState();
     }
 
-    /**
-     * Handle save (new transfer)
-     */
     @FXML
     private void handleSave() {
         if (!validateForm()) {
@@ -360,7 +297,7 @@ public class TransfertController {
         }
         
         try {
-            // Create TransfertStock object
+            
             TransfertStock transfert = new TransfertStock();
             transfert.setProduit(produitCombo.getValue());
             transfert.setEmplacementSource(sourceCombo.getValue());
@@ -378,9 +315,6 @@ public class TransfertController {
         }
     }
 
-    /**
-     * Handle approve transfer
-     */
     @FXML
     private void handleApprove() {
         if (selectedTransfert == null) return;
@@ -399,9 +333,6 @@ public class TransfertController {
         }
     }
 
-    /**
-     * Handle refuse transfer
-     */
     @FXML
     private void handleRefuse() {
         if (selectedTransfert == null) return;
@@ -422,9 +353,6 @@ public class TransfertController {
         });
     }
 
-    /**
-     * Handle start transfer (put in transit)
-     */
     @FXML
     private void handleStart() {
         if (selectedTransfert == null) return;
@@ -443,9 +371,6 @@ public class TransfertController {
         }
     }
 
-    /**
-     * Handle complete transfer
-     */
     @FXML
     private void handleComplete() {
         if (selectedTransfert == null) return;
@@ -464,9 +389,6 @@ public class TransfertController {
         }
     }
 
-    /**
-     * Handle cancel transfer
-     */
     @FXML
     private void handleCancel() {
         if (selectedTransfert == null) return;
@@ -485,9 +407,6 @@ public class TransfertController {
         }
     }
 
-    /**
-     * Handle clear form
-     */
     @FXML
     private void handleClearForm() {
         numeroLabel.setText("Nouveau");
@@ -511,9 +430,6 @@ public class TransfertController {
         updateFormState();
     }
 
-    /**
-     * Validate form inputs
-     */
     private boolean validateForm() {
         if (produitCombo.getValue() == null) {
             AlertUtil.showWarning("Validation", "Veuillez sélectionner un produit.");

@@ -9,10 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * ProduitDAO - Data Access Object for Produit entity
- * Handles all database operations for products
- */
 public class ProduitDAO {
     
     private final DatabaseConnection dbConnection;
@@ -21,10 +17,6 @@ public class ProduitDAO {
         this.dbConnection = DatabaseConnection.getInstance();
     }
     
-    /**
-     * Find all products
-     * @return list of all products
-     */
     public List<Produit> findAll() {
         List<Produit> produits = new ArrayList<>();
         String sql = "SELECT p.*, c.code as cat_code, c.nom as cat_nom, c.description as cat_desc " +
@@ -46,11 +38,6 @@ public class ProduitDAO {
         return produits;
     }
     
-    /**
-     * Find product by ID
-     * @param id the product ID
-     * @return Optional containing the product if found
-     */
     public Optional<Produit> findById(Long id) {
         String sql = "SELECT p.*, c.code as cat_code, c.nom as cat_nom, c.description as cat_desc " +
                     "FROM produits p LEFT JOIN categories c ON p.categorie_id = c.id " +
@@ -73,11 +60,6 @@ public class ProduitDAO {
         return Optional.empty();
     }
     
-    /**
-     * Find product by code
-     * @param code the product code
-     * @return Optional containing the product if found
-     */
     public Optional<Produit> findByCode(String code) {
         String sql = "SELECT p.*, c.code as cat_code, c.nom as cat_nom, c.description as cat_desc " +
                     "FROM produits p LEFT JOIN categories c ON p.categorie_id = c.id " +
@@ -100,11 +82,6 @@ public class ProduitDAO {
         return Optional.empty();
     }
     
-    /**
-     * Search products by name or code
-     * @param query the search query
-     * @return list of matching products
-     */
     public List<Produit> search(String query) {
         List<Produit> produits = new ArrayList<>();
         String sql = "SELECT p.*, c.code as cat_code, c.nom as cat_nom, c.description as cat_desc " +
@@ -132,10 +109,6 @@ public class ProduitDAO {
         return produits;
     }
     
-    /**
-     * Find products with low stock (below alert threshold)
-     * @return list of products with low stock
-     */
     public List<Produit> findLowStock() {
         List<Produit> produits = new ArrayList<>();
         String sql = "SELECT p.*, c.code as cat_code, c.nom as cat_nom, c.description as cat_desc " +
@@ -158,11 +131,6 @@ public class ProduitDAO {
         return produits;
     }
     
-    /**
-     * Find products expiring soon (within specified days)
-     * @param days number of days to check
-     * @return list of products expiring soon
-     */
     public List<Produit> findExpiringSoon(int days) {
         List<Produit> produits = new ArrayList<>();
         String sql = "SELECT p.*, c.code as cat_code, c.nom as cat_nom, c.description as cat_desc " +
@@ -188,11 +156,6 @@ public class ProduitDAO {
         return produits;
     }
     
-    /**
-     * Save a new product
-     * @param produit the product to save
-     * @return the saved product with generated ID
-     */
     public Produit save(Produit produit) {
         String sql = "INSERT INTO produits (code, nom, description, prix, quantite_stock, " +
                     "seuil_alerte, categorie_id, unite, date_expiration, fournisseur, emplacement, actif) " +
@@ -243,11 +206,6 @@ public class ProduitDAO {
         return produit;
     }
     
-    /**
-     * Update an existing product
-     * @param produit the product to update
-     * @return true if update successful
-     */
     public boolean update(Produit produit) {
         String sql = "UPDATE produits SET code = ?, nom = ?, description = ?, prix = ?, " +
                     "quantite_stock = ?, seuil_alerte = ?, categorie_id = ?, unite = ?, " +
@@ -297,11 +255,6 @@ public class ProduitDAO {
         return false;
     }
     
-    /**
-     * Delete a product (soft delete - mark as inactive)
-     * @param id the product ID
-     * @return true if delete successful
-     */
     public boolean delete(Long id) {
         String sql = "UPDATE produits SET actif = FALSE WHERE id = ?";
         
@@ -323,12 +276,6 @@ public class ProduitDAO {
         return false;
     }
     
-    /**
-     * Update product stock quantity
-     * @param produitId the product ID
-     * @param newQuantity the new stock quantity
-     * @return true if update successful
-     */
     public boolean updateStock(Long produitId, int newQuantity) {
         String sql = "UPDATE produits SET quantite_stock = ? WHERE id = ?";
         
@@ -348,9 +295,6 @@ public class ProduitDAO {
         return false;
     }
     
-    /**
-     * Map ResultSet to Produit object
-     */
     private Produit mapResultSetToProduit(ResultSet rs) throws SQLException {
         Produit produit = new Produit();
         
@@ -372,23 +316,22 @@ public class ProduitDAO {
         produit.setEmplacement(rs.getString("emplacement"));
         produit.setActif(rs.getBoolean("actif"));
         
-        // Map category if available
-        String catCode = rs.getString("cat_code");
-        if (catCode != null) {
+        Long categorieId = rs.getLong("categorie_id");
+        if (!rs.wasNull() && categorieId > 0) {
             Categorie categorie = new Categorie();
-            categorie.setCode(catCode);
-            categorie.setNom(rs.getString("cat_nom"));
-            categorie.setDescription(rs.getString("cat_desc"));
+            categorie.setId(categorieId);
+            String catCode = rs.getString("cat_code");
+            if (catCode != null) {
+                categorie.setCode(catCode);
+                categorie.setNom(rs.getString("cat_nom"));
+                categorie.setDescription(rs.getString("cat_desc"));
+            }
             produit.setCategorie(categorie);
         }
         
         return produit;
     }
     
-    /**
-     * Get total product count
-     * @return total number of active products
-     */
     public int count() {
         String sql = "SELECT COUNT(*) FROM produits WHERE actif = TRUE";
         

@@ -16,35 +16,25 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import javax.imageio.ImageIO;
 
-/**
- * BarcodeUtil - Utility class for barcode generation
- */
 public class BarcodeUtil {
     
     private static final int DEFAULT_WIDTH = 300;
     private static final int DEFAULT_HEIGHT = 100;
     private static final int QR_SIZE = 250;
     
-    /**
-     * Generate EAN-13 barcode (standard retail barcode)
-     */
     public static String generateEAN13() {
-        // Generate 12 random digits
+        
         StringBuilder code = new StringBuilder();
         for (int i = 0; i < 12; i++) {
             code.append((int)(Math.random() * 10));
         }
         
-        // Calculate check digit
         int checkDigit = calculateEAN13CheckDigit(code.toString());
         code.append(checkDigit);
         
         return code.toString();
     }
     
-    /**
-     * Calculate EAN-13 check digit
-     */
     private static int calculateEAN13CheckDigit(String code) {
         int sum = 0;
         for (int i = 0; i < 12; i++) {
@@ -54,18 +44,12 @@ public class BarcodeUtil {
         return (10 - (sum % 10)) % 10;
     }
     
-    /**
-     * Generate Code 128 barcode image
-     */
     public static BufferedImage generateCode128Image(String code) throws WriterException {
         Code128Writer writer = new Code128Writer();
         BitMatrix bitMatrix = writer.encode(code, BarcodeFormat.CODE_128, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         return MatrixToImageWriter.toBufferedImage(bitMatrix);
     }
     
-    /**
-     * Generate EAN-13 barcode image
-     */
     public static BufferedImage generateEAN13Image(String code) throws WriterException {
         if (code.length() != 13) {
             throw new IllegalArgumentException("EAN-13 code must be 13 digits");
@@ -76,18 +60,12 @@ public class BarcodeUtil {
         return MatrixToImageWriter.toBufferedImage(bitMatrix);
     }
     
-    /**
-     * Generate QR Code image
-     */
     public static BufferedImage generateQRCodeImage(String text) throws WriterException {
         QRCodeWriter writer = new QRCodeWriter();
         BitMatrix bitMatrix = writer.encode(text, BarcodeFormat.QR_CODE, QR_SIZE, QR_SIZE);
         return MatrixToImageWriter.toBufferedImage(bitMatrix);
     }
     
-    /**
-     * Save barcode to file
-     */
     public static void saveBarcodeToFile(String code, String filePath, BarcodeFormat format) throws WriterException, IOException {
         BufferedImage image;
         
@@ -109,16 +87,10 @@ public class BarcodeUtil {
         ImageIO.write(image, "PNG", path.toFile());
     }
     
-    /**
-     * Convert BufferedImage to JavaFX Image
-     */
     public static Image toFXImage(BufferedImage bufferedImage) {
         return SwingFXUtils.toFXImage(bufferedImage, null);
     }
     
-    /**
-     * Generate barcode as JavaFX Image
-     */
     public static Image generateBarcodeAsFXImage(String code, BarcodeFormat format) {
         try {
             BufferedImage bufferedImage;
@@ -145,9 +117,6 @@ public class BarcodeUtil {
         }
     }
     
-    /**
-     * Validate EAN-13 barcode
-     */
     public static boolean validateEAN13(String code) {
         if (code == null || code.length() != 13) {
             return false;

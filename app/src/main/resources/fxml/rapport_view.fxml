@@ -63,7 +63,7 @@
                     <Font name="Segoe UI Semibold" size="12"/>
                 </font>
             </Label>
-            <Label fx:id="lblTotalVentes" text="0.00 DH" textFill="#4caf50" 
+            <Label fx:id="lblTotalVentes" text="0.00 DZD" textFill="#4caf50" 
                    style="-fx-font-weight: bold; -fx-font-size: 24px;">
                 <font>
                     <Font name="Segoe UI Bold" size="24"/>
@@ -97,7 +97,7 @@
                     <Font name="Segoe UI Semibold" size="12"/>
                 </font>
             </Label>
-            <Label fx:id="lblMoyenneVente" text="0.00 DH" textFill="#ff9800" 
+            <Label fx:id="lblMoyenneVente" text="0.00 DZD" textFill="#ff9800" 
                    style="-fx-font-weight: bold; -fx-font-size: 24px;">
                 <font>
                     <Font name="Segoe UI Bold" size="24"/>
@@ -125,7 +125,7 @@
                     <TableColumn fx:id="colNumero" text="N° Vente" prefWidth="110"/>
                     <TableColumn fx:id="colDate" text="Date" prefWidth="140"/>
                     <TableColumn fx:id="colClient" text="Client" prefWidth="220"/>
-                    <TableColumn fx:id="colMontant" text="Montant (DH)" prefWidth="120"/>
+                    <TableColumn fx:id="colMontant" text="Montant (DZD)" prefWidth="120"/>
                 </columns>
             </TableView>
         </VBox>

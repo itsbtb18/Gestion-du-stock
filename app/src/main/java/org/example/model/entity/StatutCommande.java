@@ -1,8 +1,5 @@
 package org.example.model.entity;
 
-/**
- * StatutCommande - Purchase order status enum
- */
 public enum StatutCommande {
     BROUILLON("Brouillon"),
     VALIDEE("Validée"),

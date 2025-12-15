@@ -5,197 +5,295 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.ClientController"
-            styleClass="main-container" stylesheets="@../css/styles.css">
+<VBox xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="org.example.controller.ClientController"
+      styleClass="content-container" 
+      stylesheets="@../css/styles.css"
+      spacing="20">
+    <padding>
+        <Insets top="24" right="24" bottom="24" left="24"/>
+        </padding>
     
-    <!-- Top: Search and Actions -->
-    <top>
-        <VBox spacing="15" styleClass="search-section">
-            <padding>
-                <Insets top="15" right="15" bottom="15" left="15"/>
-            </padding>
-            
-            <Label text="Gestion des Clients" styleClass="section-title">
-                <font>
-                    <Font name="System Bold" size="20"/>
-                </font>
-            </Label>
-            
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <TextField fx:id="searchField" promptText="Rechercher par code, nom, téléphone ou email" 
-                          styleClass="search-field" prefWidth="400"/>
-                <Button fx:id="searchButton" text="Rechercher" styleClass="btn-primary"
-                       onAction="#handleSearch"/>
-                <Button fx:id="refreshButton" text="Actualiser" styleClass="btn-secondary"
-                       onAction="#handleRefresh"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="showAllButton" text="Tous" styleClass="btn-secondary"
-                       onAction="#handleShowAll"/>
-                <Button fx:id="showVIPButton" text="VIP Seulement" styleClass="btn-secondary"
-                       onAction="#handleShowVIP"/>
-                <Button fx:id="newClientButton" text="+ Nouveau Client" styleClass="btn-success"
-                       onAction="#handleNewClient"/>
-            </HBox>
-        </VBox>
-    </top>
-    
-    <!-- Center: Table and Form -->
-    <center>
-        <HBox spacing="15" HBox.hgrow="ALWAYS">
-            <padding>
-                <Insets top="10" right="15" bottom="15" left="15"/>
-            </padding>
-            
-            <!-- Left: Client Table -->
-            <VBox spacing="10" HBox.hgrow="ALWAYS" prefWidth="700">
-                <Label text="Liste des Clients" styleClass="section-title">
+    <!-- Header Card -->
+    <VBox spacing="18" styleClass="content-card">
+        <padding>
+            <Insets top="24" right="28" bottom="24" left="28"/>
+        </padding>
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Gestion des Clients" styleClass="page-title">
                     <font>
-                        <Font name="System Bold" size="14"/>
+                        <Font name="Segoe UI Bold" size="24"/>
+                    </font>
+                </Label>
+                <Label text="Gérer vos clients et programmes de fidélité" styleClass="page-subtitle">
+                    <font>
+                        <Font name="Segoe UI" size="14"/>
+                    </font>
+                </Label>
+            </VBox>
+            <HBox spacing="12" alignment="CENTER_RIGHT">
+                <TextField fx:id="searchField" promptText="🔍 Rechercher..." 
+                          styleClass="modern-input" prefHeight="42" prefWidth="280">
+                    <font>
+                        <Font name="Segoe UI" size="14"/>
+                    </font>
+                </TextField>
+                <Button fx:id="showVIPButton" text="VIP" styleClass="btn-secondary"
+                       onAction="#handleShowVIP" prefHeight="42" prefWidth="80">
+                    <font>
+                        <Font name="Segoe UI Semibold" size="14"/>
+                    </font>
+                </Button>
+                <Button fx:id="newClientButton" text="➕ Nouveau" styleClass="btn-primary"
+                       onAction="#handleNewClient" prefHeight="42" prefWidth="150">
+                    <font>
+                        <Font name="Segoe UI Semibold" size="14"/>
+                    </font>
+                </Button>
+            </HBox>
+        </HBox>
+    </VBox>
+    
+    <!-- 2-Column Layout: Table (60%) + Form (40%) -->
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+        
+        <!-- LEFT: Client Table (60%) -->
+        <VBox spacing="16" HBox.hgrow="ALWAYS" prefWidth="0" minWidth="0">
+            <VBox styleClass="content-card" VBox.vgrow="ALWAYS" spacing="16">
+                <padding>
+                    <Insets top="24" right="24" bottom="24" left="24"/>
+                </padding>
+                
+                <Label text="Liste des Clients" styleClass="card-title">
+                    <font>
+                        <Font name="Segoe UI Bold" size="18"/>
                     </font>
                 </Label>
                 
-                <TableView fx:id="clientTable" VBox.vgrow="ALWAYS" styleClass="cart-table">
+                <TableView fx:id="clientTable" VBox.vgrow="ALWAYS" styleClass="modern-table">
                     <columns>
                         <TableColumn fx:id="codeColumn" text="Code" prefWidth="80"/>
                         <TableColumn fx:id="nomColumn" text="Nom" prefWidth="120"/>
-                        <TableColumn fx:id="prenomColumn" text="Prénom" prefWidth="120"/>
+                        <TableColumn fx:id="prenomColumn" text="120" prefWidth="120"/>
                         <TableColumn fx:id="telephoneColumn" text="Téléphone" prefWidth="110"/>
                         <TableColumn fx:id="emailColumn" text="Email" prefWidth="150"/>
-                        <TableColumn fx:id="typeColumn" text="Type" prefWidth="70"/>
-                        <TableColumn fx:id="pointsColumn" text="Points" prefWidth="60"/>
+                        <TableColumn fx:id="typeColumn" text="Type" prefWidth="80"/>
+                        <TableColumn fx:id="pointsColumn" text="Points" prefWidth="70"/>
                     </columns>
                 </TableView>
             </VBox>
-            
-            <!-- Right: Form Section -->
-            <VBox spacing="15" prefWidth="400">
+        </VBox>
+        
+        <!-- RIGHT: Client Form (40%) -->
+        <VBox spacing="16" prefWidth="420" minWidth="400" maxWidth="450">
+            <VBox styleClass="content-card" spacing="20" VBox.vgrow="ALWAYS">
+                <padding>
+                    <Insets top="24" right="24" bottom="24" left="24"/>
+                </padding>
                 
-                <!-- Client Form Card -->
-                <VBox spacing="15" styleClass="card" VBox.vgrow="ALWAYS">
-                    <padding>
-                        <Insets top="15" right="15" bottom="15" left="15"/>
-                    </padding>
-                    
-                    <Label text="Informations Client" styleClass="section-title">
-                        <font>
-                            <Font name="System Bold" size="14"/>
-                        </font>
-                    </Label>
-                    
-                    <Separator/>
-                    
-                    <!-- Form Fields -->
-                    <GridPane hgap="10" vgap="12">
-                        <Label text="Code:" GridPane.rowIndex="0" GridPane.columnIndex="0" 
-                              styleClass="form-label"/>
-                        <TextField fx:id="codeField" GridPane.rowIndex="0" GridPane.columnIndex="1"
-                                  promptText="Auto-généré" editable="false"/>
+                <Label text="Informations Client" styleClass="card-title">
+                    <font>
+                        <Font name="Segoe UI Bold" size="18"/>
+                    </font>
+                </Label>
+                
+                <VBox spacing="16" VBox.vgrow="ALWAYS">
+                        <!-- Code -->
+                        <VBox spacing="6">
+                            <Label text="Code" styleClass="subsection-title">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="12"/>
+                                </font>
+                            </Label>
+                            <TextField fx:id="codeField" promptText="Auto-généré" editable="false"
+                                      styleClass="glass-input-disabled" prefHeight="40">
+                                <font>
+                                    <Font name="Segoe UI" size="14"/>
+                                </font>
+                            </TextField>
+                        </VBox>
                         
-                        <Label text="Nom:" GridPane.rowIndex="1" GridPane.columnIndex="0" 
-                              styleClass="form-label"/>
-                        <TextField fx:id="nomField" GridPane.rowIndex="1" GridPane.columnIndex="1"
-                                  promptText="Nom du client"/>
+                        <!-- Nom -->
+                        <VBox spacing="6">
+                            <Label text="Nom *" styleClass="subsection-title">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="12"/>
+                                </font>
+                            </Label>
+                            <TextField fx:id="nomField" promptText="Nom du client" styleClass="modern-input"
+                                      prefHeight="40">
+                                <font>
+                                    <Font name="Segoe UI" size="14"/>
+                                </font>
+                            </TextField>
+                        </VBox>
                         
-                        <Label text="Prénom:" GridPane.rowIndex="2" GridPane.columnIndex="0" 
-                              styleClass="form-label"/>
-                        <TextField fx:id="prenomField" GridPane.rowIndex="2" GridPane.columnIndex="1"
-                                  promptText="Prénom du client"/>
+                        <!-- Prénom -->
+                        <VBox spacing="6">
+                            <Label text="Prénom *" styleClass="subsection-title">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="12"/>
+                                </font>
+                            </Label>
+                            <TextField fx:id="prenomField" promptText="Prénom du client" styleClass="modern-input"
+                                      prefHeight="40">
+                                <font>
+                                    <Font name="Segoe UI" size="14"/>
+                                </font>
+                            </TextField>
+                        </VBox>
                         
-                        <Label text="Téléphone:" GridPane.rowIndex="3" GridPane.columnIndex="0" 
-                              styleClass="form-label"/>
-                        <TextField fx:id="telephoneField" GridPane.rowIndex="3" GridPane.columnIndex="1"
-                                  promptText="0612345678"/>
+                        <!-- Téléphone -->
+                        <VBox spacing="6">
+                            <Label text="Téléphone *" styleClass="subsection-title">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="12"/>
+                                </font>
+                            </Label>
+                            <TextField fx:id="telephoneField" promptText="0612345678" styleClass="modern-input"
+                                      prefHeight="40">
+                                <font>
+                                    <Font name="Segoe UI" size="14"/>
+                                </font>
+                            </TextField>
+                        </VBox>
                         
-                        <Label text="Email:" GridPane.rowIndex="4" GridPane.columnIndex="0" 
-                              styleClass="form-label"/>
-                        <TextField fx:id="emailField" GridPane.rowIndex="4" GridPane.columnIndex="1"
-                                  promptText="client@email.com"/>
+                        <!-- Email -->
+                        <VBox spacing="6">
+                            <Label text="Email" styleClass="subsection-title">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="12"/>
+                                </font>
+                            </Label>
+                            <TextField fx:id="emailField" promptText="client@email.com" styleClass="modern-input"
+                                      prefHeight="40">
+                                <font>
+                                    <Font name="Segoe UI" size="14"/>
+                                </font>
+                            </TextField>
+                        </VBox>
                         
-                        <Label text="Adresse:" GridPane.rowIndex="5" GridPane.columnIndex="0" 
-                              styleClass="form-label"/>
-                        <TextField fx:id="adresseField" GridPane.rowIndex="5" GridPane.columnIndex="1"
-                                  promptText="Adresse complète"/>
+                        <!-- Adresse -->
+                        <VBox spacing="6">
+                            <Label text="Adresse" styleClass="subsection-title">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="12"/>
+                                </font>
+                            </Label>
+                            <TextField fx:id="adresseField" promptText="Adresse complète" styleClass="modern-input"
+                                      prefHeight="40">
+                                <font>
+                                    <Font name="Segoe UI" size="14"/>
+                                </font>
+                            </TextField>
+                        </VBox>
                         
-                        <Label text="Type:" GridPane.rowIndex="6" GridPane.columnIndex="0" 
-                              styleClass="form-label"/>
-                        <ComboBox fx:id="typeCombo" GridPane.rowIndex="6" GridPane.columnIndex="1"
-                                 maxWidth="Infinity"/>
+                        <!-- Type Client -->
+                        <VBox spacing="6">
+                            <Label text="Type Client" styleClass="subsection-title">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="12"/>
+                                </font>
+                            </Label>
+                            <ComboBox fx:id="typeCombo" styleClass="modern-combo" prefHeight="40"
+                                     maxWidth="Infinity"/>
+                        </VBox>
                         
-                        <Label text="Points:" GridPane.rowIndex="7" GridPane.columnIndex="0" 
-                              styleClass="form-label"/>
-                        <TextField fx:id="pointsField" GridPane.rowIndex="7" GridPane.columnIndex="1"
-                                  editable="false"/>
-                        
-                        <Label text="Total Achats:" GridPane.rowIndex="8" GridPane.columnIndex="0" 
-                              styleClass="form-label"/>
-                        <Label fx:id="totalAchatsLabel" text="0.00 DH" 
-                              GridPane.rowIndex="8" GridPane.columnIndex="1"
-                              styleClass="total-value">
+                        <!-- Points Fidélité & Total Achats -->
+                        <HBox spacing="12">
+                            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                                <Label text="Points Fidélité" styleClass="subsection-title">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <TextField fx:id="pointsField" text="0" editable="false" 
+                                          styleClass="glass-input-disabled" prefHeight="40">
+                                    <font>
+                                        <Font name="Segoe UI" size="14"/>
+                                    </font>
+                                </TextField>
+                            </VBox>
+                            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                                <Label text="Total Achats" styleClass="subsection-title">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <Label fx:id="totalAchatsLabel" text="0.00 DZD" styleClass="glass-value-label"
+                                      prefHeight="40" alignment="CENTER_LEFT">
+                                    <font>
+                                        <Font name="Segoe UI Bold" size="14"/>
+                                    </font>
+                                    <padding>
+                                        <Insets left="12"/>
+                                    </padding>
+                                </Label>
+                            </VBox>
+                        </HBox>
+                </VBox>
+                
+                <!-- Action Buttons -->
+                <VBox spacing="10">
+                    <HBox spacing="10">
+                        <Button fx:id="saveButton" text="💾 Enregistrer" styleClass="btn-primary"
+                               onAction="#handleSave" HBox.hgrow="ALWAYS" prefHeight="42">
                             <font>
-                                <Font name="System Bold" size="13"/>
-                            </font>
-                        </Label>
-                        
-                        <columnConstraints>
-                            <ColumnConstraints percentWidth="35"/>
-                            <ColumnConstraints percentWidth="65"/>
-                        </columnConstraints>
-                    </GridPane>
-                    
-                    <Separator/>
-                    
-                    <!-- Action Buttons -->
-                    <GridPane hgap="10" vgap="10">
-                        <Button fx:id="saveButton" text="Enregistrer" styleClass="btn-success"
-                               onAction="#handleSave" maxWidth="Infinity"
-                               GridPane.rowIndex="0" GridPane.columnIndex="0">
-                            <font>
-                                <Font name="System Bold" size="12"/>
+                                <Font name="Segoe UI Semibold" size="14"/>
                             </font>
                         </Button>
-                        <Button fx:id="updateButton" text="Modifier" styleClass="btn-primary"
-                               onAction="#handleUpdate" maxWidth="Infinity"
-                               GridPane.rowIndex="0" GridPane.columnIndex="1">
+                        <Button fx:id="updateButton" text="✏️ Modifier" styleClass="btn-primary"
+                               onAction="#handleUpdate" HBox.hgrow="ALWAYS" prefHeight="42">
                             <font>
-                                <Font name="System Bold" size="12"/>
+                                <Font name="Segoe UI Semibold" size="14"/>
                             </font>
                         </Button>
-                        
-                        <Button fx:id="deleteButton" text="Supprimer" styleClass="btn-danger"
-                               onAction="#handleDelete" maxWidth="Infinity"
-                               GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                        <Button fx:id="clearFormButton" text="Annuler" styleClass="btn-cancel"
-                               onAction="#handleClearForm" maxWidth="Infinity"
-                               GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-                        
-                        <columnConstraints>
-                            <ColumnConstraints percentWidth="50"/>
-                            <ColumnConstraints percentWidth="50"/>
-                        </columnConstraints>
-                    </GridPane>
+                    </HBox>
                     
-                    <Separator/>
+                    <HBox spacing="10">
+                        <Button fx:id="deleteButton" text="🗑️ Supprimer" styleClass="btn-danger-glass"
+                               onAction="#handleDelete" HBox.hgrow="ALWAYS" prefHeight="42">
+                            <font>
+                                <Font name="Segoe UI Semibold" size="14"/>
+                            </font>
+                        </Button>
+                        <Button fx:id="clearFormButton" text="🔄 Annuler" styleClass="btn-secondary"
+                               onAction="#handleClearForm" HBox.hgrow="ALWAYS" prefHeight="42">
+                            <font>
+                                <Font name="Segoe UI Semibold" size="14"/>
+                            </font>
+                        </Button>
+                    </HBox>
+                    
+                    <Separator styleClass="glass-separator"/>
                     
                     <!-- Loyalty Points Actions -->
                     <VBox spacing="10">
-                        <Label text="Gestion Points de Fidélité" styleClass="form-label">
+                        <Label text="🎁 Gestion Points de Fidélité" styleClass="subsection-title">
                             <font>
-                                <Font name="System Bold" size="12"/>
+                                <Font name="Segoe UI Semibold" size="12"/>
                             </font>
                         </Label>
                         
                         <HBox spacing="10">
-                            <Button fx:id="addPointsButton" text="Ajouter Points" styleClass="btn-primary"
-                                   onAction="#handleAddPoints" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
-                            <Button fx:id="usePointsButton" text="Utiliser Points" styleClass="btn-secondary"
-                                   onAction="#handleUsePoints" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="addPointsButton" text="➕ Ajouter Points" styleClass="btn-success-glass"
+                                   onAction="#handleAddPoints" HBox.hgrow="ALWAYS" prefHeight="40">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="13"/>
+                                </font>
+                            </Button>
+                            <Button fx:id="usePointsButton" text="➖ Utiliser Points" styleClass="btn-secondary"
+                                   onAction="#handleUsePoints" HBox.hgrow="ALWAYS" prefHeight="40">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="13"/>
+                                </font>
+                            </Button>
                         </HBox>
                     </VBox>
-                    
                 </VBox>
-                
             </VBox>
-        </HBox>
-    </center>
-    
-</BorderPane>
+        </VBox>
+    </HBox>
+</VBox>
+

@@ -1,8 +1,5 @@
 package org.example.model.entity;
 
-/**
- * Categorie - Entity class representing a product category
- */
 public class Categorie {
     
     private Long id;
@@ -22,7 +19,6 @@ public class Categorie {
         this.actif = true;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

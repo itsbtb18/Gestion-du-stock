@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * DAO pour la gestion des logs d'audit
- */
 public class AuditLogDAO {
 
     private final DatabaseConnection dbConnection;
@@ -22,9 +19,6 @@ public class AuditLogDAO {
 
     private final UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
 
-    /**
-     * Enregistre une action dans le journal d'audit
-     */
     public AuditLog save(AuditLog log) throws SQLException {
         String sql = "INSERT INTO audit_log (date_heure, utilisateur_id, action, entite, entite_id, " +
                 "description, valeur_avant, valeur_apres, adresse_ip, succes) " +
@@ -62,9 +56,6 @@ public class AuditLogDAO {
         }
     }
 
-    /**
-     * Enregistre une action simple (sans valeurs avant/aprÃ¨s)
-     */
     public void logAction(TypeAction action, String entite, Long entiteId, String description, 
                          Long utilisateurId, String adresseIp) throws SQLException {
         AuditLog log = new AuditLog();
@@ -84,9 +75,6 @@ public class AuditLogDAO {
         save(log);
     }
 
-    /**
-     * Enregistre une modification avec valeurs avant/aprÃ¨s
-     */
     public void logModification(String entite, Long entiteId, String description, 
                                String valeurAvant, String valeurApres, 
                                Long utilisateurId, String adresseIp) throws SQLException {
@@ -109,9 +97,6 @@ public class AuditLogDAO {
         save(log);
     }
 
-    /**
-     * Recherche un log par ID
-     */
     public Optional<AuditLog> findById(Long id) throws SQLException {
         String sql = "SELECT * FROM audit_log WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -126,9 +111,6 @@ public class AuditLogDAO {
         return Optional.empty();
     }
 
-    /**
-     * Retourne tous les logs
-     */
     public List<AuditLog> findAll() throws SQLException {
         String sql = "SELECT * FROM audit_log ORDER BY date_heure DESC LIMIT 1000";
         List<AuditLog> logs = new ArrayList<>();
@@ -144,9 +126,6 @@ public class AuditLogDAO {
         return logs;
     }
 
-    /**
-     * Retourne les logs par utilisateur
-     */
     public List<AuditLog> findByUtilisateur(Long utilisateurId) throws SQLException {
         String sql = "SELECT * FROM audit_log WHERE utilisateur_id = ? ORDER BY date_heure DESC LIMIT 500";
         List<AuditLog> logs = new ArrayList<>();
@@ -163,9 +142,6 @@ public class AuditLogDAO {
         return logs;
     }
 
-    /**
-     * Retourne les logs par type d'action
-     */
     public List<AuditLog> findByAction(TypeAction action) throws SQLException {
         String sql = "SELECT * FROM audit_log WHERE action = ? ORDER BY date_heure DESC LIMIT 500";
         List<AuditLog> logs = new ArrayList<>();
@@ -182,9 +158,6 @@ public class AuditLogDAO {
         return logs;
     }
 
-    /**
-     * Retourne les logs par entitÃ©
-     */
     public List<AuditLog> findByEntite(String entite, Long entiteId) throws SQLException {
         String sql = "SELECT * FROM audit_log WHERE entite = ? AND entite_id = ? ORDER BY date_heure DESC";
         List<AuditLog> logs = new ArrayList<>();
@@ -202,9 +175,6 @@ public class AuditLogDAO {
         return logs;
     }
 
-    /**
-     * Retourne les logs par pÃ©riode
-     */
     public List<AuditLog> findByPeriode(java.time.LocalDateTime debut, java.time.LocalDateTime fin) throws SQLException {
         String sql = "SELECT * FROM audit_log WHERE date_heure BETWEEN ? AND ? ORDER BY date_heure DESC";
         List<AuditLog> logs = new ArrayList<>();
@@ -222,9 +192,6 @@ public class AuditLogDAO {
         return logs;
     }
 
-    /**
-     * Retourne les Ã©checs (tentatives non rÃ©ussies)
-     */
     public List<AuditLog> findEchecs() throws SQLException {
         String sql = "SELECT * FROM audit_log WHERE succes = false ORDER BY date_heure DESC LIMIT 500";
         List<AuditLog> logs = new ArrayList<>();
@@ -240,9 +207,6 @@ public class AuditLogDAO {
         return logs;
     }
 
-    /**
-     * Retourne les connexions
-     */
     public List<AuditLog> findConnexions() throws SQLException {
         String sql = "SELECT * FROM audit_log WHERE action = 'CONNEXION' ORDER BY date_heure DESC LIMIT 500";
         List<AuditLog> logs = new ArrayList<>();
@@ -258,9 +222,6 @@ public class AuditLogDAO {
         return logs;
     }
 
-    /**
-     * Compte le nombre de logs
-     */
     public int count() throws SQLException {
         String sql = "SELECT COUNT(*) FROM audit_log";
         try (Connection conn = dbConnection.getConnection();
@@ -273,9 +234,6 @@ public class AuditLogDAO {
         return 0;
     }
 
-    /**
-     * Supprime les anciens logs (plus de X jours)
-     */
     public int deleteOlderThan(int jours) throws SQLException {
         String sql = "DELETE FROM audit_log WHERE date_heure < DATEADD('DAY', ?, CURRENT_TIMESTAMP)";
         try (Connection conn = dbConnection.getConnection();
@@ -285,9 +243,6 @@ public class AuditLogDAO {
         }
     }
 
-    /**
-     * Convertit un ResultSet en AuditLog
-     */
     private AuditLog mapResultSetToAuditLog(ResultSet rs) throws SQLException {
         AuditLog log = new AuditLog();
         log.setId(rs.getLong("id"));

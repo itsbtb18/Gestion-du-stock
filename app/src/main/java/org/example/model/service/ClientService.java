@@ -8,10 +8,6 @@ import org.example.util.ValidationUtil;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * ClientService - Business logic for client management
- * Singleton service for handling client operations
- */
 public class ClientService {
     
     private static ClientService instance;
@@ -28,9 +24,6 @@ public class ClientService {
         return instance;
     }
     
-    /**
-     * Register a new client
-     */
     public Client registerClient(Client client) {
         if (!ValidationUtil.estNonVide(client.getNom())) {
             throw new IllegalArgumentException("Le nom du client est requis");

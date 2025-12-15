@@ -12,10 +12,6 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import java.util.Optional;
 
-/**
- * DialogManager - Centralized utility for creating and managing JavaFX dialogs
- * Provides reusable methods for common dialog patterns (confirm, error, info, custom modals)
- */
 public class DialogManager {
     
     private static DialogManager instance;
@@ -29,12 +25,6 @@ public class DialogManager {
         return instance;
     }
     
-    /**
-     * Show confirmation dialog
-     * @param title Dialog title
-     * @param message Confirmation message
-     * @return true if user clicked OK/Yes, false otherwise
-     */
     public boolean showConfirmation(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);
@@ -45,14 +35,6 @@ public class DialogManager {
         return result.isPresent() && result.get() == ButtonType.OK;
     }
     
-    /**
-     * Show confirmation dialog with custom buttons
-     * @param title Dialog title
-     * @param header Header text (can be null)
-     * @param message Confirmation message
-     * @param buttons Custom button types
-     * @return Selected button type
-     */
     public Optional<ButtonType> showConfirmation(String title, String header, String message, ButtonType... buttons) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);
@@ -63,11 +45,6 @@ public class DialogManager {
         return alert.showAndWait();
     }
     
-    /**
-     * Show error dialog
-     * @param title Dialog title
-     * @param message Error message
-     */
     public void showError(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -76,29 +53,17 @@ public class DialogManager {
         alert.showAndWait();
     }
     
-    /**
-     * Show error dialog with exception details
-     * @param title Dialog title
-     * @param message Error message
-     * @param exception Exception to display
-     */
     public void showError(String title, String message, Exception exception) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(message);
         alert.setContentText(exception.getMessage());
         
-        // Log the full stack trace
         LoggerUtil.logError(DialogManager.class, message, exception);
         
         alert.showAndWait();
     }
     
-    /**
-     * Show information dialog
-     * @param title Dialog title
-     * @param message Information message
-     */
     public void showInfo(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -107,11 +72,6 @@ public class DialogManager {
         alert.showAndWait();
     }
     
-    /**
-     * Show warning dialog
-     * @param title Dialog title
-     * @param message Warning message
-     */
     public void showWarning(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
@@ -120,15 +80,6 @@ public class DialogManager {
         alert.showAndWait();
     }
     
-    /**
-     * Show custom modal dialog from FXML
-     * @param fxmlPath Path to FXML file (relative to resources)
-     * @param title Dialog title
-     * @param width Dialog width
-     * @param height Dialog height
-     * @param modal Whether dialog should be modal
-     * @return FXMLLoader for accessing controller
-     */
     public FXMLLoader showCustomDialog(String fxmlPath, String title, double width, double height, boolean modal) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -143,8 +94,15 @@ public class DialogManager {
             }
             
             Scene scene = new Scene(root, width, height);
-            // TODO: Add stylesheet if needed
-            // scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            
+            try {
+                java.net.URL cssUrl = getClass().getResource("/css/styles.css");
+                if (cssUrl != null) {
+                    scene.getStylesheets().add(cssUrl.toExternalForm());
+                }
+            } catch (Exception e) {
+                LoggerUtil.logWarning(DialogManager.class, "Could not load stylesheet for dialog");
+            }
             
             dialogStage.setScene(scene);
             dialogStage.showAndWait();
@@ -158,29 +116,11 @@ public class DialogManager {
         }
     }
     
-    /**
-     * Show custom modal dialog and return controller
-     * @param fxmlPath Path to FXML file
-     * @param title Dialog title
-     * @param width Dialog width
-     * @param height Dialog height
-     * @param controllerClass Expected controller class
-     * @param <T> Controller type
-     * @return Controller instance or null if failed
-     */
     public <T> T showCustomDialog(String fxmlPath, String title, double width, double height, Class<T> controllerClass) {
         FXMLLoader loader = showCustomDialog(fxmlPath, title, width, height, true);
         return loader != null ? loader.getController() : null;
     }
     
-    /**
-     * Show non-modal window
-     * @param fxmlPath Path to FXML file
-     * @param title Window title
-     * @param width Window width
-     * @param height Window height
-     * @return Stage instance
-     */
     public Stage showWindow(String fxmlPath, String title, double width, double height) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -203,11 +143,8 @@ public class DialogManager {
         }
     }
     
-    /**
-     * Close all open dialogs
-     * TODO: Implement dialog tracking if needed
-     */
     public void closeAllDialogs() {
-        // Placeholder for future implementation
+        
+        LoggerUtil.logDebug(DialogManager.class, "closeAllDialogs called - modal dialogs close automatically");
     }
 }

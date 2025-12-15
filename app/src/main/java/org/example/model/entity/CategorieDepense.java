@@ -1,8 +1,5 @@
 package org.example.model.entity;
 
-/**
- * CategorieDepense - Expense category enum
- */
 public enum CategorieDepense {
     LOYER("Loyer"),
     ELECTRICITE("Électricité"),

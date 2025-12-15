@@ -1,8 +1,5 @@
 package org.example.model.entity;
 
-/**
- * FrequenceDepense - Expense frequency enum
- */
 public enum FrequenceDepense {
     QUOTIDIEN("Quotidien"),
     HEBDOMADAIRE("Hebdomadaire"),

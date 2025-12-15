@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * DAO pour la gestion des emplacements de stock
- */
 public class EmplacementDAO {
 
     private final DatabaseConnection dbConnection;
@@ -20,9 +17,6 @@ public class EmplacementDAO {
         this.dbConnection = DatabaseConnection.getInstance();
     }
 
-    /**
-     * Sauvegarde un nouvel emplacement
-     */
     public Emplacement save(Emplacement emplacement) throws SQLException {
         String sql = "INSERT INTO emplacements (code, nom, type, adresse, ville, responsable, " +
                 "telephone, date_creation, actif, commentaire) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -53,9 +47,6 @@ public class EmplacementDAO {
         }
     }
 
-    /**
-     * Met Ã  jour un emplacement
-     */
     public void update(Emplacement emplacement) throws SQLException {
         String sql = "UPDATE emplacements SET code = ?, nom = ?, type = ?, adresse = ?, ville = ?, " +
                 "responsable = ?, telephone = ?, actif = ?, commentaire = ? WHERE id = ?";
@@ -78,9 +69,6 @@ public class EmplacementDAO {
         }
     }
 
-    /**
-     * Supprime un emplacement
-     */
     public void delete(Long id) throws SQLException {
         String sql = "DELETE FROM emplacements WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -90,9 +78,6 @@ public class EmplacementDAO {
         }
     }
 
-    /**
-     * Recherche un emplacement par ID
-     */
     public Optional<Emplacement> findById(Long id) throws SQLException {
         String sql = "SELECT * FROM emplacements WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -107,9 +92,6 @@ public class EmplacementDAO {
         return Optional.empty();
     }
 
-    /**
-     * Recherche un emplacement par code
-     */
     public Optional<Emplacement> findByCode(String code) throws SQLException {
         String sql = "SELECT * FROM emplacements WHERE code = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -124,9 +106,6 @@ public class EmplacementDAO {
         return Optional.empty();
     }
 
-    /**
-     * Retourne tous les emplacements
-     */
     public List<Emplacement> findAll() throws SQLException {
         String sql = "SELECT * FROM emplacements ORDER BY nom";
         List<Emplacement> emplacements = new ArrayList<>();
@@ -142,9 +121,6 @@ public class EmplacementDAO {
         return emplacements;
     }
 
-    /**
-     * Retourne les emplacements actifs
-     */
     public List<Emplacement> findActive() throws SQLException {
         String sql = "SELECT * FROM emplacements WHERE actif = true ORDER BY nom";
         List<Emplacement> emplacements = new ArrayList<>();
@@ -160,9 +136,6 @@ public class EmplacementDAO {
         return emplacements;
     }
 
-    /**
-     * Retourne les emplacements par type
-     */
     public List<Emplacement> findByType(TypeEmplacement type) throws SQLException {
         String sql = "SELECT * FROM emplacements WHERE type = ? ORDER BY nom";
         List<Emplacement> emplacements = new ArrayList<>();
@@ -179,9 +152,6 @@ public class EmplacementDAO {
         return emplacements;
     }
 
-    /**
-     * Compte le nombre d'emplacements
-     */
     public int count() throws SQLException {
         String sql = "SELECT COUNT(*) FROM emplacements";
         try (Connection conn = dbConnection.getConnection();
@@ -194,9 +164,6 @@ public class EmplacementDAO {
         return 0;
     }
 
-    /**
-     * Convertit un ResultSet en Emplacement
-     */
     private Emplacement mapResultSetToEmplacement(ResultSet rs) throws SQLException {
         Emplacement emplacement = new Emplacement();
         emplacement.setId(rs.getLong("id"));

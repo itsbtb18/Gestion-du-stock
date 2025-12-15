@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.effect.DropShadow?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.SignupController"
+           stylesheets="@../css/styles.css"
+           prefWidth="1280" prefHeight="720">
+    
+    <ImageView fx:id="backgroundImage" preserveRatio="false" StackPane.alignment="CENTER">
+        <image><Image url="@../images/background_image.jpg"/></image>
+    </ImageView>
+    
+    <Region style="-fx-background-color: linear-gradient(to bottom right, rgba(0,0,0,0.5), rgba(0,0,0,0.7));" />
+    
+    <HBox alignment="CENTER" spacing="0">
+        
+        <VBox alignment="CENTER" spacing="0" HBox.hgrow="ALWAYS">
+            <VBox alignment="CENTER_LEFT" spacing="10" maxWidth="500">
+                <padding><Insets left="100"/></padding>
+                
+                <ImageView fitWidth="80" fitHeight="80" preserveRatio="true">
+                    <image><Image url="@../images/reb7a_logo.png"/></image>
+                    <effect><DropShadow color="rgba(0,0,0,0.6)" radius="25"/></effect>
+                </ImageView>
+                
+                <Label text="Rejoignez" style="-fx-text-fill: rgba(255,255,255,0.75); -fx-font-size: 18px; -fx-font-weight: 500;">
+                    <VBox.margin><Insets top="25"/></VBox.margin>
+                </Label>
+                
+                <Label text="REB7A" style="-fx-text-fill: #60A5FA; -fx-font-size: 72px; -fx-font-weight: 900;">
+                    <effect><DropShadow color="rgba(96,165,250,0.6)" radius="20"/></effect>
+                </Label>
+                
+                <Label text="Creez votre compte et commencez&#10;a gerer votre commerce des aujourd'hui." 
+                       style="-fx-text-fill: rgba(255,255,255,0.85); -fx-font-size: 20px; -fx-font-weight: 400; -fx-line-spacing: 4;" 
+                       wrapText="true" maxWidth="420">
+                    <VBox.margin><Insets top="20"/></VBox.margin>
+                </Label>
+                
+                <VBox spacing="15" alignment="CENTER_LEFT">
+                    <VBox.margin><Insets top="35"/></VBox.margin>
+                    
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <Label text="✓" style="-fx-text-fill: #22C55E; -fx-font-size: 20px; -fx-font-weight: 800;"/>
+                        <Label text="Gestion complete des stocks" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 16px;"/>
+                    </HBox>
+                    
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <Label text="✓" style="-fx-text-fill: #22C55E; -fx-font-size: 20px; -fx-font-weight: 800;"/>
+                        <Label text="Suivi des ventes en temps reel" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 16px;"/>
+                    </HBox>
+                    
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <Label text="✓" style="-fx-text-fill: #22C55E; -fx-font-size: 20px; -fx-font-weight: 800;"/>
+                        <Label text="Rapports et statistiques detailles" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 16px;"/>
+                    </HBox>
+                    
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <Label text="✓" style="-fx-text-fill: #22C55E; -fx-font-size: 20px; -fx-font-weight: 800;"/>
+                        <Label text="Interface moderne et intuitive" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 16px;"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </VBox>
+        
+        <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                        style="-fx-background: transparent; -fx-background-color: transparent;"
+                        maxHeight="680">
+                <VBox alignment="CENTER" spacing="0" maxWidth="450" minWidth="420"
+                      style="-fx-background-color: rgba(15,23,42,0.88); -fx-background-radius: 28; -fx-border-color: rgba(255,255,255,0.15); -fx-border-radius: 28; -fx-border-width: 1;">
+                    <effect><DropShadow color="rgba(0,0,0,0.5)" radius="50" spread="0.02"/></effect>
+                    <padding><Insets top="40" right="40" bottom="40" left="40"/></padding>
+                    
+                    <Label text="Creer un compte" style="-fx-text-fill: white; -fx-font-size: 32px; -fx-font-weight: 800;"/>
+                    
+                    <Label text="Remplissez les informations ci-dessous" 
+                           style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 14px;">
+                        <VBox.margin><Insets top="6"/></VBox.margin>
+                    </Label>
+                    
+                    <VBox spacing="16" maxWidth="370">
+                        <VBox.margin><Insets top="28"/></VBox.margin>
+                        
+                        <HBox spacing="15">
+                            <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                <Label text="NOM" style="-fx-text-fill: rgba(255,255,255,0.85); -fx-font-size: 11px; -fx-font-weight: 700;"/>
+                                <TextField fx:id="txtNom" promptText="Votre nom" 
+                                          prefHeight="48"
+                                          style="-fx-background-color: rgba(255,255,255,0.08); -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 12; -fx-text-fill: white; -fx-prompt-text-fill: rgba(255,255,255,0.4); -fx-font-size: 15px; -fx-padding: 12 14;">
+                                </TextField>
+                            </VBox>
+                            <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                <Label text="PRENOM" style="-fx-text-fill: rgba(255,255,255,0.85); -fx-font-size: 11px; -fx-font-weight: 700;"/>
+                                <TextField fx:id="txtPrenom" promptText="Votre prenom" 
+                                          prefHeight="48"
+                                          style="-fx-background-color: rgba(255,255,255,0.08); -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 12; -fx-text-fill: white; -fx-prompt-text-fill: rgba(255,255,255,0.4); -fx-font-size: 15px; -fx-padding: 12 14;">
+                                </TextField>
+                            </VBox>
+                        </HBox>
+                        
+                        <VBox spacing="8">
+                            <Label text="ADRESSE EMAIL" style="-fx-text-fill: rgba(255,255,255,0.85); -fx-font-size: 11px; -fx-font-weight: 700;"/>
+                            <TextField fx:id="txtEmail" promptText="exemple@email.com" 
+                                      prefHeight="48"
+                                      style="-fx-background-color: rgba(255,255,255,0.08); -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 12; -fx-text-fill: white; -fx-prompt-text-fill: rgba(255,255,255,0.4); -fx-font-size: 15px; -fx-padding: 12 14;">
+                            </TextField>
+                        </VBox>
+                        
+                        <VBox spacing="8">
+                            <Label text="NOM D'UTILISATEUR" style="-fx-text-fill: rgba(255,255,255,0.85); -fx-font-size: 11px; -fx-font-weight: 700;"/>
+                            <TextField fx:id="txtUsername" promptText="Choisissez un identifiant" 
+                                      prefHeight="48"
+                                      style="-fx-background-color: rgba(255,255,255,0.08); -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 12; -fx-text-fill: white; -fx-prompt-text-fill: rgba(255,255,255,0.4); -fx-font-size: 15px; -fx-padding: 12 14;">
+                            </TextField>
+                        </VBox>
+                        
+                        <HBox spacing="15">
+                            <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                <Label text="MOT DE PASSE" style="-fx-text-fill: rgba(255,255,255,0.85); -fx-font-size: 11px; -fx-font-weight: 700;"/>
+                                <PasswordField fx:id="txtPassword" promptText="Min. 6 caracteres" 
+                                              prefHeight="48"
+                                              style="-fx-background-color: rgba(255,255,255,0.08); -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 12; -fx-text-fill: white; -fx-prompt-text-fill: rgba(255,255,255,0.4); -fx-font-size: 15px; -fx-padding: 12 14;">
+                                </PasswordField>
+                            </VBox>
+                            <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                <Label text="CONFIRMATION" style="-fx-text-fill: rgba(255,255,255,0.85); -fx-font-size: 11px; -fx-font-weight: 700;"/>
+                                <PasswordField fx:id="txtConfirmPassword" promptText="Confirmer" 
+                                              prefHeight="48"
+                                              style="-fx-background-color: rgba(255,255,255,0.08); -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 12; -fx-text-fill: white; -fx-prompt-text-fill: rgba(255,255,255,0.4); -fx-font-size: 15px; -fx-padding: 12 14;">
+                                </PasswordField>
+                            </VBox>
+                        </HBox>
+                        
+                        <Label fx:id="lblError" text="" wrapText="true" visible="false" maxWidth="Infinity"
+                               style="-fx-text-fill: #FCA5A5; -fx-background-color: rgba(220,38,38,0.15); -fx-background-radius: 10; -fx-padding: 14; -fx-font-size: 13px; -fx-font-weight: 600; -fx-border-color: rgba(252,165,165,0.4); -fx-border-width: 1; -fx-border-radius: 10;"/>
+                        
+                        <Label fx:id="lblSuccess" text="" wrapText="true" visible="false" maxWidth="Infinity"
+                               style="-fx-text-fill: #86EFAC; -fx-background-color: rgba(34,197,94,0.15); -fx-background-radius: 10; -fx-padding: 14; -fx-font-size: 13px; -fx-font-weight: 600; -fx-border-color: rgba(134,239,172,0.4); -fx-border-width: 1; -fx-border-radius: 10;"/>
+                        
+                        <Button fx:id="btnSignup" text="CREER MON COMPTE" onAction="#handleSignup" 
+                               maxWidth="Infinity" prefHeight="54"
+                               style="-fx-background-color: linear-gradient(to right, #22C55E, #16A34A); -fx-background-radius: 12; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: 700; -fx-cursor: hand;">
+                            <effect><DropShadow color="rgba(22,163,74,0.6)" radius="16" offsetY="5"/></effect>
+                            <VBox.margin><Insets top="8"/></VBox.margin>
+                        </Button>
+                        
+                        <HBox alignment="CENTER" spacing="10">
+                            <VBox.margin><Insets top="6"/></VBox.margin>
+                            <Region style="-fx-background-color: rgba(255,255,255,0.15); -fx-pref-height: 1;" HBox.hgrow="ALWAYS"/>
+                            <Label text="DEJA INSCRIT ?" style="-fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 12px; -fx-font-weight: 600;"/>
+                            <Region style="-fx-background-color: rgba(255,255,255,0.15); -fx-pref-height: 1;" HBox.hgrow="ALWAYS"/>
+                        </HBox>
+                        
+                        <Button text="RETOUR A LA CONNEXION" onAction="#handleBackToLogin" 
+                               maxWidth="Infinity" prefHeight="50"
+                               style="-fx-background-color: transparent; -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.35); -fx-border-radius: 12; -fx-border-width: 2; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: 600; -fx-cursor: hand;">
+                        </Button>
+                    </VBox>
+                    
+                    <VBox alignment="CENTER" spacing="4">
+                        <VBox.margin><Insets top="25"/></VBox.margin>
+                        <Label text="© 2025 REB7A - Systeme de Gestion POS" style="-fx-text-fill: rgba(255,255,255,0.45); -fx-font-size: 11px;"/>
+                        <Label text="Version 1.0.0" style="-fx-text-fill: rgba(255,255,255,0.35); -fx-font-size: 10px;"/>
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+        </VBox>
+        
+    </HBox>
+    
+</StackPane>

@@ -1,8 +1,5 @@
 package org.example.model.entity;
 
-/**
- * TypeMouvement - Types of stock movements
- */
 public enum TypeMouvement {
     ENTREE("Entrée", "Ajout de stock", 1),
     SORTIE("Sortie", "Retrait de stock", -1),
@@ -14,7 +11,7 @@ public enum TypeMouvement {
     
     private final String libelle;
     private final String description;
-    private final int coefficient; // +1 for increase, -1 for decrease, 0 for adjustment
+    private final int coefficient; 
     
     TypeMouvement(String libelle, String description, int coefficient) {
         this.libelle = libelle;

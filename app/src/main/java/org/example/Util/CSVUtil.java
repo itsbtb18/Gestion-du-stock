@@ -6,9 +6,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * CSVUtil - Utility class for CSV operations
- */
 public class CSVUtil {
     
     private static final String SEPARATOR = AppConfig.CSV_SEPARATOR;
@@ -18,9 +15,6 @@ public class CSVUtil {
         throw new UnsupportedOperationException("Utility class");
     }
     
-    /**
-     * Export data to CSV file
-     */
     public static boolean exporter(String fichier, List<String[]> donnees) {
         try (BufferedWriter writer = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(fichier), StandardCharsets.UTF_8))) {
@@ -37,9 +31,6 @@ public class CSVUtil {
         }
     }
     
-    /**
-     * Import data from CSV file
-     */
     public static List<String[]> importer(String fichier) {
         List<String[]> donnees = new ArrayList<>();
         
@@ -59,9 +50,6 @@ public class CSVUtil {
         return donnees;
     }
     
-    /**
-     * Create CSV line from array
-     */
     public static String creerLigneCSV(String[] valeurs) {
         StringBuilder sb = new StringBuilder();
         
@@ -75,15 +63,11 @@ public class CSVUtil {
         return sb.toString();
     }
     
-    /**
-     * Escape CSV value (add quotes if needed)
-     */
     private static String echapperValeur(String valeur) {
         if (valeur == null) {
             return "";
         }
         
-        // Add quotes if value contains separator, quotes, or newlines
         if (valeur.contains(SEPARATOR) || valeur.contains("\"") || valeur.contains("\n")) {
             return "\"" + valeur.replace("\"", "\"\"") + "\"";
         }
@@ -91,16 +75,11 @@ public class CSVUtil {
         return valeur;
     }
     
-    /**
-     * Convert list of objects to CSV format
-     */
     public static <T> List<String[]> convertirEnTableau(List<T> objets, ConvertisseurCSV<T> convertisseur) {
         List<String[]> resultat = new ArrayList<>();
         
-        // Add header
         resultat.add(convertisseur.obtenirEntetes());
         
-        // Add data rows
         for (T objet : objets) {
             resultat.add(convertisseur.convertirEnLigne(objet));
         }
@@ -108,24 +87,16 @@ public class CSVUtil {
         return resultat;
     }
     
-    /**
-     * Interface for CSV conversion
-     */
     public interface ConvertisseurCSV<T> {
         String[] obtenirEntetes();
         String[] convertirEnLigne(T objet);
     }
     
-    /**
-     * Export ventes to CSV file
-     */
     public static boolean exportVentes(List<org.example.model.entity.Vente> ventes, String filename) {
         List<String[]> data = new ArrayList<>();
         
-        // Header
         data.add(new String[]{"Numero", "Date", "Client", "Montant Total", "Remise", "TVA", "Montant Final", "Mode Paiement"});
         
-        // Data rows
         for (org.example.model.entity.Vente vente : ventes) {
             data.add(new String[]{
                 vente.getNumero(),
@@ -142,16 +113,11 @@ public class CSVUtil {
         return exporter(filename, data);
     }
     
-    /**
-     * Export mouvements de stock to CSV file
-     */
     public static boolean exportMouvements(List<org.example.model.entity.MouvementStock> mouvements, String filename) {
         List<String[]> data = new ArrayList<>();
         
-        // Header
         data.add(new String[]{"Date", "Produit", "Type", "Quantite", "Motif"});
         
-        // Data rows
         for (org.example.model.entity.MouvementStock mouv : mouvements) {
             data.add(new String[]{
                 mouv.getDateMouvement().toString(),

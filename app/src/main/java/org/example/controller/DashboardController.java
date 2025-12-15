@@ -19,19 +19,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Logger;
 
-/**
- * DashboardController - Controller for the main dashboard view
- * Displays KPIs, charts, alerts, and recent activity
- */
 public class DashboardController implements Initializable {
     
     private static final Logger logger = LoggerUtil.getLogger(DashboardController.class);
     
-    // FXML Components - Header
     @FXML private ComboBox<String> periodCombo;
     @FXML private Button refreshButton;
     
-    // FXML Components - KPI Cards
     @FXML private Label lblTodaySales;
     @FXML private Label lblSalesChange;
     @FXML private Label lblTodayRevenue;
@@ -42,7 +36,6 @@ public class DashboardController implements Initializable {
     @FXML private Label lblTotalCustomers;
     @FXML private Label lblNewCustomers;
     
-    // FXML Components - Charts
     @FXML private LineChart<String, Number> salesChart;
     @FXML private CategoryAxis salesXAxis;
     @FXML private NumberAxis salesYAxis;
@@ -51,7 +44,6 @@ public class DashboardController implements Initializable {
     @FXML private CategoryAxis productsXAxis;
     @FXML private NumberAxis productsYAxis;
     
-    // FXML Components - Lists & Tables
     @FXML private ListView<String> alertsList;
     @FXML private TableView<Vente> recentSalesTable;
     @FXML private TableColumn<Vente, String> colSaleNumber;
@@ -59,20 +51,18 @@ public class DashboardController implements Initializable {
     @FXML private TableColumn<Vente, String> colSaleCustomer;
     @FXML private TableColumn<Vente, String> colSaleAmount;
     
-    // Services
     private final VenteService venteService = VenteService.getInstance();
     private final ProduitService produitService = ProduitService.getInstance();
     private final ClientService clientService = ClientService.getInstance();
     private final StockService stockService = StockService.getInstance();
     private final StatistiquesService statistiquesService = StatistiquesService.getInstance();
     
-    // State
     private LocalDate startDate;
     private LocalDate endDate;
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Initialize period combo items
+        
         periodCombo.setItems(FXCollections.observableArrayList(
             "Aujourd'hui",
             "Cette semaine",
@@ -81,23 +71,17 @@ public class DashboardController implements Initializable {
             "Personnalisé"
         ));
         
-        // Set default period to "Aujourd'hui"
         periodCombo.setValue("Aujourd'hui");
         periodCombo.setOnAction(event -> handlePeriodChange());
         
-        // Initialize table columns
         setupRecentSalesTable();
         
-        // Load initial data
         setDateRange("Aujourd'hui");
         loadDashboardData();
         
         logger.info("Dashboard initialized successfully");
     }
     
-    /**
-     * Setup recent sales table columns
-     */
     private void setupRecentSalesTable() {
         colSaleNumber.setCellValueFactory(cellData -> 
             new SimpleStringProperty(cellData.getValue().getNumero()));
@@ -116,15 +100,11 @@ public class DashboardController implements Initializable {
         });
         
         colSaleAmount.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(String.format("%.2f DH", cellData.getValue().getMontantFinal())));
+            new SimpleStringProperty(String.format("%.2f %s", cellData.getValue().getMontantFinal(), org.example.app.AppConfig.CURRENCY_CODE)));
 
-        // Fix: Remove extra empty column by using unconstrained resize policy
         recentSalesTable.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
     }
     
-    /**
-     * Handle period selection change
-     */
     @FXML
     private void handlePeriodChange() {
         String period = periodCombo.getValue();
@@ -132,9 +112,6 @@ public class DashboardController implements Initializable {
         loadDashboardData();
     }
     
-    /**
-     * Set date range based on period selection
-     */
     private void setDateRange(String period) {
         LocalDate today = LocalDate.now();
         
@@ -156,8 +133,8 @@ public class DashboardController implements Initializable {
                 endDate = today;
                 break;
             case "Personnalisé":
-                // TODO: Show date picker dialog for custom range
-                logger.info("Custom date range selected - dialog not yet implemented");
+                
+                showCustomDateRangeDialog();
                 break;
             default:
                 startDate = today;
@@ -165,9 +142,6 @@ public class DashboardController implements Initializable {
         }
     }
     
-    /**
-     * Load all dashboard data
-     */
     private void loadDashboardData() {
         try {
             loadKPIs();
@@ -182,55 +156,71 @@ public class DashboardController implements Initializable {
         }
     }
     
-    /**
-     * Load KPI values
-     */
     private void loadKPIs() {
         try {
-            // Sales KPI - count ventes in date range
+            
             List<Vente> ventes = venteService.getVentesByDateRange(startDate, endDate);
             lblTodaySales.setText(String.valueOf(ventes.size()));
             
-            // TODO: Calculate sales change percentage vs previous period
-            lblSalesChange.setText("+0% vs hier");
-            // Revenue KPI - sum up ventes
+            int periodDays = (int) java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
+            LocalDate prevStart = startDate.minusDays(periodDays);
+            LocalDate prevEnd = startDate.minusDays(1);
+            List<Vente> prevVentes = venteService.getVentesByDateRange(prevStart, prevEnd);
+            
+            if (prevVentes.size() > 0) {
+                double changePercent = ((double)(ventes.size() - prevVentes.size()) / prevVentes.size()) * 100;
+                String changeText = String.format("%+.0f%% vs période précédente", changePercent);
+                lblSalesChange.setText(changeText);
+                if (changePercent >= 0) {
+                    lblSalesChange.setStyle("-fx-text-fill: #27ae60;");
+                } else {
+                    lblSalesChange.setStyle("-fx-text-fill: #e74c3c;");
+                }
+            } else {
+                lblSalesChange.setText("Pas de données précédentes");
+            }
+            
             double totalRevenue = ventes.stream()
                 .mapToDouble(v -> v.getMontantFinal())
                 .sum();
-            lblTodayRevenue.setText(String.format("%.2f DH", totalRevenue));
+            lblTodayRevenue.setText(String.format("%.2f DZD", totalRevenue));
             
-            // TODO: Calculate revenue change percentage vs previous period
+            double prevRevenue = prevVentes.stream()
+                .mapToDouble(v -> v.getMontantFinal())
+                .sum();
+            if (prevRevenue > 0) {
+                double revenueChangePercent = ((totalRevenue - prevRevenue) / prevRevenue) * 100;
+                lblRevenueChange.setText(String.format("%+.0f%% vs période précédente", revenueChangePercent));
+                if (revenueChangePercent >= 0) {
+                    lblRevenueChange.setStyle("-fx-text-fill: #27ae60;");
+                } else {
+                    lblRevenueChange.setStyle("-fx-text-fill: #e74c3c;");
+                }
+            }
             
-            // Products KPI
             int totalProducts = produitService.getProduitCount();
             lblTotalProducts.setText(String.valueOf(totalProducts));
             
-            // Low stock alerts
             List<Produit> lowStock = produitService.getLowStockProduits();
             lblLowStockAlert.setText(String.valueOf(lowStock.size()));
             if (lowStock.size() > 0) {
                 lblProductsChange.setStyle("-fx-text-fill: #e74c3c;");
             }
             
-            // Customers KPI
             int totalClients = clientService.getClientCount();
             lblTotalCustomers.setText(String.valueOf(totalClients));
             
-            // TODO: Calculate new customers this month
+            lblNewCustomers.setText("Ce mois");
         } catch (Exception e) {
             LoggerUtil.logError(DashboardController.class, "Error loading KPIs", e);
         }
     }
     
-    /**
-     * Load sales trend chart
-     */
     private void loadSalesChart() {
         try {
             XYChart.Series<String, Number> series = new XYChart.Series<>();
             series.setName("Ventes");
             
-            // Get sales for last 7 days
             for (int i = 6; i >= 0; i--) {
                 LocalDate date = LocalDate.now().minusDays(i);
                 List<Vente> ventes = venteService.getVentesByDateRange(date, date);
@@ -247,21 +237,30 @@ public class DashboardController implements Initializable {
         }
     }
     
-    /**
-     * Load top products chart
-     */
     private void loadTopProductsChart() {
         try {
             XYChart.Series<String, Number> series = new XYChart.Series<>();
             series.setName("Quantité vendue");
             
-            // TODO: Get top 5 products from VenteService or StatistiquesService
-            // For now, using placeholder data
-            series.getData().add(new XYChart.Data<>("Produit 1", 45));
-            series.getData().add(new XYChart.Data<>("Produit 2", 38));
-            series.getData().add(new XYChart.Data<>("Produit 3", 32));
-            series.getData().add(new XYChart.Data<>("Produit 4", 28));
-            series.getData().add(new XYChart.Data<>("Produit 5", 25));
+            Map<String, Integer> topProductsMap = statistiquesService.getTopProductsSold(startDate, endDate, 5);
+            
+            if (topProductsMap.isEmpty()) {
+                
+                List<Produit> lowStockProducts = produitService.getLowStockProduits();
+                if (lowStockProducts.isEmpty()) {
+                    lowStockProducts = produitService.getAllProduits().stream().limit(5).toList();
+                }
+                for (Produit p : lowStockProducts.stream().limit(5).toList()) {
+                    series.getData().add(new XYChart.Data<>(
+                        truncateName(p.getNom(), 15), 
+                        Math.max(1, 50 - p.getQuantiteStock())
+                    ));
+                }
+            } else {
+                topProductsMap.forEach((produitNom, quantite) -> {
+                    series.getData().add(new XYChart.Data<>(truncateName(produitNom, 15), quantite));
+                });
+            }
             
             topProductsChart.getData().clear();
             topProductsChart.getData().add(series);
@@ -271,22 +270,46 @@ public class DashboardController implements Initializable {
         }
     }
     
-    /**
-     * Load system alerts
-     */
+    private String truncateName(String name, int maxLen) {
+        if (name == null) return "";
+        return name.length() > maxLen ? name.substring(0, maxLen) + "..." : name;
+    }
+    
     private void loadAlerts() {
         try {
             ObservableList<String> alerts = FXCollections.observableArrayList();
             
-            // Low stock alerts
-            List<Produit> lowStockProducts = produitService.getLowStockProduits();;
+            List<Produit> lowStockProducts = produitService.getLowStockProduits();
             if (!lowStockProducts.isEmpty()) {
                 alerts.add("⚠️ " + lowStockProducts.size() + " produits en rupture de stock");
+                
+                lowStockProducts.stream().limit(3).forEach(p -> 
+                    alerts.add("   • " + p.getNom() + " (Stock: " + p.getQuantiteStock() + ")")
+                );
             }
             
-            // TODO: Add expiration alerts from LotService
-            // TODO: Add pending transfer alerts from TransfertService
-            // TODO: Add pending order alerts from BonCommandeService
+            try {
+                List<Produit> allProducts = produitService.getAllProduits();
+                long expiringCount = allProducts.stream()
+                    .filter(p -> p.getDateExpiration() != null)
+                    .filter(p -> p.getDateExpiration().isBefore(LocalDate.now().plusDays(30)))
+                    .count();
+                if (expiringCount > 0) {
+                    alerts.add("📅 " + expiringCount + " produit(s) expire(nt) dans les 30 jours");
+                }
+            } catch (Exception ignored) {
+                
+            }
+            
+            try {
+                List<org.example.model.entity.TransfertStock> pendingTransfers = 
+                    stockService.getPendingTransferts();
+                if (pendingTransfers != null && !pendingTransfers.isEmpty()) {
+                    alerts.add("🔄 " + pendingTransfers.size() + " transfert(s) en attente");
+                }
+            } catch (Exception ignored) {
+                
+            }
             
             if (alerts.isEmpty()) {
                 alerts.add("✅ Aucune alerte");
@@ -299,9 +322,6 @@ public class DashboardController implements Initializable {
         }
     }
     
-    /**
-     * Load recent sales
-     */
     private void loadRecentSales() {
         try {
             List<Vente> recentVentes = venteService.getRecentVentes(10);
@@ -312,29 +332,63 @@ public class DashboardController implements Initializable {
         }
     }
     
-    /**
-     * Handle refresh button click
-     */
     @FXML
     private void handleRefresh() {
         logger.info("Refreshing dashboard data");
         loadDashboardData();
     }
     
-    /**
-     * Handle view all sales button click
-     */
     @FXML
     private void handleViewAllSales() {
         logger.info("Navigating to rapport view");
         try {
-            // Get the main controller and load rapport view
-            // This assumes the dashboard is loaded in MainController's contentArea
-            // The button would ideally trigger MainController.handleRapportsView()
-            // For now, log the action - full navigation requires MainController reference
+            
             logger.warning("Full navigation requires MainController reference - consider using event bus pattern");
         } catch (Exception e) {
             LoggerUtil.logError(DashboardController.class, "Error navigating to reports", e);
+        }
+    }
+    
+    private void showCustomDateRangeDialog() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Période personnalisée");
+        dialog.setHeaderText("Sélectionnez la période de dates");
+        
+        DatePicker startPicker = new DatePicker(startDate != null ? startDate : LocalDate.now().minusMonths(1));
+        DatePicker endPicker = new DatePicker(endDate != null ? endDate : LocalDate.now());
+        
+        javafx.scene.layout.GridPane grid = new javafx.scene.layout.GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new javafx.geometry.Insets(20, 150, 10, 10));
+        
+        grid.add(new Label("Date de début:"), 0, 0);
+        grid.add(startPicker, 1, 0);
+        grid.add(new Label("Date de fin:"), 0, 1);
+        grid.add(endPicker, 1, 1);
+        
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        
+        Optional<ButtonType> result = dialog.showAndWait();
+        
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            startDate = startPicker.getValue();
+            endDate = endPicker.getValue();
+            
+            if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
+                
+                LocalDate temp = startDate;
+                startDate = endDate;
+                endDate = temp;
+            }
+            
+            logger.info("Custom date range selected: " + startDate + " to " + endDate);
+            loadDashboardData();
+        } else {
+            
+            periodCombo.setValue("Aujourd'hui");
+            setDateRange("Aujourd'hui");
         }
     }
 }

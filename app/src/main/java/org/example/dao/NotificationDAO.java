@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * DAO pour la gestion des notifications
- */
 public class NotificationDAO {
 
     private final DatabaseConnection dbConnection;
@@ -23,9 +20,6 @@ public class NotificationDAO {
 
     private final UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
 
-    /**
-     * Sauvegarde une nouvelle notification
-     */
     public Notification save(Notification notification) throws SQLException {
         String sql = "INSERT INTO notifications (titre, message, type, priorite, date_creation, " +
                 "date_envoi, destinataire_id, lu, date_lecture, lien_action, envoi_email, envoi_sms, " +
@@ -78,9 +72,6 @@ public class NotificationDAO {
         }
     }
 
-    /**
-     * Met Ã  jour une notification
-     */
     public void update(Notification notification) throws SQLException {
         String sql = "UPDATE notifications SET date_envoi = ?, lu = ?, date_lecture = ? WHERE id = ?";
 
@@ -107,9 +98,6 @@ public class NotificationDAO {
         }
     }
 
-    /**
-     * Marque une notification comme lue
-     */
     public void marquerLue(Long id) throws SQLException {
         String sql = "UPDATE notifications SET lu = true, date_lecture = ? WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -120,9 +108,6 @@ public class NotificationDAO {
         }
     }
 
-    /**
-     * Marque toutes les notifications d'un utilisateur comme lues
-     */
     public void marquerToutesLues(Long destinataireId) throws SQLException {
         String sql = "UPDATE notifications SET lu = true, date_lecture = ? WHERE destinataire_id = ? AND lu = false";
         try (Connection conn = dbConnection.getConnection();
@@ -133,9 +118,6 @@ public class NotificationDAO {
         }
     }
 
-    /**
-     * Met Ã  jour la date d'envoi
-     */
     public void marquerEnvoyee(Long id) throws SQLException {
         String sql = "UPDATE notifications SET date_envoi = ? WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -146,9 +128,6 @@ public class NotificationDAO {
         }
     }
 
-    /**
-     * Supprime une notification
-     */
     public void delete(Long id) throws SQLException {
         String sql = "DELETE FROM notifications WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -158,9 +137,6 @@ public class NotificationDAO {
         }
     }
 
-    /**
-     * Recherche une notification par ID
-     */
     public Optional<Notification> findById(Long id) throws SQLException {
         String sql = "SELECT * FROM notifications WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -175,9 +151,6 @@ public class NotificationDAO {
         return Optional.empty();
     }
 
-    /**
-     * Retourne toutes les notifications d'un utilisateur
-     */
     public List<Notification> findByDestinataire(Long destinataireId) throws SQLException {
         String sql = "SELECT * FROM notifications WHERE destinataire_id = ? ORDER BY date_creation DESC";
         List<Notification> notifications = new ArrayList<>();
@@ -194,9 +167,6 @@ public class NotificationDAO {
         return notifications;
     }
 
-    /**
-     * Retourne les notifications non lues d'un utilisateur
-     */
     public List<Notification> findNonLues(Long destinataireId) throws SQLException {
         String sql = "SELECT * FROM notifications WHERE destinataire_id = ? AND lu = false " +
                 "ORDER BY priorite DESC, date_creation DESC";
@@ -214,9 +184,6 @@ public class NotificationDAO {
         return notifications;
     }
 
-    /**
-     * Retourne les notifications par type
-     */
     public List<Notification> findByType(TypeNotification type) throws SQLException {
         String sql = "SELECT * FROM notifications WHERE type = ? ORDER BY date_creation DESC LIMIT 500";
         List<Notification> notifications = new ArrayList<>();
@@ -233,9 +200,6 @@ public class NotificationDAO {
         return notifications;
     }
 
-    /**
-     * Retourne les notifications par prioritÃ©
-     */
     public List<Notification> findByPriorite(PrioriteNotification priorite) throws SQLException {
         String sql = "SELECT * FROM notifications WHERE priorite = ? ORDER BY date_creation DESC LIMIT 500";
         List<Notification> notifications = new ArrayList<>();
@@ -252,9 +216,6 @@ public class NotificationDAO {
         return notifications;
     }
 
-    /**
-     * Retourne les notifications Ã  envoyer par email
-     */
     public List<Notification> findAEnvoyerParEmail() throws SQLException {
         String sql = "SELECT * FROM notifications WHERE envoi_email = true AND date_envoi IS NULL " +
                 "ORDER BY priorite DESC, date_creation ASC";
@@ -271,9 +232,6 @@ public class NotificationDAO {
         return notifications;
     }
 
-    /**
-     * Retourne les notifications urgentes non lues
-     */
     public List<Notification> findUrgentesNonLues(Long destinataireId) throws SQLException {
         String sql = "SELECT * FROM notifications WHERE destinataire_id = ? AND priorite = 'URGENTE' " +
                 "AND lu = false ORDER BY date_creation DESC";
@@ -291,9 +249,6 @@ public class NotificationDAO {
         return notifications;
     }
 
-    /**
-     * Compte les notifications non lues
-     */
     public int countNonLues(Long destinataireId) throws SQLException {
         String sql = "SELECT COUNT(*) FROM notifications WHERE destinataire_id = ? AND lu = false";
         try (Connection conn = dbConnection.getConnection();
@@ -308,9 +263,6 @@ public class NotificationDAO {
         return 0;
     }
 
-    /**
-     * Supprime les anciennes notifications lues (plus de X jours)
-     */
     public int deleteAnciennesLues(int jours) throws SQLException {
         String sql = "DELETE FROM notifications WHERE lu = true AND " +
                 "date_lecture < DATEADD('DAY', ?, CURRENT_TIMESTAMP)";
@@ -321,9 +273,6 @@ public class NotificationDAO {
         }
     }
 
-    /**
-     * Convertit un ResultSet en Notification
-     */
     private Notification mapResultSetToNotification(ResultSet rs) throws SQLException {
         Notification notification = new Notification();
         notification.setId(rs.getLong("id"));

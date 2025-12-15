@@ -2,9 +2,6 @@ package org.example.exception;
 
 import java.sql.SQLException;
 
-/**
- * DatabaseException - Exception thrown when database operations fail
- */
 public class DatabaseException extends RuntimeException {
     
     private final String operation;

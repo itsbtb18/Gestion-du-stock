@@ -7,12 +7,9 @@ import org.example.dao.MouvementStockDAO;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * StatistiquesService - Business logic for statistics and reports
- * Singleton service for handling statistics operations
- */
 public class StatistiquesService {
     
     private static StatistiquesService instance;
@@ -38,25 +35,21 @@ public class StatistiquesService {
     public Map<String, Object> getDashboardStatistics() {
         Map<String, Object> stats = new HashMap<>();
         
-        // Today's statistics
         LocalDate today = LocalDate.now();
         double[] todayStats = venteDAO.getStatistics(today, today);
         stats.put("ventesAujourdhui", (int) todayStats[0]);
         stats.put("chiffreAffairesAujourdhui", todayStats[1]);
         stats.put("panierMoyen", todayStats[2]);
         
-        // This month statistics
         LocalDate startOfMonth = today.withDayOfMonth(1);
         double[] monthStats = venteDAO.getStatistics(startOfMonth, today);
         stats.put("ventesMois", (int) monthStats[0]);
         stats.put("chiffreAffairesMois", monthStats[1]);
         
-        // Product statistics
         stats.put("totalProduits", produitDAO.count());
         stats.put("produitsStockBas", produitDAO.findLowStock().size());
         stats.put("produitsExpireSoon", produitDAO.findExpiringSoon(30).size());
         
-        // Client statistics
         stats.put("totalClients", clientDAO.count());
         stats.put("clientsVIP", clientDAO.findVIPClients(1000.0).size());
         
@@ -73,6 +66,35 @@ public class StatistiquesService {
             stats.put((String) stat[0], (Integer) stat[1]);
         }
         return stats;
+    }
+    
+    public Map<String, Integer> getTopProductsSold(LocalDate startDate, LocalDate endDate, int limit) {
+        Map<String, Integer> topProducts = new LinkedHashMap<>();
+        
+        try {
+            
+            var ventes = venteDAO.findByDateRange(startDate, endDate);
+            
+            Map<String, Integer> productQuantities = new HashMap<>();
+            for (var vente : ventes) {
+                if (vente.getLignes() != null) {
+                    for (var ligne : vente.getLignes()) {
+                        String produitNom = ligne.getProduit() != null ? ligne.getProduit().getNom() : "Inconnu";
+                        productQuantities.merge(produitNom, ligne.getQuantite(), Integer::sum);
+                    }
+                }
+            }
+            
+            productQuantities.entrySet().stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .limit(limit)
+                .forEach(e -> topProducts.put(e.getKey(), e.getValue()));
+                
+        } catch (Exception e) {
+            
+        }
+        
+        return topProducts;
     }
 }
 

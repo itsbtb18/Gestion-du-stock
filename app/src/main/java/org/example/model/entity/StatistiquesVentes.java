@@ -2,9 +2,6 @@ package org.example.model.entity;
 
 import java.time.LocalDate;
 
-/**
- * StatistiquesVentes - Entity representing sales statistics
- */
 public class StatistiquesVentes {
     
     private LocalDate date;
@@ -17,7 +14,6 @@ public class StatistiquesVentes {
     private Produit produitPlusVendu;
     private int quantiteProduitPlusVendu;
     
-    // Constructors
     public StatistiquesVentes() {
         this.date = LocalDate.now();
         this.nombreVentes = 0;
@@ -33,7 +29,6 @@ public class StatistiquesVentes {
         this.date = date;
     }
     
-    // Business logic
     public void calculerPanierMoyen() {
         if (nombreVentes > 0) {
             this.panierMoyen = chiffreAffaires / nombreVentes;
@@ -50,11 +45,10 @@ public class StatistiquesVentes {
     }
     
     public double getMargeCommerciale() {
-        // Simplified: assuming 30% margin
+        
         return chiffreAffaires * 0.30;
     }
     
-    // Getters and Setters
     public LocalDate getDate() {
         return date;
     }

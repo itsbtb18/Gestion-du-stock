@@ -2,9 +2,6 @@ package org.example.model.entity;
 
 import java.time.LocalDateTime;
 
-/**
- * AlerteStock - Entity representing a low stock alert
- */
 public class AlerteStock {
     
     private String id;
@@ -12,7 +9,7 @@ public class AlerteStock {
     private int quantiteActuelle;
     private int seuilAlerte;
     private LocalDateTime dateAlerte;
-    private String niveau; // CRITIQUE, AVERTISSEMENT, INFO
+    private String niveau; 
     private boolean traitee;
     private String message;
     
@@ -42,7 +39,6 @@ public class AlerteStock {
         }
     }
     
-    // Getters and Setters
     public String getId() {
         return id;
     }

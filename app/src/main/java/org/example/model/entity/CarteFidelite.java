@@ -2,9 +2,6 @@ package org.example.model.entity;
 
 import java.time.LocalDate;
 
-/**
- * CarteFidelite - Entity representing a loyalty card
- */
 public class CarteFidelite {
     
     private Long id;
@@ -14,9 +11,8 @@ public class CarteFidelite {
     private LocalDate dateExpiration;
     private int pointsAccumules;
     private int pointsUtilises;
-    private String statut; // ACTIVE, EXPIREE, BLOQUEE
+    private String statut; 
     
-    // Constructors
     public CarteFidelite() {
         this.numero = genererNumero();
         this.dateCreation = LocalDate.now();
@@ -31,7 +27,6 @@ public class CarteFidelite {
         this.client = client;
     }
     
-    // Business logic
     private String genererNumero() {
         return "CARD" + System.currentTimeMillis();
     }
@@ -61,7 +56,6 @@ public class CarteFidelite {
         this.statut = "ACTIVE";
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

@@ -1,8 +1,5 @@
 package org.example.model.entity;
 
-/**
- * TypeNotification - Notification type enum
- */
 public enum TypeNotification {
     INFO("Information"),
     WARNING("Avertissement"),

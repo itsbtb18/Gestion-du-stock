@@ -8,7 +8,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.example.model.entity.*;
-import org.example.model.service.ClientService;
 import org.example.model.service.ProduitService;
 import org.example.model.service.RetourService;
 import org.example.model.service.VenteService;
@@ -19,13 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Controller for Product Return management
- * Handles return creation, approval/refusal, refunds, and stock restoration
- */
 public class RetourController {
 
-    // FXML UI Components - Return List
     @FXML private TableView<Retour> retourTable;
     @FXML private TableColumn<Retour, String> numeroColumn;
     @FXML private TableColumn<Retour, String> clientColumn;
@@ -33,7 +27,6 @@ public class RetourController {
     @FXML private TableColumn<Retour, String> statutColumn;
     @FXML private TableColumn<Retour, Double> totalColumn;
     
-    // FXML UI Components - Return Header
     @FXML private Label numeroLabel;
     @FXML private ComboBox<Vente> venteCombo;
     @FXML private DatePicker dateRetourPicker;
@@ -42,7 +35,6 @@ public class RetourController {
     @FXML private TextArea notesArea;
     @FXML private CheckBox remboursementCheckBox;
     
-    // FXML UI Components - Line Items
     @FXML private TableView<LigneRetour> lignesTable;
     @FXML private TableColumn<LigneRetour, String> produitColumn;
     @FXML private TableColumn<LigneRetour, Integer> quantiteColumn;
@@ -57,11 +49,9 @@ public class RetourController {
     @FXML private Button addLineButton;
     @FXML private Button removeLineButton;
     
-    // FXML UI Components - Summary
     @FXML private Label totalRetourLabel;
     @FXML private Label creditNoteLabel;
     
-    // FXML UI Components - Actions
     @FXML private Button newButton;
     @FXML private Button saveButton;
     @FXML private Button updateButton;
@@ -71,21 +61,15 @@ public class RetourController {
     @FXML private Button refuseButton;
     @FXML private Button processRefundButton;
     
-    // Services
     private final RetourService retourService = RetourService.getInstance();
     private final VenteService venteService = VenteService.getInstance();
-    private final ClientService clientService = ClientService.getInstance();
     private final ProduitService produitService = ProduitService.getInstance();
     
-    // State
     private ObservableList<Retour> retourList = FXCollections.observableArrayList();
     private ObservableList<LigneRetour> lignesList = FXCollections.observableArrayList();
     private Retour selectedRetour = null;
     private boolean isEditMode = false;
 
-    /**
-     * Initialize the controller
-     */
     @FXML
     public void initialize() {
         setupRetourTable();
@@ -96,9 +80,6 @@ public class RetourController {
         updateFormState();
     }
 
-    /**
-     * Setup return table
-     */
     private void setupRetourTable() {
         numeroColumn.setCellValueFactory(cellData -> 
             new SimpleStringProperty(cellData.getValue().getNumeroRetour()));
@@ -120,9 +101,6 @@ public class RetourController {
         );
     }
 
-    /**
-     * Setup line items table
-     */
     private void setupLignesTable() {
         produitColumn.setCellValueFactory(cellData -> 
             new SimpleStringProperty(cellData.getValue().getProduit().getNom()));
@@ -141,12 +119,9 @@ public class RetourController {
         lignesTable.setItems(lignesList);
     }
 
-    /**
-     * Setup combo boxes
-     */
     private void setupCombos() {
         try {
-            // Vente combo - load recent sales
+            
             List<Vente> ventes = venteService.getRecentVentes(30);
             venteCombo.setItems(FXCollections.observableArrayList(ventes));
             venteCombo.setConverter(new javafx.util.StringConverter<Vente>() {
@@ -163,7 +138,6 @@ public class RetourController {
                 }
             });
             
-            // Produit combo
             List<Produit> produits = produitService.getAllProduits();
             produitCombo.setItems(FXCollections.observableArrayList(produits));
             produitCombo.setConverter(new javafx.util.StringConverter<Produit>() {
@@ -177,7 +151,6 @@ public class RetourController {
                 }
             });
             
-            // Statut combo
             statutCombo.setItems(FXCollections.observableArrayList(StatutRetour.values()));
             
         } catch (Exception e) {
@@ -185,26 +158,19 @@ public class RetourController {
         }
     }
 
-    /**
-     * Setup listeners
-     */
     private void setupListeners() {
-        // Auto-fill price when product selected
+        
         produitCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 prixUnitaireField.setText(String.valueOf(newVal.getPrixVente()));
             }
         });
         
-        // Update totals when lines change
         lignesList.addListener((javafx.collections.ListChangeListener<LigneRetour>) c -> {
             updateTotals();
         });
     }
 
-    /**
-     * Load all returns
-     */
     private void loadAllRetours() {
         try {
             List<Retour> retours = retourService.getAllRetours();
@@ -214,9 +180,6 @@ public class RetourController {
         }
     }
 
-    /**
-     * Handle return selection
-     */
     private void handleRetourSelected(Retour retour) {
         selectedRetour = retour;
         if (retour != null) {
@@ -226,9 +189,6 @@ public class RetourController {
         }
     }
 
-    /**
-     * Populate form with return data
-     */
     private void populateForm(Retour retour) {
         numeroLabel.setText(retour.getNumeroRetour());
         venteCombo.setValue(retour.getVente());
@@ -244,9 +204,6 @@ public class RetourController {
         updateTotals();
     }
 
-    /**
-     * Update totals
-     */
     private void updateTotals() {
         double total = 0;
         for (LigneRetour ligne : lignesList) {
@@ -256,9 +213,6 @@ public class RetourController {
         totalRetourLabel.setText(String.format("%.2f", total));
     }
 
-    /**
-     * Update form state
-     */
     private void updateFormState() {
         boolean editing = isEditMode && selectedRetour != null;
         
@@ -277,9 +231,6 @@ public class RetourController {
         venteCombo.setDisable(editing);
     }
 
-    /**
-     * Handle new return
-     */
     @FXML
     private void handleNew() {
         isEditMode = false;
@@ -288,9 +239,6 @@ public class RetourController {
         updateFormState();
     }
 
-    /**
-     * Handle save (new return)
-     */
     @FXML
     private void handleSave() {
         if (!validateForm()) {
@@ -302,7 +250,6 @@ public class RetourController {
             String motif = motifField.getText().trim();
             List<LigneRetour> lignes = new ArrayList<>(lignesList);
             
-            // Create Retour object
             Retour retour = new Retour();
             retour.setVenteOriginale(vente);
             retour.setClient(vente.getClient());
@@ -319,9 +266,6 @@ public class RetourController {
         }
     }
 
-    /**
-     * Handle approve return
-     */
     @FXML
     private void handleApprove() {
         if (selectedRetour == null) {
@@ -343,9 +287,6 @@ public class RetourController {
         }
     }
 
-    /**
-     * Handle refuse return
-     */
     @FXML
     private void handleRefuse() {
         if (selectedRetour == null) {
@@ -368,9 +309,6 @@ public class RetourController {
         });
     }
 
-    /**
-     * Handle process refund
-     */
     @FXML
     private void handleProcessRefund() {
         if (selectedRetour == null) {
@@ -383,8 +321,7 @@ public class RetourController {
         }
         
         try {
-            // The service method processRefund is private, so we need to use approveRetour which handles refund
-            // Or we can reload the retour after it's already been approved
+            
             Optional<Retour> retourOpt = retourService.getRetourById(selectedRetour.getId());
             if (retourOpt.isPresent()) {
                 Retour retour = retourOpt.get();
@@ -397,9 +334,6 @@ public class RetourController {
         }
     }
 
-    /**
-     * Handle add line item
-     */
     @FXML
     private void handleAddLine() {
         Produit produit = produitCombo.getValue();
@@ -428,7 +362,6 @@ public class RetourController {
             
             lignesList.add(ligne);
             
-            // Clear line form
             produitCombo.setValue(null);
             quantiteField.clear();
             prixUnitaireField.clear();
@@ -439,9 +372,6 @@ public class RetourController {
         }
     }
 
-    /**
-     * Handle remove line item
-     */
     @FXML
     private void handleRemoveLine() {
         LigneRetour selected = lignesTable.getSelectionModel().getSelectedItem();
@@ -450,9 +380,6 @@ public class RetourController {
         }
     }
 
-    /**
-     * Handle clear form
-     */
     @FXML
     private void handleClear() {
         numeroLabel.setText("Nouveau");
@@ -476,18 +403,12 @@ public class RetourController {
         updateFormState();
     }
 
-    /**
-     * Handle refresh
-     */
     @FXML
     private void handleRefresh() {
         loadAllRetours();
         handleClear();
     }
 
-    /**
-     * Validate form
-     */
     private boolean validateForm() {
         if (venteCombo.getValue() == null) {
             AlertUtil.showWarning("Validation", "Veuillez sélectionner une vente.");

@@ -1,8 +1,5 @@
 package org.example.model.entity;
 
-/**
- * TypeRetour - Enum for return types
- */
 public enum TypeRetour {
     TOTAL("Retour Total"),
     PARTIEL("Retour Partiel");

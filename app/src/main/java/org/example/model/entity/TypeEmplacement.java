@@ -1,8 +1,5 @@
 package org.example.model.entity;
 
-/**
- * TypeEmplacement - Location type enum
- */
 public enum TypeEmplacement {
     MAGASIN("Magasin"),
     ENTREPOT("Entrepôt"),

@@ -2,9 +2,6 @@ package org.example.model.entity;
 
 import java.time.LocalDate;
 
-/**
- * Lot - Batch/Lot tracking for products
- */
 public class Lot {
     
     private Long id;
@@ -32,7 +29,6 @@ public class Lot {
                dateExpiration.isBefore(LocalDate.now().plusDays(joursAvance));
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

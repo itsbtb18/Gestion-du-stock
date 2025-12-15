@@ -4,24 +4,21 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Retour - Entity representing a product return/refund
- */
 public class Retour {
     
     private Long id;
     private String numeroRetour;
     private LocalDateTime dateRetour;
-    private Vente venteOriginale; // Original sale
+    private Vente venteOriginale; 
     private Client client;
     private Utilisateur traiteParUser;
-    private String motif; // Reason for return
-    private TypeRetour typeRetour; // TOTAL, PARTIEL
-    private StatutRetour statut; // EN_COURS, APPROUVE, REFUSE, COMPLETE
+    private String motif; 
+    private TypeRetour typeRetour; 
+    private StatutRetour statut; 
     private Double montantTotal;
     private Double montantRembourse;
-    private String modePaiement; // Same as original or CREDIT_NOTE
-    private String numeroCreditNote; // If issuing store credit
+    private String modePaiement; 
+    private String numeroCreditNote; 
     private List<LigneRetour> lignes;
     private String commentaire;
     
@@ -39,7 +36,6 @@ public class Retour {
         this.motif = motif;
     }
     
-    // Business methods
     public void calculerMontantTotal() {
         this.montantTotal = lignes.stream()
             .mapToDouble(LigneRetour::getMontantLigne)
@@ -55,7 +51,6 @@ public class Retour {
         return typeRetour == TypeRetour.TOTAL;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -176,7 +171,6 @@ public class Retour {
         this.commentaire = commentaire;
     }
     
-    // Alias methods for compatibility
     public Vente getVente() {
         return venteOriginale;
     }
@@ -194,19 +188,6 @@ public class Retour {
         return numeroRetour + " - " + dateRetour;
     }
     
-    /**
-     * Builder for Retour - implements Builder Pattern
-     * Usage:
-     *   Retour retour = new Retour.Builder()
-     *       .withNumeroRetour(numero)
-     *       .withVenteOriginale(vente)
-     *       .withClient(client)
-     *       .withMotif("Produit défectueux")
-     *       .withTraiteParUser(user)
-     *       .addLigne(ligne1)
-     *       .withTypeRetour(TypeRetour.PARTIEL)
-     *       .build();
-     */
     public static class Builder {
         private final Retour retour;
         
@@ -285,10 +266,6 @@ public class Retour {
             return this;
         }
         
-        /**
-         * Build the Retour instance
-         * Automatically calculates total amount
-         */
         public Retour build() {
             if (!retour.lignes.isEmpty()) {
                 retour.calculerMontantTotal();
@@ -296,9 +273,6 @@ public class Retour {
             return retour;
         }
         
-        /**
-         * Build without recalculating (for loading from database)
-         */
         public Retour buildFromDB() {
             return retour;
         }

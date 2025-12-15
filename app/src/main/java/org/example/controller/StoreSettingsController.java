@@ -26,16 +26,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Controller for Store Settings view
- * Handles store configuration, promotions, loyalty program, and advanced settings
- */
 public class StoreSettingsController {
 
-    // Tab Pane
     @FXML private TabPane settingsTabPane;
     
-    // Store Info Tab
     @FXML private TextField storeCodeField;
     @FXML private TextField storeNameField;
     @FXML private TextArea storeAddressField;
@@ -46,7 +40,6 @@ public class StoreSettingsController {
     @FXML private ComboBox<String> languageCombo;
     @FXML private CheckBox storeActiveCheck;
     
-    // Promotions Tab
     @FXML private TableView<Promotion> promotionsTable;
     @FXML private TableColumn<Promotion, String> promoNameColumn;
     @FXML private TableColumn<Promotion, String> promoTypeColumn;
@@ -56,7 +49,6 @@ public class StoreSettingsController {
     @FXML private TableColumn<Promotion, String> promoEndColumn;
     @FXML private TableColumn<Promotion, Boolean> promoActiveColumn;
     
-    // Loyalty Tab
     @FXML private CheckBox loyaltyEnabledCheck;
     @FXML private Spinner<Integer> pointsPerCurrencySpinner;
     @FXML private TextField minPurchaseField;
@@ -68,7 +60,6 @@ public class StoreSettingsController {
     @FXML private Spinner<Double> maxRedemptionPercentSpinner;
     @FXML private Spinner<Integer> pointsExpirationSpinner;
     
-    // Advanced Settings Tab
     @FXML private CheckBox allowNegativeStockCheck;
     @FXML private CheckBox lowStockNotificationsCheck;
     @FXML private CheckBox expirationAlertsCheck;
@@ -79,23 +70,17 @@ public class StoreSettingsController {
     @FXML private TextField invoiceHeaderField;
     @FXML private TextArea invoiceFooterField;
     
-    // Buttons
     @FXML private Button saveButton;
     @FXML private Button cancelButton;
     
-    // Services
     private final StoreService storeService = StoreService.getInstance();
     private final PromotionService promotionService = PromotionService.getInstance();
     
-    // State
     private Store currentStore;
     private StoreSettings currentSettings;
     private LoyaltyProgramConfig currentLoyaltyConfig;
     private ObservableList<Promotion> promotionsList = FXCollections.observableArrayList();
 
-    /**
-     * Initialize the controller
-     */
     @FXML
     public void initialize() {
         loadCurrentStore();
@@ -106,9 +91,6 @@ public class StoreSettingsController {
         loadPromotions();
     }
     
-    /**
-     * Load current store from context
-     */
     private void loadCurrentStore() {
         currentStore = StoreContext.getInstance().getCurrentStore();
         currentSettings = StoreContext.getInstance().getStoreSettings();
@@ -119,23 +101,15 @@ public class StoreSettingsController {
         }
     }
     
-    /**
-     * Setup combo boxes
-     */
     private void setupComboBoxes() {
-        // Currency combo
+        
         currencyCombo.setItems(FXCollections.observableArrayList("MAD", "EUR", "USD", "GBP"));
         
-        // Language combo
         languageCombo.setItems(FXCollections.observableArrayList("fr", "ar", "en", "es"));
         
-        // Reward type combo
         rewardTypeCombo.setItems(FXCollections.observableArrayList(RewardType.values()));
     }
     
-    /**
-     * Setup spinners with value factories
-     */
     private void setupSpinners() {
         pointsPerCurrencySpinner.setValueFactory(
             new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 10));
@@ -156,9 +130,6 @@ public class StoreSettingsController {
             new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 365, 30));
     }
     
-    /**
-     * Setup promotions table
-     */
     private void setupPromotionsTable() {
         promoNameColumn.setCellValueFactory(cellData -> 
             new SimpleStringProperty(cellData.getValue().getName()));
@@ -191,11 +162,8 @@ public class StoreSettingsController {
         promotionsTable.setItems(promotionsList);
     }
     
-    /**
-     * Load store data into UI
-     */
     private void loadStoreData() {
-        // Store Info
+        
         storeCodeField.setText(currentStore.getCode());
         storeNameField.setText(currentStore.getName());
         storeAddressField.setText(currentStore.getAddress());
@@ -206,7 +174,6 @@ public class StoreSettingsController {
         languageCombo.setValue(currentStore.getLanguage());
         storeActiveCheck.setSelected(currentStore.isActive());
         
-        // Advanced Settings
         allowNegativeStockCheck.setSelected(currentSettings.isAllowNegativeStock());
         requireManagerApprovalCheck.setSelected(currentSettings.isRequireManagerApproval());
         defaultVatRateField.setText(String.valueOf(currentSettings.getDefaultVatRate() * 100));
@@ -217,7 +184,6 @@ public class StoreSettingsController {
         expirationAlertsCheck.setSelected(currentSettings.isExpirationAlertsEnabled());
         expirationAlertDaysSpinner.getValueFactory().setValue(currentSettings.getExpirationAlertDays());
         
-        // Loyalty Settings
         loyaltyEnabledCheck.setSelected(currentLoyaltyConfig.isEnabled());
         pointsPerCurrencySpinner.getValueFactory().setValue(currentLoyaltyConfig.getPointsPerCurrencyUnit());
         minPurchaseField.setText(String.valueOf(currentLoyaltyConfig.getMinimumPurchaseAmount()));
@@ -230,22 +196,16 @@ public class StoreSettingsController {
         pointsExpirationSpinner.getValueFactory().setValue(currentLoyaltyConfig.getPointsExpirationDays());
     }
     
-    /**
-     * Load promotions from database
-     */
     private void loadPromotions() {
         List<Promotion> promotions = promotionService.getAllPromotions();
         promotionsList.clear();
         promotionsList.addAll(promotions);
     }
     
-    /**
-     * Handle save button
-     */
     @FXML
     private void handleSave() {
         try {
-            // Update Store
+            
             currentStore.setCode(storeCodeField.getText());
             currentStore.setName(storeNameField.getText());
             currentStore.setAddress(storeAddressField.getText());
@@ -256,7 +216,6 @@ public class StoreSettingsController {
             currentStore.setLanguage(languageCombo.getValue());
             currentStore.setActive(storeActiveCheck.isSelected());
             
-            // Update Settings
             currentSettings.setAllowNegativeStock(allowNegativeStockCheck.isSelected());
             currentSettings.setRequireManagerApproval(requireManagerApprovalCheck.isSelected());
             currentSettings.setDefaultVatRate(Double.parseDouble(defaultVatRateField.getText()) / 100.0);
@@ -268,7 +227,6 @@ public class StoreSettingsController {
             currentSettings.setExpirationAlertsEnabled(expirationAlertsCheck.isSelected());
             currentSettings.setExpirationAlertDays(expirationAlertDaysSpinner.getValue());
             
-            // Update Loyalty Config
             currentLoyaltyConfig.setEnabled(loyaltyEnabledCheck.isSelected());
             currentLoyaltyConfig.setPointsPerCurrencyUnit(pointsPerCurrencySpinner.getValue());
             currentLoyaltyConfig.setMinimumPurchaseAmount(Double.parseDouble(minPurchaseField.getText()));
@@ -280,7 +238,6 @@ public class StoreSettingsController {
             currentLoyaltyConfig.setMaxRedemptionPercentOfTotal(maxRedemptionPercentSpinner.getValue());
             currentLoyaltyConfig.setPointsExpirationDays(pointsExpirationSpinner.getValue());
             
-            // Save to database
             storeService.updateStore(currentStore);
             storeService.updateSettings(currentSettings);
             storeService.updateLoyaltyConfig(currentLoyaltyConfig);
@@ -294,18 +251,12 @@ public class StoreSettingsController {
         }
     }
     
-    /**
-     * Handle cancel button
-     */
     @FXML
     private void handleCancel() {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
     }
     
-    /**
-     * Handle browse logo button
-     */
     @FXML
     private void handleBrowseLogo() {
         FileChooser fileChooser = new FileChooser();
@@ -320,12 +271,9 @@ public class StoreSettingsController {
         }
     }
     
-    /**
-     * Handle add promotion button
-     */
     @FXML
     private void handleAddPromotion() {
-        // Create dialog for adding promotion
+        
         Dialog<Promotion> dialog = createPromotionDialog(null);
         Optional<Promotion> result = dialog.showAndWait();
         
@@ -340,9 +288,6 @@ public class StoreSettingsController {
         });
     }
     
-    /**
-     * Handle edit promotion button
-     */
     @FXML
     private void handleEditPromotion() {
         Promotion selected = promotionsTable.getSelectionModel().getSelectedItem();
@@ -365,9 +310,6 @@ public class StoreSettingsController {
         });
     }
     
-    /**
-     * Handle delete promotion button
-     */
     @FXML
     private void handleDeletePromotion() {
         Promotion selected = promotionsTable.getSelectionModel().getSelectedItem();
@@ -389,23 +331,16 @@ public class StoreSettingsController {
         }
     }
     
-    /**
-     * Handle refresh promotions button
-     */
     @FXML
     private void handleRefreshPromotions() {
         loadPromotions();
     }
     
-    /**
-     * Create promotion dialog
-     */
     private Dialog<Promotion> createPromotionDialog(Promotion existingPromo) {
         Dialog<Promotion> dialog = new Dialog<>();
         dialog.setTitle(existingPromo == null ? "Nouvelle Promotion" : "Modifier Promotion");
         dialog.setHeaderText("Entrez les détails de la promotion");
         
-        // Create form fields
         TextField nameField = new TextField();
         nameField.setPromptText("Nom de la promotion");
         
@@ -432,7 +367,6 @@ public class StoreSettingsController {
         
         Spinner<Integer> prioritySpinner = new Spinner<>(0, 100, 0);
         
-        // Load existing values if editing
         if (existingPromo != null) {
             nameField.setText(existingPromo.getName());
             descField.setText(existingPromo.getDescription());
@@ -446,7 +380,6 @@ public class StoreSettingsController {
             prioritySpinner.getValueFactory().setValue(existingPromo.getPriority());
         }
         
-        // Create form layout
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
@@ -475,7 +408,6 @@ public class StoreSettingsController {
         dialog.getDialogPane().setContent(grid);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
         
-        // Convert result
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == ButtonType.OK) {
                 Promotion promo = existingPromo != null ? existingPromo : new Promotion();
@@ -501,9 +433,6 @@ public class StoreSettingsController {
         return dialog;
     }
     
-    /**
-     * Show alert dialog
-     */
     private void showAlert(String title, String content, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

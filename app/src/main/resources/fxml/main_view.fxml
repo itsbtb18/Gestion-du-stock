@@ -242,7 +242,7 @@
                             <Font size="8"/>
                         </font>
                     </Label>
-                    <Label fx:id="lblRevenue" text="0 DH" styleClass="sidebar-footer-text">
+                    <Label fx:id="lblRevenue" text="0 DZD" styleClass="sidebar-footer-text">
                         <font>
                             <Font name="Segoe UI Semibold" size="11"/>
                         </font>

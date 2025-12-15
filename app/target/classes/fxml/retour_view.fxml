@@ -5,133 +5,317 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.RetourController"
-            styleClass="main-container" stylesheets="@../css/styles.css">
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.RetourController"
+      styleClass="content-container" stylesheets="@../css/styles.css" spacing="20">
+    <padding>
+        <Insets top="24" right="24" bottom="24" left="24"/>
+    </padding>
     
-    <top>
-        <VBox spacing="15" styleClass="search-section">
-            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+    <!-- Header -->
+    <VBox spacing="18" styleClass="content-card">
+        <padding>
+            <Insets top="24" right="28" bottom="24" left="28"/>
+        </padding>
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Gestion des Retours" styleClass="page-title">
+                    <font>
+                        <Font name="Segoe UI Bold" size="24"/>
+                    </font>
+                </Label>
+                <Label text="Gérer les retours produits et remboursements" styleClass="page-subtitle">
+                    <font>
+                        <Font name="Segoe UI" size="14"/>
+                    </font>
+                </Label>
+            </VBox>
+            <Button fx:id="newButton" text="➕ Nouveau" styleClass="btn-primary"
+                    prefHeight="42" prefWidth="150" onAction="#handleNew">
+                <font>
+                    <Font name="Segoe UI Semibold" size="14"/>
+                </font>
+            </Button>
+        </HBox>
+    </VBox>
+    
+    <!-- Main Content -->
+    <HBox spacing="24" VBox.vgrow="ALWAYS">
+        
+        <!-- Returns List (Top) -->
+        <VBox spacing="16" styleClass="content-card" prefWidth="550">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
             
-            <Label text="Gestion des Retours Produits" styleClass="section-title">
-                <font><Font name="System Bold" size="20"/></font>
+            <Label text="Liste des Retours" styleClass="card-title">
+                <font>
+                    <Font name="Segoe UI Bold" size="16"/>
+                </font>
             </Label>
             
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <Button fx:id="refreshButton" text="Actualiser" styleClass="btn-secondary" onAction="#handleRefresh"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="newButton" text="+ Nouveau Retour" styleClass="btn-success" onAction="#handleNew"/>
-            </HBox>
+            <TableView fx:id="retourTable" styleClass="modern-table" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="numeroColumn" text="N°" prefWidth="90"/>
+                    <TableColumn fx:id="clientColumn" text="Client" prefWidth="130"/>
+                    <TableColumn fx:id="dateColumn" text="Date" prefWidth="95"/>
+                    <TableColumn fx:id="statutColumn" text="Statut" prefWidth="100"/>
+                    <TableColumn fx:id="totalColumn" text="Total" prefWidth="85"/>
+                </columns>
+            </TableView>
         </VBox>
-    </top>
-    
-    <center>
-        <VBox spacing="15" VBox.vgrow="ALWAYS">
-            <padding><Insets top="10" right="15" bottom="15" left="15"/></padding>
+        
+        <!-- Right: Form and Lines -->
+        <VBox spacing="20" styleClass="content-card" HBox.hgrow="ALWAYS">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
             
-            <!-- Top: Return List -->
-            <VBox spacing="10" VBox.vgrow="SOMETIMES" prefHeight="250">
-                <Label text="Liste des Retours" styleClass="section-title">
-                    <font><Font name="System Bold" size="14"/></font>
-                </Label>
-                
-                <TableView fx:id="retourTable" VBox.vgrow="ALWAYS" styleClass="cart-table">
-                    <columns>
-                        <TableColumn fx:id="numeroColumn" text="Numéro" prefWidth="120"/>
-                        <TableColumn fx:id="clientColumn" text="Client" prefWidth="150"/>
-                        <TableColumn fx:id="dateColumn" text="Date" prefWidth="100"/>
-                        <TableColumn fx:id="statutColumn" text="Statut" prefWidth="100"/>
-                        <TableColumn fx:id="totalColumn" text="Total" prefWidth="100"/>
-                    </columns>
-                </TableView>
-            </VBox>
-            
-            <!-- Middle: Return Form and Line Items -->
-            <HBox spacing="15" VBox.vgrow="ALWAYS">
-                <!-- Left: Form -->
-                <VBox spacing="15" prefWidth="400">
-                    <VBox spacing="15" styleClass="card">
-                        <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
-                        
-                        <Label text="Détails du Retour" styleClass="section-title">
-                            <font><Font name="System Bold" size="14"/></font>
+            <VBox spacing="16" VBox.vgrow="ALWAYS">
+                    
+                    <!-- Header Form -->
+                    <VBox spacing="16" styleClass="form-section">
+                        <Label text="Informations Retour" styleClass="section-title">
+                            <font>
+                                <Font name="Segoe UI Bold" size="16"/>
+                            </font>
                         </Label>
-                        <Separator/>
                         
-                        <GridPane hgap="10" vgap="12">
-                            <Label text="Numéro:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <Label fx:id="numeroLabel" text="Nouveau" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="form-value"/>
+                        <HBox spacing="16">
+                            <VBox spacing="6">
+                                <Label text="Numéro" styleClass="subsection-title">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <Label fx:id="numeroLabel" text="Nouveau" styleClass="glass-value-label" 
+                                       prefHeight="40" alignment="CENTER_LEFT">
+                                    <padding>
+                                        <Insets left="12"/>
+                                    </padding>
+                                    <font>
+                                        <Font name="Segoe UI Bold" size="14"/>
+                                    </font>
+                                </Label>
+                            </VBox>
                             
-                            <Label text="Vente:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <ComboBox fx:id="venteCombo" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="Sélectionner vente" prefWidth="250"/>
+                            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                                <Label text="Vente Originale *" styleClass="subsection-title">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <ComboBox fx:id="venteCombo" styleClass="modern-combo" 
+                                          prefHeight="40" maxWidth="Infinity"/>
+                            </VBox>
                             
-                            <Label text="Date:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <DatePicker fx:id="dateRetourPicker" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                            <VBox spacing="6">
+                                <Label text="Date" styleClass="subsection-title">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <DatePicker fx:id="dateRetourPicker" styleClass="glass-date-picker" 
+                                            prefHeight="40" prefWidth="140"/>
+                            </VBox>
+                        </HBox>
+                        
+                        <HBox spacing="16">
+                            <VBox spacing="6" prefWidth="200">
+                                <Label text="Statut" styleClass="subsection-title">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <ComboBox fx:id="statutCombo" styleClass="modern-combo" 
+                                          prefHeight="40" maxWidth="Infinity"/>
+                            </VBox>
                             
-                            <Label text="Statut:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <ComboBox fx:id="statutCombo" GridPane.rowIndex="3" GridPane.columnIndex="1" disable="true"/>
-                            
-                            <Label text="Motif:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <TextField fx:id="motifField" GridPane.rowIndex="4" GridPane.columnIndex="1" promptText="Motif du retour"/>
-                            
-                            <Label text="Notes:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <TextArea fx:id="notesArea" GridPane.rowIndex="5" GridPane.columnIndex="1" promptText="Notes" prefRowCount="2"/>
-                            
-                            <Label text="Remboursé:" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <CheckBox fx:id="remboursementCheckBox" GridPane.rowIndex="6" GridPane.columnIndex="1" disable="true"/>
-                            
-                            <Label text="Note Crédit:" GridPane.rowIndex="7" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <Label fx:id="creditNoteLabel" text="N/A" GridPane.rowIndex="7" GridPane.columnIndex="1" styleClass="form-value"/>
-                        </GridPane>
+                            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                                <Label text="Motif *" styleClass="subsection-title">
+                                    <font>
+                                        <Font name="Segoe UI Semibold" size="12"/>
+                                    </font>
+                                </Label>
+                                <TextField fx:id="motifField" styleClass="modern-input" 
+                                           promptText="Raison du retour" prefHeight="40"/>
+                            </VBox>
+                        </HBox>
+                        
+                        <VBox spacing="6">
+                            <Label text="Notes" styleClass="subsection-title">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="12"/>
+                                </font>
+                            </Label>
+                            <TextArea fx:id="notesArea" styleClass="glass-textarea" 
+                                      promptText="Notes..." prefRowCount="2"/>
+                        </VBox>
+                        
+                        <HBox spacing="16" alignment="CENTER_LEFT">
+                            <CheckBox fx:id="remboursementCheckBox" text="Remboursement effectué" 
+                                      styleClass="glass-checkbox" disable="true">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="13"/>
+                                </font>
+                            </CheckBox>
+                            <VBox spacing="2">
+                                <Label text="Note de Crédit" style="-fx-text-fill: #667085; -fx-font-size: 11px;"/>
+                                <Label fx:id="creditNoteLabel" text="N/A" 
+                                       style="-fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+                            </VBox>
+                        </HBox>
                     </VBox>
                     
-                    <HBox spacing="10">
-                        <Button fx:id="saveButton" text="Créer" styleClass="btn-success" onAction="#handleSave" HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="clearButton" text="Vider" styleClass="btn-secondary" onAction="#handleClear" HBox.hgrow="ALWAYS"/>
-                    </HBox>
-                    <HBox spacing="10">
-                        <Button fx:id="approveButton" text="Approuver" styleClass="btn-primary" onAction="#handleApprove" HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="refuseButton" text="Refuser" styleClass="btn-danger" onAction="#handleRefuse" HBox.hgrow="ALWAYS"/>
-                    </HBox>
-                    <Button fx:id="processRefundButton" text="Traiter Remboursement" styleClass="btn-success" onAction="#handleProcessRefund"/>
-                </VBox>
-                
-                <!-- Right: Line Items -->
-                <VBox spacing="15" HBox.hgrow="ALWAYS">
-                    <VBox spacing="10" styleClass="card" VBox.vgrow="ALWAYS">
-                        <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
-                        
-                        <Label text="Lignes du Retour" styleClass="section-title">
-                            <font><Font name="System Bold" size="14"/></font>
+                    <Separator styleClass="glass-separator"/>
+                    
+                    <!-- Line Items -->
+                    <VBox spacing="12">
+                        <Label text="Articles Retournés" styleClass="section-title">
+                            <font>
+                                <Font name="Segoe UI Bold" size="16"/>
+                            </font>
                         </Label>
                         
-                        <TableView fx:id="lignesTable" VBox.vgrow="ALWAYS" styleClass="cart-table">
+                           <!-- Add Line -->
+<HBox spacing="10" alignment="CENTER_LEFT" styleClass="modern-input-group">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+    
+    <VBox spacing="3">
+        <Label text="Produit" style="-fx-text-fill: #667085; -fx-font-size: 10px;"/>
+        <ComboBox fx:id="produitCombo" styleClass="modern-combo" 
+                  prefHeight="36" prefWidth="200"/>
+    </VBox>
+    
+    <VBox spacing="3">
+        <Label text="Qté" style="-fx-text-fill: #667085; -fx-font-size: 10px;"/>
+        <TextField fx:id="quantiteField" styleClass="modern-input" 
+                   promptText="Qté" prefHeight="36" prefWidth="90"/>
+    </VBox>
+    
+    <VBox spacing="3">
+        <Label text="Prix" style="-fx-text-fill: #667085; -fx-font-size: 10px;"/>
+        <TextField fx:id="prixUnitaireField" styleClass="modern-input" 
+                   promptText="Prix" prefHeight="36" prefWidth="90"/>
+    </VBox>
+    
+    <VBox spacing="7" alignment="BOTTOM_LEFT">
+        <Label text=" "/>
+        <CheckBox fx:id="endommagéCheckBox" text="Endommagé" 
+                  styleClass="glass-checkbox" prefWidth="140">
+            <font>
+                <Font name="Segoe UI" size="12"/>
+            </font>
+        </CheckBox>
+    </VBox>
+    
+    <Region HBox.hgrow="ALWAYS"/>
+    
+    <VBox spacing="3" alignment="BOTTOM_LEFT">
+        <Label text=" "/>
+        <HBox spacing="6">
+            <Button fx:id="addLineButton" text="➕ Ajouter" styleClass="btn-primary" 
+                    prefHeight="36" prefWidth="140" onAction="#handleAddLine">
+                <font>
+                    <Font name="Segoe UI Bold" size="12"/>
+                </font>
+            </Button>
+            <Button fx:id="removeLineButton" text="➖ Retirer" styleClass="btn-danger-glass" 
+                    prefHeight="36" prefWidth="130" onAction="#handleRemoveLine">
+                <font>
+                    <Font name="Segoe UI Bold" size="12"/>
+                </font>
+            </Button>
+        </HBox>
+    </VBox>
+</HBox>
+
+                        
+                        <TableView fx:id="lignesTable" styleClass="modern-table" prefHeight="200">
                             <columns>
-                                <TableColumn fx:id="produitColumn" text="Produit" prefWidth="200"/>
-                                <TableColumn fx:id="quantiteColumn" text="Quantité" prefWidth="80"/>
-                                <TableColumn fx:id="prixColumn" text="Prix Unit." prefWidth="80"/>
-                                <TableColumn fx:id="endommagéColumn" text="Endommagé" prefWidth="90"/>
-                                <TableColumn fx:id="totalLigneColumn" text="Total" prefWidth="80"/>
+                                <TableColumn fx:id="produitColumn" text="Produit" prefWidth="180"/>
+                                <TableColumn fx:id="quantiteColumn" text="Qté" prefWidth="50"/>
+                                <TableColumn fx:id="prixColumn" text="Prix U." prefWidth="70"/>
+                                <TableColumn fx:id="endommagéColumn" text="Endommagé" prefWidth="95"/>
+                                <TableColumn fx:id="totalLigneColumn" text="Total" prefWidth="75"/>
                             </columns>
                         </TableView>
                         
-                        <Separator/>
-                        
-                        <HBox spacing="10" alignment="CENTER_LEFT">
-                            <ComboBox fx:id="produitCombo" promptText="Produit" prefWidth="200"/>
-                            <TextField fx:id="quantiteField" promptText="Qté" prefWidth="60"/>
-                            <TextField fx:id="prixUnitaireField" promptText="Prix" prefWidth="80"/>
-                            <CheckBox fx:id="endommagéCheckBox" text="Endommagé"/>
-                            <Button fx:id="addLineButton" text="+" styleClass="btn-primary" onAction="#handleAddLine"/>
-                            <Button fx:id="removeLineButton" text="-" styleClass="btn-danger" onAction="#handleRemoveLine"/>
-                        </HBox>
-                        
-                        <HBox spacing="10" alignment="CENTER_RIGHT">
-                            <Label text="Total Retour:" styleClass="total-label"/>
-                            <Label fx:id="totalRetourLabel" text="0.00" styleClass="total-value"/>
+                        <HBox spacing="10" alignment="CENTER_RIGHT" styleClass="glass-summary-bar">
+                            <padding>
+                                <Insets top="12" right="12" bottom="12" left="12"/>
+                            </padding>
+                            
+                            <Label text="Total Retour:" styleClass="subsection-title">
+                                <font>
+                                    <Font name="Segoe UI Semibold" size="14"/>
+                                </font>
+                            </Label>
+                            <Label fx:id="totalRetourLabel" text="0.00" 
+                                   style="-fx-text-fill: #e74c3c; -fx-font-weight: bold; -fx-font-size: 22px;">
+                                <font>
+                                    <Font name="Segoe UI Bold" size="22"/>
+                                </font>
+                            </Label>
+                            <Label text="DZD" style="-fx-text-fill: #e74c3c; -fx-font-size: 14px;"/>
                         </HBox>
                     </VBox>
-                </VBox>
-            </HBox>
+            </VBox>
+            
+            <Separator styleClass="glass-separator"/>
+            
+            <!-- Actions -->
+            <VBox spacing="10">
+                <HBox spacing="10">
+                    <Button fx:id="saveButton" text="💾 Enregistrer" styleClass="btn-primary" 
+                            HBox.hgrow="ALWAYS" prefHeight="44" onAction="#handleSave">
+                        <font>
+                            <Font name="Segoe UI Semibold" size="13"/>
+                        </font>
+                    </Button>
+                    <Button fx:id="updateButton" text="✏️ Modifier" styleClass="btn-primary" 
+                            HBox.hgrow="ALWAYS" prefHeight="44">
+                        <font>
+                            <Font name="Segoe UI Semibold" size="13"/>
+                        </font>
+                    </Button>
+                    <Button fx:id="clearButton" text="🔄 Vider" styleClass="btn-secondary" 
+                            HBox.hgrow="ALWAYS" prefHeight="44" onAction="#handleClear">
+                        <font>
+                            <Font name="Segoe UI Semibold" size="13"/>
+                        </font>
+                    </Button>
+                </HBox>
+                
+                <HBox spacing="10">
+                    <Button fx:id="approveButton" text="✅ Approuver" styleClass="btn-primary" 
+                            HBox.hgrow="ALWAYS" prefHeight="44" onAction="#handleApprove">
+                        <font>
+                            <Font name="Segoe UI Semibold" size="13"/>
+                        </font>
+                    </Button>
+                    <Button fx:id="refuseButton" text="❌ Refuser" styleClass="btn-danger-glass" 
+                            HBox.hgrow="ALWAYS" prefHeight="44" onAction="#handleRefuse">
+                        <font>
+                            <Font name="Segoe UI Semibold" size="13"/>
+                        </font>
+                    </Button>
+                    <Button fx:id="processRefundButton" text="💰 Rembourser" styleClass="btn-primary" 
+                            HBox.hgrow="ALWAYS" prefHeight="44" onAction="#handleProcessRefund">
+                        <font>
+                            <Font name="Segoe UI Semibold" size="13"/>
+                        </font>
+                    </Button>
+                </HBox>
+                
+                <Button fx:id="deleteButton" text="🗑️ Supprimer" styleClass="btn-danger-glass" 
+                        maxWidth="Infinity" prefHeight="44">
+                    <font>
+                        <Font name="Segoe UI Semibold" size="13"/>
+                    </font>
+                </Button>
+            </VBox>
         </VBox>
-    </center>
-</BorderPane>
+    </HBox>
+</VBox>

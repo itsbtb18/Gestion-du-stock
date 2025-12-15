@@ -2,17 +2,14 @@ package org.example.model.entity;
 
 import java.time.LocalDateTime;
 
-/**
- * AvisClient - Customer feedback/rating entity
- */
 public class AvisClient {
     
     private Long id;
     private Vente vente;
     private Client client;
-    private int note; // Rating 1-5
+    private int note; 
     private String commentaire;
-    private CategorieAvis categorie; // SERVICE, PRODUIT, PRIX, PROPRETE
+    private CategorieAvis categorie; 
     private LocalDateTime dateAvis;
     private boolean traite;
     private String reponse;
@@ -23,7 +20,6 @@ public class AvisClient {
         this.traite = false;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

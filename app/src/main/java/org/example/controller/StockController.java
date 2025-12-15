@@ -19,10 +19,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
-/**
- * StockController - Controller for stock movements
- * Integrates with Observer pattern to trigger alerts
- */
 public class StockController implements Initializable {
     
     @FXML private TableView<MouvementStock> tableMouvements;
@@ -74,10 +70,9 @@ public class StockController implements Initializable {
     }
     
     private void initializeForm() {
-        // Initialize movement types
+        
         cmbTypeMouvement.getItems().addAll("ENTREE", "SORTIE", "AJUSTEMENT", "RETOUR");
         
-        // Product selection listener
         cmbProduit.getSelectionModel().selectedItemProperty().addListener(
             (obs, old, nouveau) -> {
                 if (nouveau != null) {
@@ -108,10 +103,8 @@ public class StockController implements Initializable {
             String type = cmbTypeMouvement.getValue();
             int quantite = Integer.parseInt(txtQuantite.getText());
             
-            // Store old quantity for observer notification
             int ancienneQuantite = produit.getQuantiteStock();
             
-            // Update stock based on movement type
             if ("ENTREE".equals(type) || "RETOUR".equals(type)) {
                 produit.ajouterStock(quantite);
             } else if ("SORTIE".equals(type)) {
@@ -120,10 +113,8 @@ public class StockController implements Initializable {
             
             int nouvelleQuantite = produit.getQuantiteStock();
             
-            // ** OBSERVER PATTERN: Notify observers of stock change **
             alerteService.notifierChangementStock(produit, ancienneQuantite, nouvelleQuantite);
             
-            // Create and save movement record
             MouvementStock mouvement = new MouvementStock();
             mouvement.setProduit(produit);
             mouvement.setTypeMouvement(TypeMouvement.valueOf(type));

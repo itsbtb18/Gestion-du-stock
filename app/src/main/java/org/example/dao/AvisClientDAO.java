@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * DAO pour la gestion des avis clients
- */
 public class AvisClientDAO {
 
     private final DatabaseConnection dbConnection;
@@ -24,9 +21,6 @@ public class AvisClientDAO {
     private final ClientDAO clientDAO = new ClientDAO();
     private final UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
 
-    /**
-     * Sauvegarde un nouvel avis
-     */
     public AvisClient save(AvisClient avis) throws SQLException {
         String sql = "INSERT INTO avis_clients (vente_id, client_id, note, commentaire, categorie, " +
                 "date_avis, traite, reponse, reponse_par_user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -66,9 +60,6 @@ public class AvisClientDAO {
         }
     }
 
-    /**
-     * Met Ã  jour un avis
-     */
     public void update(AvisClient avis) throws SQLException {
         String sql = "UPDATE avis_clients SET traite = ?, reponse = ?, reponse_par_user_id = ? WHERE id = ?";
 
@@ -90,9 +81,6 @@ public class AvisClientDAO {
         }
     }
 
-    /**
-     * Marque un avis comme traitÃ©
-     */
     public void marquerTraite(Long id, String reponse, Long reponsePar) throws SQLException {
         String sql = "UPDATE avis_clients SET traite = true, reponse = ?, reponse_par_user_id = ? WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -104,9 +92,6 @@ public class AvisClientDAO {
         }
     }
 
-    /**
-     * Supprime un avis
-     */
     public void delete(Long id) throws SQLException {
         String sql = "DELETE FROM avis_clients WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -116,9 +101,6 @@ public class AvisClientDAO {
         }
     }
 
-    /**
-     * Recherche un avis par ID
-     */
     public Optional<AvisClient> findById(Long id) throws SQLException {
         String sql = "SELECT * FROM avis_clients WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -133,9 +115,6 @@ public class AvisClientDAO {
         return Optional.empty();
     }
 
-    /**
-     * Retourne tous les avis
-     */
     public List<AvisClient> findAll() throws SQLException {
         String sql = "SELECT * FROM avis_clients ORDER BY date_avis DESC";
         List<AvisClient> avisList = new ArrayList<>();
@@ -151,9 +130,6 @@ public class AvisClientDAO {
         return avisList;
     }
 
-    /**
-     * Retourne les avis par client
-     */
     public List<AvisClient> findByClient(Long clientId) throws SQLException {
         String sql = "SELECT * FROM avis_clients WHERE client_id = ? ORDER BY date_avis DESC";
         List<AvisClient> avisList = new ArrayList<>();
@@ -170,9 +146,6 @@ public class AvisClientDAO {
         return avisList;
     }
 
-    /**
-     * Retourne les avis par catÃ©gorie
-     */
     public List<AvisClient> findByCategorie(CategorieAvis categorie) throws SQLException {
         String sql = "SELECT * FROM avis_clients WHERE categorie = ? ORDER BY date_avis DESC";
         List<AvisClient> avisList = new ArrayList<>();
@@ -189,9 +162,6 @@ public class AvisClientDAO {
         return avisList;
     }
 
-    /**
-     * Retourne les avis par note
-     */
     public List<AvisClient> findByNote(int note) throws SQLException {
         String sql = "SELECT * FROM avis_clients WHERE note = ? ORDER BY date_avis DESC";
         List<AvisClient> avisList = new ArrayList<>();
@@ -208,9 +178,6 @@ public class AvisClientDAO {
         return avisList;
     }
 
-    /**
-     * Retourne les avis non traitÃ©s
-     */
     public List<AvisClient> findNonTraites() throws SQLException {
         String sql = "SELECT * FROM avis_clients WHERE traite = false ORDER BY date_avis DESC";
         List<AvisClient> avisList = new ArrayList<>();
@@ -226,9 +193,6 @@ public class AvisClientDAO {
         return avisList;
     }
 
-    /**
-     * Retourne les avis nÃ©gatifs (note <= 2)
-     */
     public List<AvisClient> findNegatifs() throws SQLException {
         String sql = "SELECT * FROM avis_clients WHERE note <= 2 ORDER BY date_avis DESC";
         List<AvisClient> avisList = new ArrayList<>();
@@ -244,9 +208,6 @@ public class AvisClientDAO {
         return avisList;
     }
 
-    /**
-     * Calcule la note moyenne
-     */
     public double getMoyenneNotes() throws SQLException {
         String sql = "SELECT AVG(note) FROM avis_clients";
         
@@ -260,9 +221,6 @@ public class AvisClientDAO {
         return 0.0;
     }
 
-    /**
-     * Calcule la note moyenne par catÃ©gorie
-     */
     public double getMoyenneParCategorie(CategorieAvis categorie) throws SQLException {
         String sql = "SELECT AVG(note) FROM avis_clients WHERE categorie = ?";
         
@@ -279,9 +237,6 @@ public class AvisClientDAO {
         return 0.0;
     }
 
-    /**
-     * Compte le nombre d'avis
-     */
     public int count() throws SQLException {
         String sql = "SELECT COUNT(*) FROM avis_clients";
         try (Connection conn = dbConnection.getConnection();
@@ -294,9 +249,6 @@ public class AvisClientDAO {
         return 0;
     }
 
-    /**
-     * Convertit un ResultSet en AvisClient
-     */
     private AvisClient mapResultSetToAvis(ResultSet rs) throws SQLException {
         AvisClient avis = new AvisClient();
         avis.setId(rs.getLong("id"));

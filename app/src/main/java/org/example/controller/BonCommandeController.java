@@ -1,6 +1,5 @@
 package org.example.controller;
 
-
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -13,21 +12,13 @@ import org.example.model.service.FournisseurService;
 import org.example.model.service.ProduitService;
 import org.example.util.AlertUtil;
 
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/**
- * Controller for Purchase Order (Bon de Commande) management
- * Handles order creation, line items, and supplier orders
- */
 public class BonCommandeController {
 
-
-    // FXML UI Components - Order List
     @FXML private TableView<BonCommande> commandeTable;
     @FXML private TableColumn<BonCommande, String> numeroColumn;
     @FXML private TableColumn<BonCommande, String> fournisseurColumn;
@@ -35,7 +26,6 @@ public class BonCommandeController {
     @FXML private TableColumn<BonCommande, String> statutColumn;
     @FXML private TableColumn<BonCommande, Double> totalColumn;
    
-    // FXML UI Components - Order Header
     @FXML private Label numeroLabel;
     @FXML private ComboBox<Fournisseur> fournisseurCombo;
     @FXML private DatePicker dateCommandePicker;
@@ -43,7 +33,6 @@ public class BonCommandeController {
     @FXML private ComboBox<StatutCommande> statutCombo;
     @FXML private TextArea notesArea;
    
-    // FXML UI Components - Line Items
     @FXML private TableView<LigneCommande> lignesTable;
     @FXML private TableColumn<LigneCommande, String> produitColumn;
     @FXML private TableColumn<LigneCommande, Integer> quantiteColumn;
@@ -56,12 +45,10 @@ public class BonCommandeController {
     @FXML private Button addLineButton;
     @FXML private Button removeLineButton;
    
-    // FXML UI Components - Summary
     @FXML private Label totalHTLabel;
     @FXML private Label taxeLabel;
     @FXML private Label totalTTCLabel;
    
-    // FXML UI Components - Actions
     @FXML private Button newButton;
     @FXML private Button saveButton;
     @FXML private Button updateButton;
@@ -70,22 +57,17 @@ public class BonCommandeController {
     @FXML private Button approveButton;
     @FXML private Button receiveButton;
    
-    // Services
     private final FournisseurService fournisseurService = FournisseurService.getInstance();
     private final ProduitService produitService = ProduitService.getInstance();
     private final org.example.model.service.BonCommandeService bonCommandeService =
         org.example.model.service.BonCommandeService.getInstance();
    
-    // State
     private ObservableList<BonCommande> commandeList = FXCollections.observableArrayList();
     private ObservableList<LigneCommande> lignesList = FXCollections.observableArrayList();
     private BonCommande selectedCommande = null;
     private boolean isEditMode = false;
-    private static final double TVA_RATE = 0.20; // 20% VAT
+    private static final double TVA_RATE = 0.20; 
    
-    /**
-     * Inner class for line item representation in TableView
-     */
     public static class LigneCommande {
         private final Produit produit;
         private int quantite;
@@ -122,10 +104,6 @@ public class BonCommandeController {
         }
     }
 
-
-    /**
-     * Initialize the controller
-     */
     @FXML
     public void initialize() {
         setupCommandeTable();
@@ -136,10 +114,6 @@ public class BonCommandeController {
         updateFormState();
     }
 
-
-    /**
-     * Setup order table
-     */
     private void setupCommandeTable() {
         numeroColumn.setCellValueFactory(cellData ->
             new SimpleStringProperty(cellData.getValue().getNumero()));
@@ -152,10 +126,7 @@ public class BonCommandeController {
         totalColumn.setCellValueFactory(cellData ->
             new SimpleDoubleProperty(cellData.getValue().getMontantTotal()).asObject());
 
-
-        // Fix: Use constrained resize policy to fit card and match FXML
-        commandeTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
+        commandeTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
 
         commandeTable.setItems(commandeList);
         commandeTable.getSelectionModel().selectedItemProperty().addListener(
@@ -163,10 +134,6 @@ public class BonCommandeController {
         );
     }
 
-
-    /**
-     * Setup line items table
-     */
     private void setupLignesTable() {
         produitColumn.setCellValueFactory(cellData ->
             new SimpleStringProperty(cellData.getValue().getProduit().getNom()));
@@ -183,13 +150,9 @@ public class BonCommandeController {
         lignesTable.setItems(lignesList);
     }
 
-
-    /**
-     * Setup combo boxes
-     */
     private void setupCombos() {
         try {
-            // Fournisseur combo
+            
             List<Fournisseur> fournisseurs = fournisseurService.getActiveFournisseurs();
             fournisseurCombo.setItems(FXCollections.observableArrayList(fournisseurs));
             fournisseurCombo.setConverter(new javafx.util.StringConverter<Fournisseur>() {
@@ -203,7 +166,6 @@ public class BonCommandeController {
                 }
             });
            
-            // Produit combo
             List<Produit> produits = produitService.getAllProduits();
             produitCombo.setItems(FXCollections.observableArrayList(produits));
             produitCombo.setConverter(new javafx.util.StringConverter<Produit>() {
@@ -217,7 +179,6 @@ public class BonCommandeController {
                 }
             });
            
-            // Statut combo
             statutCombo.setItems(FXCollections.observableArrayList(StatutCommande.values()));
            
         } catch (Exception e) {
@@ -225,28 +186,19 @@ public class BonCommandeController {
         }
     }
 
-
-    /**
-     * Setup listeners
-     */
     private void setupListeners() {
-        // Auto-calculate when product selected
+        
         produitCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 prixUnitaireField.setText(String.valueOf(newVal.getPrix()));
             }
         });
        
-        // Update totals when lines change
         lignesList.addListener((javafx.collections.ListChangeListener<LigneCommande>) c -> {
             updateTotals();
         });
     }
 
-
-    /**
-     * Load all orders
-     */
     private void loadAllCommandes() {
         try {
             commandeList.setAll(bonCommandeService.getAllCommandes());
@@ -256,10 +208,6 @@ public class BonCommandeController {
         }
     }
 
-
-    /**
-     * Handle order selection
-     */
     private void handleCommandeSelected(BonCommande commande) {
         selectedCommande = commande;
         if (commande != null) {
@@ -269,10 +217,6 @@ public class BonCommandeController {
         }
     }
 
-
-    /**
-     * Populate form with order data
-     */
     private void populateForm(BonCommande commande) {
         numeroLabel.setText(commande.getNumero());
         fournisseurCombo.setValue(commande.getFournisseur());
@@ -281,7 +225,6 @@ public class BonCommandeController {
         statutCombo.setValue(commande.getStatut());
         notesArea.setText(commande.getCommentaire() != null ? commande.getCommentaire() : "");
        
-        // Convert LigneBonCommande to LigneCommande for display
         lignesList.clear();
         for (LigneBonCommande lbc : commande.getLignes()) {
             lignesList.add(new LigneCommande(
@@ -293,10 +236,6 @@ public class BonCommandeController {
         updateTotals();
     }
 
-
-    /**
-     * Update totals
-     */
     private void updateTotals() {
         double totalHT = 0;
         for (LigneCommande ligne : lignesList) {
@@ -311,10 +250,6 @@ public class BonCommandeController {
         totalTTCLabel.setText(String.format("%.2f", totalTTC));
     }
 
-
-    /**
-     * Update form state
-     */
     private void updateFormState() {
         boolean editing = isEditMode && selectedCommande != null;
        
@@ -327,10 +262,6 @@ public class BonCommandeController {
         fournisseurCombo.setDisable(editing);
     }
 
-
-    /**
-     * Handle new order
-     */
     @FXML
     private void handleNew() {
         isEditMode = false;
@@ -339,10 +270,6 @@ public class BonCommandeController {
         updateFormState();
     }
 
-
-    /**
-     * Handle save (new order)
-     */
     @FXML
     private void handleSave() {
         if (!validateForm()) {
@@ -358,7 +285,6 @@ public class BonCommandeController {
             commande.setStatut(StatutCommande.BROUILLON);
             commande.setCommentaire(notesArea.getText().trim());
            
-            // Convert LigneCommande to LigneBonCommande
             List<LigneBonCommande> lignes = new ArrayList<>();
             for (LigneCommande ligne : lignesList) {
                 LigneBonCommande lbc = new LigneBonCommande(
@@ -376,7 +302,6 @@ public class BonCommandeController {
             }
             commande.setMontantTotal(total * (1 + TVA_RATE));
            
-            // Save with BonCommandeService
             if (isEditMode && selectedCommande != null) {
                 bonCommandeService.updateCommande(commande);
                 AlertUtil.showInfo("Succès", "Bon de commande mis à jour avec succès!");
@@ -390,10 +315,6 @@ public class BonCommandeController {
         }
     }
 
-
-    /**
-     * Handle add line item
-     */
     @FXML
     private void handleAddLine() {
         Produit produit = produitCombo.getValue();
@@ -417,7 +338,6 @@ public class BonCommandeController {
             LigneCommande ligne = new LigneCommande(produit, quantite, prix);
             lignesList.add(ligne);
            
-            // Clear line form
             produitCombo.setValue(null);
             quantiteField.clear();
             prixUnitaireField.clear();
@@ -427,10 +347,6 @@ public class BonCommandeController {
         }
     }
 
-
-    /**
-     * Handle remove line item
-     */
     @FXML
     private void handleRemoveLine() {
         LigneCommande selected = lignesTable.getSelectionModel().getSelectedItem();
@@ -439,10 +355,6 @@ public class BonCommandeController {
         }
     }
 
-
-    /**
-     * Handle clear form
-     */
     @FXML
     private void handleClear() {
         numeroLabel.setText("Nouveau");
@@ -463,20 +375,12 @@ public class BonCommandeController {
         updateFormState();
     }
 
-
-    /**
-     * Handle refresh
-     */
     @FXML
     private void handleRefresh() {
         loadAllCommandes();
         handleClear();
     }
 
-
-    /**
-     * Handle approve - Approve a purchase order
-     */
     @FXML
     private void handleApprove() {
         BonCommande selectedCommande = commandeTable.getSelectionModel().getSelectedItem();
@@ -501,10 +405,6 @@ public class BonCommandeController {
         }
     }
 
-
-    /**
-     * Handle receive - Receive goods from a purchase order
-     */
     @FXML
     private void handleReceive() {
         BonCommande selectedCommande = commandeTable.getSelectionModel().getSelectedItem();
@@ -523,7 +423,6 @@ public class BonCommandeController {
             selectedCommande.setStatut(StatutCommande.RECUE);
             bonCommandeService.updateCommande(selectedCommande);
            
-            // Update stock quantities for received products
             for (LigneBonCommande ligne : selectedCommande.getLignes()) {
                 Produit produit = ligne.getProduit();
                 produit.setQuantiteStock(produit.getQuantiteStock() + ligne.getQuantiteCommandee());
@@ -537,10 +436,6 @@ public class BonCommandeController {
         }
     }
 
-
-    /**
-     * Validate form
-     */
     private boolean validateForm() {
         if (fournisseurCombo.getValue() == null) {
             AlertUtil.showWarning("Validation", "Veuillez sélectionner un fournisseur.");

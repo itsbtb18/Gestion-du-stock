@@ -1,8 +1,5 @@
 package org.example.model.entity;
 
-/**
- * StatutCaisse - Cash register status enum
- */
 public enum StatutCaisse {
     OUVERTE("Ouverte"),
     FERMEE("Fermée"),

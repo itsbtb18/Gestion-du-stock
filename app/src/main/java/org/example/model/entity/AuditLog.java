@@ -2,20 +2,17 @@ package org.example.model.entity;
 
 import java.time.LocalDateTime;
 
-/**
- * AuditLog - Audit trail for tracking all critical operations
- */
 public class AuditLog {
     
     private Long id;
     private LocalDateTime dateHeure;
     private Utilisateur utilisateur;
     private TypeAction action;
-    private String entite; // Entity type (e.g., "Produit", "Vente")
-    private Long entiteId; // ID of the affected entity
+    private String entite; 
+    private Long entiteId; 
     private String description;
-    private String valeurAvant; // JSON of previous state
-    private String valeurApres; // JSON of new state
+    private String valeurAvant; 
+    private String valeurApres; 
     private String adresseIP;
     private boolean succes;
     
@@ -33,7 +30,6 @@ public class AuditLog {
         this.description = description;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

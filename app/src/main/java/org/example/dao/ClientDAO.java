@@ -10,10 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * ClientDAO - Data Access Object for Client entity
- * Handles all database operations for clients
- */
 public class ClientDAO {
     
     private final DatabaseConnection dbConnection;
@@ -22,10 +18,6 @@ public class ClientDAO {
         this.dbConnection = DatabaseConnection.getInstance();
     }
     
-    /**
-     * Find all clients
-     * @return list of all active clients
-     */
     public List<Client> findAll() {
         List<Client> clients = new ArrayList<>();
         String sql = "SELECT * FROM clients WHERE actif = TRUE ORDER BY nom, prenom";
@@ -45,11 +37,6 @@ public class ClientDAO {
         return clients;
     }
     
-    /**
-     * Find client by ID
-     * @param id the client ID
-     * @return Optional containing the client if found
-     */
     public Optional<Client> findById(Long id) {
         String sql = "SELECT * FROM clients WHERE id = ?";
         
@@ -70,11 +57,6 @@ public class ClientDAO {
         return Optional.empty();
     }
     
-    /**
-     * Find client by phone number
-     * @param telephone the phone number
-     * @return Optional containing the client if found
-     */
     public Optional<Client> findByTelephone(String telephone) {
         String sql = "SELECT * FROM clients WHERE telephone = ? AND actif = TRUE";
         
@@ -95,11 +77,6 @@ public class ClientDAO {
         return Optional.empty();
     }
     
-    /**
-     * Find client by code
-     * @param code the client code
-     * @return Optional containing the client if found
-     */
     public Optional<Client> findByCode(String code) {
         String sql = "SELECT * FROM clients WHERE code = ? AND actif = TRUE";
         
@@ -120,11 +97,6 @@ public class ClientDAO {
         return Optional.empty();
     }
     
-    /**
-     * Search clients by name, phone, or email
-     * @param query the search query
-     * @return list of matching clients
-     */
     public List<Client> search(String query) {
         List<Client> clients = new ArrayList<>();
         String sql = "SELECT * FROM clients WHERE actif = TRUE AND " +
@@ -153,11 +125,6 @@ public class ClientDAO {
         return clients;
     }
     
-    /**
-     * Find VIP clients (total purchases > threshold)
-     * @param threshold the purchase threshold
-     * @return list of VIP clients
-     */
     public List<Client> findVIPClients(double threshold) {
         List<Client> clients = new ArrayList<>();
         String sql = "SELECT * FROM clients WHERE actif = TRUE AND total_achats >= ? " +
@@ -180,11 +147,6 @@ public class ClientDAO {
         return clients;
     }
     
-    /**
-     * Save a new client
-     * @param client the client to save
-     * @return the saved client with generated ID
-     */
     public Client save(Client client) {
         String sql = "INSERT INTO clients (code, nom, prenom, telephone, email, adresse, " +
                     "type_client, date_inscription, total_achats, points_fidelite, actif) " +
@@ -228,11 +190,6 @@ public class ClientDAO {
         return client;
     }
     
-    /**
-     * Update an existing client
-     * @param client the client to update
-     * @return true if update successful
-     */
     public boolean update(Client client) {
         String sql = "UPDATE clients SET code = ?, nom = ?, prenom = ?, telephone = ?, email = ?, " +
                     "adresse = ?, type_client = ?, total_achats = ?, points_fidelite = ? WHERE id = ?";
@@ -265,11 +222,6 @@ public class ClientDAO {
         return false;
     }
     
-    /**
-     * Delete a client (soft delete - mark as inactive)
-     * @param id the client ID
-     * @return true if delete successful
-     */
     public boolean delete(Long id) {
         String sql = "UPDATE clients SET actif = FALSE WHERE id = ?";
         
@@ -291,12 +243,6 @@ public class ClientDAO {
         return false;
     }
     
-    /**
-     * Update client loyalty points
-     * @param clientId the client ID
-     * @param points the points to add (can be negative)
-     * @return true if update successful
-     */
     public boolean updatePoints(Long clientId, int points) {
         String sql = "UPDATE clients SET points_fidelite = points_fidelite + ? WHERE id = ?";
         
@@ -316,12 +262,6 @@ public class ClientDAO {
         return false;
     }
     
-    /**
-     * Update client total purchases
-     * @param clientId the client ID
-     * @param amount the amount to add
-     * @return true if update successful
-     */
     public boolean updateTotalAchats(Long clientId, double amount) {
         String sql = "UPDATE clients SET total_achats = total_achats + ? WHERE id = ?";
         
@@ -341,9 +281,6 @@ public class ClientDAO {
         return false;
     }
     
-    /**
-     * Map ResultSet to Client object
-     */
     private Client mapResultSetToClient(ResultSet rs) throws SQLException {
         Client client = new Client();
         
@@ -371,10 +308,6 @@ public class ClientDAO {
         return client;
     }
     
-    /**
-     * Get total client count
-     * @return total number of active clients
-     */
     public int count() {
         String sql = "SELECT COUNT(*) FROM clients WHERE actif = TRUE";
         

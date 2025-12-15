@@ -12,17 +12,10 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-/**
- * PDFUtil - Utility class for PDF generation
- */
 public class PDFUtil {
     
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     
-    /**
-     * Generate PDF receipt for a sale
-     */
     public static void generateReceipt(Vente vente, String outputPath) throws IOException {
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage(PDRectangle.A4);
@@ -33,7 +26,6 @@ public class PDFUtil {
                 float margin = 50;
                 float leading = 15;
                 
-                // Header
                 contentStream.beginText();
                 contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 18);
                 contentStream.newLineAtOffset(margin, yPosition);
@@ -42,7 +34,6 @@ public class PDFUtil {
                 
                 yPosition -= 30;
                 
-                // Store info
                 contentStream.beginText();
                 contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 10);
                 contentStream.newLineAtOffset(margin, yPosition);
@@ -55,7 +46,6 @@ public class PDFUtil {
                 
                 yPosition -= 60;
                 
-                // Sale info
                 contentStream.beginText();
                 contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 10);
                 contentStream.newLineAtOffset(margin, yPosition);
@@ -72,7 +62,6 @@ public class PDFUtil {
                 
                 yPosition -= 60;
                 
-                // Line items header
                 contentStream.beginText();
                 contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 10);
                 contentStream.newLineAtOffset(margin, yPosition);
@@ -87,14 +76,12 @@ public class PDFUtil {
                 
                 yPosition -= 20;
                 
-                // Draw line
                 contentStream.moveTo(margin, yPosition);
                 contentStream.lineTo(550, yPosition);
                 contentStream.stroke();
                 
                 yPosition -= 15;
                 
-                // Line items
                 contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 9);
                 
                 for (LigneVente ligne : vente.getLignes()) {
@@ -112,7 +99,7 @@ public class PDFUtil {
                     yPosition -= leading;
                     
                     if (yPosition < 100) {
-                        // Create new page if needed
+                        
                         contentStream.close();
                         page = new PDPage(PDRectangle.A4);
                         document.addPage(page);
@@ -122,14 +109,12 @@ public class PDFUtil {
                 
                 yPosition -= 10;
                 
-                // Draw line
                 contentStream.moveTo(margin, yPosition);
                 contentStream.lineTo(550, yPosition);
                 contentStream.stroke();
                 
                 yPosition -= 20;
                 
-                // Totals
                 contentStream.beginText();
                 contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 10);
                 contentStream.newLineAtOffset(370, yPosition);
@@ -159,7 +144,6 @@ public class PDFUtil {
                 
                 yPosition -= leading + 5;
                 
-                // Draw line
                 contentStream.moveTo(370, yPosition);
                 contentStream.lineTo(550, yPosition);
                 contentStream.stroke();
@@ -176,7 +160,6 @@ public class PDFUtil {
                 
                 yPosition -= 30;
                 
-                // Payment method
                 contentStream.beginText();
                 contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 9);
                 contentStream.newLineAtOffset(margin, yPosition);
@@ -185,7 +168,6 @@ public class PDFUtil {
                 
                 yPosition -= 40;
                 
-                // Footer
                 contentStream.beginText();
                 contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_OBLIQUE), 8);
                 contentStream.newLineAtOffset(margin, yPosition);
@@ -199,9 +181,6 @@ public class PDFUtil {
         }
     }
     
-    /**
-     * Generate PDF report
-     */
     public static void generateReport(String title, List<String[]> data, String[] headers, String outputPath) throws IOException {
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage(PDRectangle.A4);
@@ -212,7 +191,6 @@ public class PDFUtil {
                 float margin = 50;
                 float leading = 15;
                 
-                // Title
                 contentStream.beginText();
                 contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 16);
                 contentStream.newLineAtOffset(margin, yPosition);
@@ -221,7 +199,6 @@ public class PDFUtil {
                 
                 yPosition -= 30;
                 
-                // Headers
                 contentStream.beginText();
                 contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 10);
                 contentStream.newLineAtOffset(margin, yPosition);
@@ -240,7 +217,6 @@ public class PDFUtil {
                 
                 yPosition -= 20;
                 
-                // Data rows
                 contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 9);
                 
                 for (String[] row : data) {
@@ -260,7 +236,7 @@ public class PDFUtil {
                     yPosition -= leading;
                     
                     if (yPosition < 100) {
-                        // Create new page if needed
+                        
                         contentStream.close();
                         page = new PDPage(PDRectangle.A4);
                         document.addPage(page);

@@ -2,15 +2,12 @@ package org.example.model.entity;
 
 import java.time.LocalDateTime;
 
-/**
- * Emplacement - Location/warehouse entity for multi-location inventory
- */
 public class Emplacement {
     
     private Long id;
     private String code;
     private String nom;
-    private TypeEmplacement type; // MAGASIN, ENTREPOT, RESERVE
+    private TypeEmplacement type; 
     private String adresse;
     private String ville;
     private String responsable;
@@ -24,7 +21,6 @@ public class Emplacement {
         this.actif = true;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

@@ -3,34 +3,21 @@ package org.example.model.pattern.composite;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * ProduitCompose - Composite class in Composite pattern
- * Represents a bundle or pack of products (can contain simple products or other bundles)
- */
 public class ProduitCompose extends ProduitComponent {
     
     private List<ProduitComponent> produits;
-    private double remise; // Discount percentage for the bundle
+    private double remise; 
     
-    /**
-     * Constructor for ProduitCompose
-     */
     public ProduitCompose(String code, String nom, String description, double remise) {
         super(code, nom, description);
         this.produits = new ArrayList<>();
         this.remise = remise;
     }
     
-    /**
-     * Constructor without discount
-     */
     public ProduitCompose(String code, String nom, String description) {
         this(code, nom, description, 0.0);
     }
     
-    /**
-     * Add a product to this bundle
-     */
     @Override
     public void ajouter(ProduitComponent produit) {
         if (produit != null) {
@@ -38,17 +25,11 @@ public class ProduitCompose extends ProduitComponent {
         }
     }
     
-    /**
-     * Remove a product from this bundle
-     */
     @Override
     public void retirer(ProduitComponent produit) {
         produits.remove(produit);
     }
     
-    /**
-     * Get a child product at specific index
-     */
     @Override
     public ProduitComponent getEnfant(int index) {
         if (index >= 0 && index < produits.size()) {
@@ -57,30 +38,21 @@ public class ProduitCompose extends ProduitComponent {
         throw new IndexOutOfBoundsException("Index invalide: " + index);
     }
     
-    /**
-     * Get all child products
-     */
     @Override
     public List<ProduitComponent> getEnfants() {
         return new ArrayList<>(produits);
     }
     
-    /**
-     * Calculate total price of the bundle (sum of all products with discount)
-     */
     @Override
     public double getPrix() {
         double total = 0.0;
         for (ProduitComponent produit : produits) {
             total += produit.getPrix();
         }
-        // Apply discount
+        
         return total * (1 - remise / 100.0);
     }
     
-    /**
-     * Get minimum stock quantity among all products in the bundle
-     */
     @Override
     public int getQuantiteStock() {
         if (produits.isEmpty()) {
@@ -97,9 +69,6 @@ public class ProduitCompose extends ProduitComponent {
         return minStock;
     }
     
-    /**
-     * Display information about this bundle and all its products
-     */
     @Override
     public void afficher(String indent) {
         System.out.println(indent + "[Pack/Bundle]");
@@ -116,38 +85,23 @@ public class ProduitCompose extends ProduitComponent {
         }
     }
     
-    /**
-     * This is a composite, so return true
-     */
     @Override
     public boolean isComposite() {
         return true;
     }
     
-    /**
-     * Get the number of products in this bundle
-     */
     public int getNombreProduits() {
         return produits.size();
     }
     
-    /**
-     * Get discount percentage
-     */
     public double getRemise() {
         return remise;
     }
     
-    /**
-     * Set discount percentage
-     */
     public void setRemise(double remise) {
         this.remise = remise;
     }
     
-    /**
-     * Calculate total price without discount
-     */
     public double getPrixSansRemise() {
         double total = 0.0;
         for (ProduitComponent produit : produits) {
@@ -156,9 +110,6 @@ public class ProduitCompose extends ProduitComponent {
         return total;
     }
     
-    /**
-     * Get the amount saved with the discount
-     */
     public double getEconomie() {
         return getPrixSansRemise() - getPrix();
     }

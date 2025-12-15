@@ -4,8 +4,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import org.example.model.entity.Produit;
 import org.example.model.entity.Categorie;
 import org.example.model.service.MagasinService;
@@ -18,13 +21,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Optional;
 
-/**
- * ProduitController - Controller for product management (CRUD)
- * Part of the Controller layer in MVC architecture
- */
 public class ProduitController implements Initializable {
     
-    // FXML Components - Table
     @FXML private TableView<Produit> tableProduits;
     @FXML private TableColumn<Produit, String> colCode;
     @FXML private TableColumn<Produit, String> colNom;
@@ -33,7 +31,6 @@ public class ProduitController implements Initializable {
     @FXML private TableColumn<Produit, String> colCategorie;
     @FXML private TableColumn<Produit, String> colUnite;
     
-    // FXML Components - Input Fields
     @FXML private TextField txtCode;
     @FXML private TextField txtNom;
     @FXML private TextArea txtDescription;
@@ -47,38 +44,52 @@ public class ProduitController implements Initializable {
     @FXML private TextField txtEmplacement;
     @FXML private CheckBox chkActif;
     
-    // FXML Components - Buttons
     @FXML private Button btnAjouter;
     @FXML private Button btnModifier;
     @FXML private Button btnSupprimer;
     @FXML private Button btnNouveau;
+    @FXML private Button btnCalculatrice;
+    @FXML private Button btnCalculatriceStock;
     @FXML private TextField txtRecherche;
     
-    // Model and Data
     private MagasinService magasinService;
     private ProduitDAO produitDAO;
     private ObservableList<Produit> listeProduits;
     private Produit produitSelectionne;
     
+    private void afficherMessage(String titre, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    
+    private Optional<ButtonType> afficherConfirmation(String titre, String message) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        return alert.showAndWait();
+    }
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Initialize services
+        
         magasinService = MagasinService.getInstance();
         produitDAO = magasinService.getProduitDAO();
         listeProduits = FXCollections.observableArrayList();
         
-        // Initialize table columns
         initializeTableColumns();
         
-        // Load initial data
+        loadCategories();
+        
         chargerProduits();
         
-        // Set up table selection listener
         tableProduits.getSelectionModel().selectedItemProperty().addListener(
             (observable, oldValue, newValue) -> handleSelectionChange(newValue)
         );
         
-        // Initialize form state
         resetForm();
     }
     
@@ -95,7 +106,6 @@ public class ProduitController implements Initializable {
         });
         colUnite.setCellValueFactory(new PropertyValueFactory<>("unite"));
         
-        // Set table items
         tableProduits.setItems(listeProduits);
     }
     
@@ -225,27 +235,22 @@ public class ProduitController implements Initializable {
     
     private boolean validerFormulaire() {
         try {
-            // Validate code (required, alphanumeric)
+            
             InputValidator.validateNotEmpty(txtCode.getText(), "Code");
             InputValidator.validateCode(txtCode.getText(), "Code");
             
-            // Validate name (required, min 3 chars)
             InputValidator.validateMinLength(txtNom.getText(), "Nom", 3);
             InputValidator.validateMaxLength(txtNom.getText(), "Nom", 100);
             
-            // Validate price (positive number)
             double prix = Double.parseDouble(txtPrix.getText());
             InputValidator.validatePositive(prix, "Prix");
             
-            // Validate stock (non-negative integer)
             int stock = Integer.parseInt(txtStock.getText());
             InputValidator.validateNonNegative(stock, "Stock");
             
-            // Validate alert threshold (positive integer)
             int seuil = Integer.parseInt(txtSeuilAlerte.getText());
             InputValidator.validatePositive(seuil, "Seuil d'alerte");
             
-            // Validate unit (required)
             InputValidator.validateNotEmpty(txtUnite.getText(), "Unité");
             
             return true;
@@ -264,7 +269,6 @@ public class ProduitController implements Initializable {
     private Produit creerProduitDepuisFormulaire() {
         Produit produit = new Produit();
         
-        // Normalize and set values
         produit.setCode(InputValidator.normalizeCode(txtCode.getText()));
         produit.setNom(txtNom.getText().trim());
         produit.setDescription(txtDescription.getText().trim());
@@ -308,7 +312,7 @@ public class ProduitController implements Initializable {
         txtFournisseur.setText(produit.getFournisseur());
         txtEmplacement.setText(produit.getEmplacement());
         chkActif.setSelected(produit.isActif());
-        txtCode.setDisable(true); // Code cannot be changed
+        txtCode.setDisable(true); 
     }
     
     private void resetForm() {
@@ -332,19 +336,262 @@ public class ProduitController implements Initializable {
         btnSupprimer.setDisable(true);
     }
     
-    private void afficherMessage(String titre, String message, Alert.AlertType type) {
-        Alert alert = new Alert(type);
-        alert.setTitle(titre);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    @FXML
+    private void handleShowCalculator() {
+        showCalculator(txtPrix);
     }
     
-    private Optional<ButtonType> afficherConfirmation(String titre, String message) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(titre);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        return alert.showAndWait();
+    @FXML
+    private void handleShowCalculatorStock() {
+        showCalculator(txtStock);
+    }
+    
+    private void showCalculator(TextField targetField) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Calculatrice");
+        dialog.setHeaderText("Entrez une expression mathématique");
+        
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(15));
+        
+        TextField expressionField = new TextField();
+        expressionField.setPromptText("Ex: 100 + 50 * 2");
+        expressionField.setStyle("-fx-font-size: 14; -fx-padding: 10;");
+        
+        GridPane buttonGrid = new GridPane();
+        buttonGrid.setHgap(5);
+        buttonGrid.setVgap(5);
+        buttonGrid.setStyle("-fx-padding: 10;");
+        
+        String[][] buttonLabels = {
+            {"7", "8", "9", "/"},
+            {"4", "5", "6", "*"},
+            {"1", "2", "3", "-"},
+            {"0", ".", "=", "+"}
+        };
+        
+        for (int i = 0; i < buttonLabels.length; i++) {
+            for (int j = 0; j < buttonLabels[i].length; j++) {
+                String label = buttonLabels[i][j];
+                Button btn = new Button(label);
+                btn.setStyle("-fx-font-size: 16; -fx-padding: 10; -fx-min-width: 60; -fx-min-height: 50;");
+                
+                final String buttonLabel = label;
+                btn.setOnAction(e -> {
+                    if ("=".equals(buttonLabel)) {
+                        try {
+                            double result = evaluateExpression(expressionField.getText());
+                            expressionField.setText(String.valueOf(result));
+                        } catch (Exception ex) {
+                            expressionField.setText("Erreur");
+                        }
+                    } else {
+                        expressionField.appendText(buttonLabel);
+                    }
+                });
+                
+                buttonGrid.add(btn, j, i);
+            }
+        }
+        
+        content.getChildren().addAll(expressionField, buttonGrid);
+        
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        
+        Optional<ButtonType> result = dialog.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                double value = evaluateExpression(expressionField.getText());
+                targetField.setText(String.format("%.2f", value));
+            } catch (Exception e) {
+                afficherMessage("Erreur", "Expression invalide", Alert.AlertType.ERROR);
+            }
+        }
+    }
+    
+    private double evaluateExpression(String expression) throws Exception {
+        
+        expression = expression.trim();
+        if (expression.isEmpty()) {
+            return 0;
+        }
+        
+        try {
+            javax.script.ScriptEngineManager manager = new javax.script.ScriptEngineManager();
+            javax.script.ScriptEngine engine = manager.getEngineByName("JavaScript");
+            Object result = engine.eval(expression);
+            if (result instanceof Number) {
+                return ((Number) result).doubleValue();
+            }
+            return Double.parseDouble(result.toString());
+        } catch (Exception e) {
+            throw new Exception("Erreur d'evaluation: " + e.getMessage());
+        }
+    }
+    
+    @FXML
+    private void handleAddCategorie() {
+        Dialog<Categorie> dialog = new Dialog<>();
+        dialog.setTitle("Nouvelle Categorie");
+        dialog.setHeaderText("Creer une nouvelle categorie");
+        
+        VBox content = new VBox(15);
+        content.setPadding(new Insets(20));
+        
+        TextField codeField = new TextField();
+        codeField.setPromptText("Code (ex: CAT-001)");
+        
+        TextField nomField = new TextField();
+        nomField.setPromptText("Nom de la categorie");
+        
+        TextArea descField = new TextArea();
+        descField.setPromptText("Description (optionnel)");
+        descField.setPrefRowCount(2);
+        
+        content.getChildren().addAll(
+            new Label("Code *:"), codeField,
+            new Label("Nom *:"), nomField,
+            new Label("Description:"), descField
+        );
+        
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        
+        dialog.setResultConverter(btn -> {
+            if (btn == ButtonType.OK) {
+                String code = codeField.getText().trim();
+                String nom = nomField.getText().trim();
+                if (!code.isEmpty() && !nom.isEmpty()) {
+                    Categorie cat = new Categorie();
+                    cat.setCode(code);
+                    cat.setNom(nom);
+                    cat.setDescription(descField.getText().trim());
+                    cat.setActif(true);
+                    return cat;
+                }
+            }
+            return null;
+        });
+        
+        Optional<Categorie> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            try {
+                org.example.dao.CategorieDAO categorieDAO = new org.example.dao.CategorieDAO();
+                categorieDAO.save(result.get());
+                loadCategories();
+                cmbCategorie.setValue(result.get());
+                afficherMessage("Succes", "Categorie creee avec succes", Alert.AlertType.INFORMATION);
+            } catch (Exception e) {
+                afficherMessage("Erreur", "Erreur lors de la creation: " + e.getMessage(), Alert.AlertType.ERROR);
+            }
+        }
+    }
+    
+    @FXML
+    private void handleEditCategorie() {
+        Categorie selected = cmbCategorie.getValue();
+        if (selected == null) {
+            afficherMessage("Attention", "Veuillez selectionner une categorie", Alert.AlertType.WARNING);
+            return;
+        }
+        
+        Dialog<Categorie> dialog = new Dialog<>();
+        dialog.setTitle("Modifier Categorie");
+        dialog.setHeaderText("Modifier la categorie: " + selected.getNom());
+        
+        VBox content = new VBox(15);
+        content.setPadding(new Insets(20));
+        
+        TextField codeField = new TextField(selected.getCode());
+        TextField nomField = new TextField(selected.getNom());
+        TextArea descField = new TextArea(selected.getDescription() != null ? selected.getDescription() : "");
+        descField.setPrefRowCount(2);
+        
+        content.getChildren().addAll(
+            new Label("Code *:"), codeField,
+            new Label("Nom *:"), nomField,
+            new Label("Description:"), descField
+        );
+        
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        
+        dialog.setResultConverter(btn -> {
+            if (btn == ButtonType.OK) {
+                String code = codeField.getText().trim();
+                String nom = nomField.getText().trim();
+                if (!code.isEmpty() && !nom.isEmpty()) {
+                    selected.setCode(code);
+                    selected.setNom(nom);
+                    selected.setDescription(descField.getText().trim());
+                    return selected;
+                }
+            }
+            return null;
+        });
+        
+        Optional<Categorie> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            try {
+                org.example.dao.CategorieDAO categorieDAO = new org.example.dao.CategorieDAO();
+                categorieDAO.update(result.get());
+                loadCategories();
+                cmbCategorie.setValue(result.get());
+                afficherMessage("Succes", "Categorie modifiee avec succes", Alert.AlertType.INFORMATION);
+            } catch (Exception e) {
+                afficherMessage("Erreur", "Erreur lors de la modification: " + e.getMessage(), Alert.AlertType.ERROR);
+            }
+        }
+    }
+    
+    @FXML
+    private void handleDeleteCategorie() {
+        Categorie selected = cmbCategorie.getValue();
+        if (selected == null) {
+            afficherMessage("Attention", "Veuillez selectionner une categorie", Alert.AlertType.WARNING);
+            return;
+        }
+        
+        Optional<ButtonType> confirm = afficherConfirmation(
+            "Confirmation",
+            "Voulez-vous vraiment supprimer la categorie '" + selected.getNom() + "'?\n" +
+            "Les produits de cette categorie ne seront plus associes a aucune categorie."
+        );
+        
+        if (confirm.isPresent() && confirm.get() == ButtonType.OK) {
+            try {
+                org.example.dao.CategorieDAO categorieDAO = new org.example.dao.CategorieDAO();
+                categorieDAO.delete(selected.getId());
+                loadCategories();
+                cmbCategorie.setValue(null);
+                afficherMessage("Succes", "Categorie supprimee avec succes", Alert.AlertType.INFORMATION);
+            } catch (Exception e) {
+                afficherMessage("Erreur", "Erreur lors de la suppression: " + e.getMessage(), Alert.AlertType.ERROR);
+            }
+        }
+    }
+    
+    private void loadCategories() {
+        try {
+            org.example.dao.CategorieDAO categorieDAO = new org.example.dao.CategorieDAO();
+            List<Categorie> categories = categorieDAO.findAll();
+            cmbCategorie.getItems().clear();
+            cmbCategorie.getItems().addAll(categories);
+            
+            cmbCategorie.setConverter(new javafx.util.StringConverter<Categorie>() {
+                @Override
+                public String toString(Categorie cat) {
+                    return cat != null ? cat.getNom() : "";
+                }
+                
+                @Override
+                public Categorie fromString(String string) {
+                    return null;
+                }
+            });
+        } catch (Exception e) {
+            afficherMessage("Erreur", "Erreur lors du chargement des categories: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 }

@@ -2,10 +2,6 @@ package org.example.model.entity;
 
 import java.time.LocalDate;
 
-/**
- * StockItem - Entity representing a stock inventory item snapshot
- * Used for inventory tracking and historical stock levels
- */
 public class StockItem {
     
     private Long id;
@@ -16,7 +12,6 @@ public class StockItem {
     private String commentaire;
     private Utilisateur inventoriste;
     
-    // Constructors
     public StockItem() {
         this.dateInventaire = LocalDate.now();
     }
@@ -28,7 +23,6 @@ public class StockItem {
         this.emplacement = emplacement;
     }
     
-    // Business logic
     public int calculerEcart(int quantiteTheorique) {
         return this.quantite - quantiteTheorique;
     }
@@ -40,7 +34,6 @@ public class StockItem {
         return 0.0;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

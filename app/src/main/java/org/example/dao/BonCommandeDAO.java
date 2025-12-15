@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * DAO pour la gestion des bons de commande
- */
 public class BonCommandeDAO {
 
     private final DatabaseConnection dbConnection;
@@ -25,9 +22,6 @@ public class BonCommandeDAO {
     private final UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
     private final ProduitDAO produitDAO = new ProduitDAO();
 
-    /**
-     * Sauvegarde un nouveau bon de commande avec ses lignes
-     */
     public BonCommande save(BonCommande bonCommande) throws SQLException {
         String sql = "INSERT INTO bons_commande (numero, date_commande, date_livraison_prevue, " +
                 "date_livraison_reelle, fournisseur_id, commande_par_user_id, statut, montant_total, " +
@@ -62,7 +56,6 @@ public class BonCommandeDAO {
                 }
             }
 
-            // Sauvegarder les lignes
             saveLignes(conn, bonCommande);
 
             conn.commit();
@@ -81,9 +74,6 @@ public class BonCommandeDAO {
         }
     }
 
-    /**
-     * Sauvegarde les lignes d'un bon de commande
-     */
     private void saveLignes(Connection conn, BonCommande bonCommande) throws SQLException {
         String sql = "INSERT INTO lignes_bon_commande (bon_commande_id, produit_id, quantite_commandee, " +
                 "quantite_recue, prix_unitaire, montant_ligne, commentaire) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -103,9 +93,6 @@ public class BonCommandeDAO {
         }
     }
 
-    /**
-     * Met Ã  jour un bon de commande
-     */
     public void update(BonCommande bonCommande) throws SQLException {
         String sql = "UPDATE bons_commande SET date_livraison_prevue = ?, date_livraison_reelle = ?, " +
                 "statut = ?, montant_total = ?, montant_paye = ?, mode_paiement = ?, commentaire = ? WHERE id = ?";
@@ -128,9 +115,6 @@ public class BonCommandeDAO {
         }
     }
 
-    /**
-     * Met Ã  jour le statut d'un bon de commande
-     */
     public void updateStatut(Long id, StatutCommande statut) throws SQLException {
         String sql = "UPDATE bons_commande SET statut = ? WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -141,9 +125,6 @@ public class BonCommandeDAO {
         }
     }
 
-    /**
-     * Met Ã  jour la quantitÃ© reÃ§ue pour une ligne de commande
-     */
     public void updateQuantiteRecue(Long ligneId, int quantite) throws SQLException {
         String sql = "UPDATE lignes_bon_commande SET quantite_recue = ? WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -154,9 +135,6 @@ public class BonCommandeDAO {
         }
     }
 
-    /**
-     * Recherche un bon de commande par ID avec ses lignes
-     */
     public Optional<BonCommande> findById(Long id) throws SQLException {
         String sql = "SELECT * FROM bons_commande WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -173,9 +151,6 @@ public class BonCommandeDAO {
         return Optional.empty();
     }
 
-    /**
-     * Recherche un bon de commande par numÃ©ro
-     */
     public Optional<BonCommande> findByNumero(String numero) throws SQLException {
         String sql = "SELECT * FROM bons_commande WHERE numero = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -192,9 +167,6 @@ public class BonCommandeDAO {
         return Optional.empty();
     }
 
-    /**
-     * Retourne toutes les lignes d'un bon de commande
-     */
     private List<LigneBonCommande> findLignesByBonCommandeId(Long bonCommandeId) throws SQLException {
         String sql = "SELECT * FROM lignes_bon_commande WHERE bon_commande_id = ?";
         List<LigneBonCommande> lignes = new ArrayList<>();
@@ -211,9 +183,6 @@ public class BonCommandeDAO {
         return lignes;
     }
 
-    /**
-     * Retourne tous les bons de commande
-     */
     public List<BonCommande> findAll() throws SQLException {
         String sql = "SELECT * FROM bons_commande ORDER BY date_commande DESC";
         List<BonCommande> commandes = new ArrayList<>();
@@ -231,9 +200,6 @@ public class BonCommandeDAO {
         return commandes;
     }
 
-    /**
-     * Retourne les bons de commande par fournisseur
-     */
     public List<BonCommande> findByFournisseur(Long fournisseurId) throws SQLException {
         String sql = "SELECT * FROM bons_commande WHERE fournisseur_id = ? ORDER BY date_commande DESC";
         List<BonCommande> commandes = new ArrayList<>();
@@ -252,9 +218,6 @@ public class BonCommandeDAO {
         return commandes;
     }
 
-    /**
-     * Retourne les bons de commande par statut
-     */
     public List<BonCommande> findByStatut(StatutCommande statut) throws SQLException {
         String sql = "SELECT * FROM bons_commande WHERE statut = ? ORDER BY date_commande DESC";
         List<BonCommande> commandes = new ArrayList<>();
@@ -273,9 +236,6 @@ public class BonCommandeDAO {
         return commandes;
     }
 
-    /**
-     * Supprime un bon de commande (cascade sur les lignes)
-     */
     public void delete(Long id) throws SQLException {
         String sql = "DELETE FROM bons_commande WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -285,9 +245,6 @@ public class BonCommandeDAO {
         }
     }
 
-    /**
-     * Convertit un ResultSet en BonCommande
-     */
     private BonCommande mapResultSetToBonCommande(ResultSet rs) throws SQLException {
         BonCommande bc = new BonCommande();
         bc.setId(rs.getLong("id"));
@@ -319,9 +276,6 @@ public class BonCommandeDAO {
         return bc;
     }
 
-    /**
-     * Convertit un ResultSet en LigneBonCommande
-     */
     private LigneBonCommande mapResultSetToLigne(ResultSet rs) throws SQLException {
         LigneBonCommande ligne = new LigneBonCommande();
         ligne.setId(rs.getLong("id"));

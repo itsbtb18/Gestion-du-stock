@@ -1,8 +1,5 @@
 package org.example.exception;
 
-/**
- * StockException - Custom exception for stock-related errors
- */
 public class StockException extends Exception {
     
     public StockException(String message) {
@@ -13,7 +10,6 @@ public class StockException extends Exception {
         super(message, cause);
     }
     
-    // Factory methods for common scenarios
     public static StockException stockInsuffisant(String produit, int demande, int disponible) {
         return new StockException(String.format(
             "Stock insuffisant pour '%s': demandé=%d, disponible=%d",

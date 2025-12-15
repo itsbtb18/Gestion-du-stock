@@ -7,20 +7,15 @@ import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.Statement;
 
-/**
- * DatabaseInitializer - Utility to initialize database with schema enhancements
- */
 public class DatabaseInitializer {
     
     public static void main(String[] args) {
         try {
             System.out.println("Initializing database schema...");
             
-            // First run base schema
             System.out.println("\n=== Step 1: Running base schema ===");
             runSqlFile("src/main/resources/schema.sql");
             
-            // Then run enhancements
             System.out.println("\n=== Step 2: Running schema enhancements ===");
             runSqlFile("src/main/resources/schema_enhancements.sql");
             
@@ -33,7 +28,7 @@ public class DatabaseInitializer {
     }
     
     private static void runSqlFile(String filePath) throws Exception {
-            // Read SQL file
+            
             StringBuilder sql = new StringBuilder();
             try (BufferedReader reader = new BufferedReader(
                     new FileReader(filePath))) {
@@ -43,7 +38,6 @@ public class DatabaseInitializer {
                 }
             }
             
-            // Execute SQL statements
             Connection conn = DatabaseConnection.getInstance().getConnection();
             String[] statements = sql.toString().split(";");
             

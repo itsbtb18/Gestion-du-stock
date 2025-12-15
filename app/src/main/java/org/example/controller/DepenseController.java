@@ -16,13 +16,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Controller for Expense (Dépense) management
- * Handles expense tracking, categorization, and financial reporting
- */
 public class DepenseController {
 
-    // FXML UI Components - Expense Table
     @FXML private TableView<Depense> depenseTable;
     @FXML private TableColumn<Depense, String> numeroColumn;
     @FXML private TableColumn<Depense, String> dateColumn;
@@ -31,7 +26,6 @@ public class DepenseController {
     @FXML private TableColumn<Depense, Double> montantColumn;
     @FXML private TableColumn<Depense, String> recurrentColumn;
     
-    // FXML UI Components - Search & Filter
     @FXML private DatePicker dateDebutPicker;
     @FXML private DatePicker dateFinPicker;
     @FXML private ComboBox<CategorieDepense> categorieFilterCombo;
@@ -39,7 +33,6 @@ public class DepenseController {
     @FXML private Button clearFilterButton;
     @FXML private Button refreshButton;
     
-    // FXML UI Components - Form
     @FXML private Label numeroLabel;
     @FXML private DatePicker dateDepensePicker;
     @FXML private ComboBox<CategorieDepense> categorieCombo;
@@ -51,31 +44,24 @@ public class DepenseController {
     @FXML private CheckBox recurrentCheckBox;
     @FXML private TextArea notesArea;
     
-    // FXML UI Components - Actions
     @FXML private Button newButton;
     @FXML private Button saveButton;
     @FXML private Button updateButton;
     @FXML private Button deleteButton;
     @FXML private Button clearFormButton;
     
-    // FXML UI Components - Summary
     @FXML private Label totalPeriodeLabel;
     @FXML private Label totalMoisLabel;
     @FXML private Label totalAnneeLabel;
     @FXML private Label moyenneMoisLabel;
     @FXML private PieChart categoryPieChart;
     
-    // Service
     private final DepenseService depenseService = DepenseService.getInstance();
     
-    // State
     private ObservableList<Depense> depenseList = FXCollections.observableArrayList();
     private Depense selectedDepense = null;
     private boolean isEditMode = false;
 
-    /**
-     * Initialize the controller
-     */
     @FXML
     public void initialize() {
         setupDepenseTable();
@@ -86,9 +72,6 @@ public class DepenseController {
         updateSummary();
     }
 
-    /**
-     * Configure expense table columns
-     */
     private void setupDepenseTable() {
         numeroColumn.setCellValueFactory(cellData -> 
             new SimpleStringProperty(cellData.getValue().getNumero()));
@@ -105,32 +88,24 @@ public class DepenseController {
         
         depenseTable.setItems(depenseList);
         
-        // Selection listener
         depenseTable.getSelectionModel().selectedItemProperty().addListener(
             (observable, oldValue, newValue) -> handleDepenseSelected(newValue)
         );
     }
 
-    /**
-     * Setup combo boxes
-     */
     private void setupCombos() {
-        // Category combo
+        
         categorieCombo.setItems(FXCollections.observableArrayList(CategorieDepense.values()));
         categorieFilterCombo.setItems(FXCollections.observableArrayList(CategorieDepense.values()));
         
-        // Payment method combo
         ObservableList<String> modePaiements = FXCollections.observableArrayList(
             "Espèces", "Chèque", "Virement", "Carte bancaire", "Prélèvement"
         );
         modePaiementCombo.setItems(modePaiements);
     }
 
-    /**
-     * Setup listeners
-     */
     private void setupListeners() {
-        // Auto-update summary when filters change
+        
         if (dateDebutPicker != null) {
             dateDebutPicker.valueProperty().addListener((obs, old, newVal) -> {
                 if (newVal != null && dateFinPicker.getValue() != null) {
@@ -148,9 +123,6 @@ public class DepenseController {
         }
     }
 
-    /**
-     * Load all expenses
-     */
     private void loadAllDepenses() {
         try {
             List<Depense> depenses = depenseService.getAllDepenses();
@@ -160,9 +132,6 @@ public class DepenseController {
         }
     }
 
-    /**
-     * Handle expense selection
-     */
     private void handleDepenseSelected(Depense depense) {
         selectedDepense = depense;
         if (depense != null) {
@@ -172,9 +141,6 @@ public class DepenseController {
         }
     }
 
-    /**
-     * Populate form with expense data
-     */
     private void populateForm(Depense depense) {
         numeroLabel.setText(depense.getNumero());
         dateDepensePicker.setValue(depense.getDateDepense());
@@ -188,9 +154,6 @@ public class DepenseController {
         notesArea.setText(depense.getNotes());
     }
 
-    /**
-     * Update form state based on mode
-     */
     private void updateFormState() {
         boolean editing = isEditMode && selectedDepense != null;
         
@@ -199,12 +162,9 @@ public class DepenseController {
         if (deleteButton != null) deleteButton.setDisable(!editing);
     }
 
-    /**
-     * Update summary statistics
-     */
     private void updateSummary() {
         try {
-            // Period total
+            
             LocalDate debut = dateDebutPicker != null && dateDebutPicker.getValue() != null 
                 ? dateDebutPicker.getValue() : LocalDate.now().withDayOfMonth(1);
             LocalDate fin = dateFinPicker != null && dateFinPicker.getValue() != null 
@@ -215,7 +175,6 @@ public class DepenseController {
                 totalPeriodeLabel.setText(String.format("%.2f", totalPeriode));
             }
             
-            // Monthly total
             LocalDate firstDayMonth = LocalDate.now().withDayOfMonth(1);
             LocalDate lastDayMonth = LocalDate.now().withDayOfMonth(
                 LocalDate.now().lengthOfMonth());
@@ -224,7 +183,6 @@ public class DepenseController {
                 totalMoisLabel.setText(String.format("%.2f", totalMois));
             }
             
-            // Yearly total
             LocalDate firstDayYear = LocalDate.now().withDayOfYear(1);
             LocalDate lastDayYear = LocalDate.now().withDayOfYear(
                 LocalDate.now().lengthOfYear());
@@ -233,13 +191,11 @@ public class DepenseController {
                 totalAnneeLabel.setText(String.format("%.2f", totalAnnee));
             }
             
-            // Average monthly
             double moyenne = totalAnnee / 12;
             if (moyenneMoisLabel != null) {
                 moyenneMoisLabel.setText(String.format("%.2f", moyenne));
             }
             
-            // Update pie chart
             updateCategoryChart(debut, fin);
             
         } catch (Exception e) {
@@ -247,9 +203,6 @@ public class DepenseController {
         }
     }
 
-    /**
-     * Update category pie chart
-     */
     private void updateCategoryChart(LocalDate debut, LocalDate fin) {
         if (categoryPieChart == null) return;
         
@@ -270,13 +223,10 @@ public class DepenseController {
             categoryPieChart.setTitle("Répartition par catégorie");
             
         } catch (Exception e) {
-            // Silently fail chart update
+            
         }
     }
 
-    /**
-     * Handle filter action
-     */
     @FXML
     private void handleFilter() {
         try {
@@ -304,9 +254,6 @@ public class DepenseController {
         }
     }
 
-    /**
-     * Handle clear filter
-     */
     @FXML
     private void handleClearFilter() {
         dateDebutPicker.setValue(null);
@@ -316,9 +263,6 @@ public class DepenseController {
         updateSummary();
     }
 
-    /**
-     * Handle refresh action
-     */
     @FXML
     private void handleRefresh() {
         loadAllDepenses();
@@ -326,9 +270,6 @@ public class DepenseController {
         updateSummary();
     }
 
-    /**
-     * Handle new expense action
-     */
     @FXML
     private void handleNew() {
         isEditMode = false;
@@ -337,9 +278,6 @@ public class DepenseController {
         updateFormState();
     }
 
-    /**
-     * Handle save action (new expense)
-     */
     @FXML
     private void handleSave() {
         if (!validateForm()) {
@@ -367,9 +305,6 @@ public class DepenseController {
         }
     }
 
-    /**
-     * Handle update action
-     */
     @FXML
     private void handleUpdate() {
         if (selectedDepense == null || !validateForm()) {
@@ -396,9 +331,6 @@ public class DepenseController {
         }
     }
 
-    /**
-     * Handle delete action
-     */
     @FXML
     private void handleDelete() {
         if (selectedDepense == null) {
@@ -419,9 +351,6 @@ public class DepenseController {
         }
     }
 
-    /**
-     * Handle clear form action
-     */
     @FXML
     private void handleClearForm() {
         numeroLabel.setText("Nouveau");
@@ -441,9 +370,6 @@ public class DepenseController {
         updateFormState();
     }
 
-    /**
-     * Validate form inputs
-     */
     private boolean validateForm() {
         if (dateDepensePicker.getValue() == null) {
             AlertUtil.showWarning("Validation", "La date est requise.");

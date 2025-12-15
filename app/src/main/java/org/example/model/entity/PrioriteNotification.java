@@ -1,8 +1,5 @@
 package org.example.model.entity;
 
-/**
- * PrioriteNotification - Notification priority enum
- */
 public enum PrioriteNotification {
     BASSE("Basse"),
     NORMALE("Normale"),

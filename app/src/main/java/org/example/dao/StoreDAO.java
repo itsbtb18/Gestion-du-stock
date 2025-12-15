@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * StoreDAO - Data Access Object for Store entity
- */
 public class StoreDAO {
     
     private final DatabaseConnection dbConnection;
@@ -19,9 +16,6 @@ public class StoreDAO {
         this.dbConnection = DatabaseConnection.getInstance();
     }
     
-    /**
-     * Find all stores
-     */
     public List<Store> findAll() {
         List<Store> stores = new ArrayList<>();
         String sql = "SELECT * FROM stores ORDER BY name";
@@ -41,9 +35,6 @@ public class StoreDAO {
         return stores;
     }
     
-    /**
-     * Find store by ID
-     */
     public Optional<Store> findById(Long id) {
         String sql = "SELECT * FROM stores WHERE id = ?";
         
@@ -64,9 +55,6 @@ public class StoreDAO {
         return Optional.empty();
     }
     
-    /**
-     * Find store by code
-     */
     public Optional<Store> findByCode(String code) {
         String sql = "SELECT * FROM stores WHERE code = ?";
         
@@ -87,9 +75,6 @@ public class StoreDAO {
         return Optional.empty();
     }
     
-    /**
-     * Save a new store
-     */
     public Store save(Store store) {
         String sql = "INSERT INTO stores (code, name, address, phone, email, logo_path, " +
                     "currency, language, created_date, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -123,9 +108,6 @@ public class StoreDAO {
         }
     }
     
-    /**
-     * Update an existing store
-     */
     public boolean update(Store store) {
         String sql = "UPDATE stores SET code = ?, name = ?, address = ?, phone = ?, email = ?, " +
                     "logo_path = ?, currency = ?, language = ?, active = ? WHERE id = ?";
@@ -153,9 +135,6 @@ public class StoreDAO {
         }
     }
     
-    /**
-     * Delete a store
-     */
     public boolean delete(Long id) {
         String sql = "DELETE FROM stores WHERE id = ?";
         
@@ -172,9 +151,6 @@ public class StoreDAO {
         }
     }
     
-    /**
-     * Map ResultSet to Store entity
-     */
     private Store mapResultSetToStore(ResultSet rs) throws SQLException {
         Store store = new Store();
         store.setId(rs.getLong("id"));

@@ -1,8 +1,5 @@
 package org.example.model.pattern.strategy;
 
-/**
- * CashPayment - Strategy for cash payment
- */
 public class CashPayment implements PaymentStrategy {
     
     private double montantRecu;
@@ -44,15 +41,19 @@ public class CashPayment implements PaymentStrategy {
     public String getDetailsPaiement() {
         return String.format(
             "Méthode: Espèces\n" +
-            "Montant reçu: %.2f€\n" +
-            "Monnaie rendue: %.2f€",
-            montantRecu, monnaieRendue
+            "Montant à payer: %.2f DZD\n" +
+            "Montant reçu: %.2f DZD\n" +
+            "Monnaie rendue: %.2f DZD",
+            montantAPayer, montantRecu, monnaieRendue
         );
     }
     
-    // Getters
     public double getMontantRecu() {
         return montantRecu;
+    }
+    
+    public double getMontantAPayer() {
+        return montantAPayer;
     }
     
     public double getMonnaieRendue() {

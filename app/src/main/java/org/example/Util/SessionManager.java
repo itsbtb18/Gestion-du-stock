@@ -2,9 +2,6 @@ package org.example.util;
 
 import org.example.model.entity.Utilisateur;
 
-/**
- * SessionManager - Singleton class for managing user session
- */
 public class SessionManager {
     
     private static SessionManager instance;
@@ -22,9 +19,6 @@ public class SessionManager {
         return instance;
     }
     
-    /**
-     * Start a new session for a user
-     */
     public void startSession(Utilisateur user) {
         this.currentUser = user;
         this.sessionId = generateSessionId();
@@ -32,9 +26,6 @@ public class SessionManager {
         System.out.println("Session started for user: " + user.getUsername());
     }
     
-    /**
-     * End current session
-     */
     public void endSession() {
         if (currentUser != null) {
             System.out.println("Session ended for user: " + currentUser.getUsername());
@@ -44,30 +35,18 @@ public class SessionManager {
         this.sessionStartTime = 0;
     }
     
-    /**
-     * Get current logged-in user
-     */
     public Utilisateur getCurrentUser() {
         return currentUser;
     }
     
-    /**
-     * Check if user is logged in
-     */
     public boolean isLoggedIn() {
         return currentUser != null;
     }
     
-    /**
-     * Get session ID
-     */
     public String getSessionId() {
         return sessionId;
     }
     
-    /**
-     * Get session duration in minutes
-     */
     public long getSessionDurationMinutes() {
         if (sessionStartTime == 0) {
             return 0;
@@ -75,9 +54,6 @@ public class SessionManager {
         return (System.currentTimeMillis() - sessionStartTime) / (1000 * 60);
     }
     
-    /**
-     * Check if user has specific role
-     */
     public boolean hasRole(org.example.model.entity.Role... roles) {
         if (currentUser == null) {
             return false;
@@ -85,28 +61,95 @@ public class SessionManager {
         return currentUser.hasRole(roles);
     }
     
-    /**
-     * Generate unique session ID
-     */
+    public boolean isAdmin() {
+        return hasRole(org.example.model.entity.Role.ADMIN);
+    }
+    
+    public boolean isManagerOrAdmin() {
+        return hasRole(org.example.model.entity.Role.ADMIN, org.example.model.entity.Role.GERANT);
+    }
+    
     private String generateSessionId() {
         return "SESSION_" + System.currentTimeMillis() + "_" + (int)(Math.random() * 10000);
     }
     
-    /**
-     * Check if session is still valid (timeout after 8 hours)
-     */
+    private static final long SESSION_TIMEOUT_MINUTES = 8 * 60;
+    private static final long INACTIVITY_TIMEOUT_MINUTES = 30;
+    private long lastActivityTime;
+    
+    private java.util.List<Runnable> sessionTimeoutListeners = new java.util.ArrayList<>();
+    
     public boolean isSessionValid() {
         if (!isLoggedIn()) {
             return false;
         }
-        long maxDurationMinutes = 8 * 60; // 8 hours
-        return getSessionDurationMinutes() < maxDurationMinutes;
+        
+        if (getSessionDurationMinutes() >= SESSION_TIMEOUT_MINUTES) {
+            LoggerUtil.logInfo(SessionManager.class, "Session expired due to maximum duration");
+            return false;
+        }
+        
+        if (lastActivityTime > 0) {
+            long inactiveMinutes = (System.currentTimeMillis() - lastActivityTime) / (1000 * 60);
+            if (inactiveMinutes >= INACTIVITY_TIMEOUT_MINUTES) {
+                LoggerUtil.logInfo(SessionManager.class, "Session expired due to inactivity");
+                return false;
+            }
+        }
+        
+        return true;
     }
     
-    /**
-     * Refresh session (update timestamp)
-     */
+    public void recordActivity() {
+        this.lastActivityTime = System.currentTimeMillis();
+    }
+    
     public void refreshSession() {
         this.sessionStartTime = System.currentTimeMillis();
+        this.lastActivityTime = System.currentTimeMillis();
+    }
+    
+    public void addSessionTimeoutListener(Runnable listener) {
+        sessionTimeoutListeners.add(listener);
+    }
+    
+    public void removeSessionTimeoutListener(Runnable listener) {
+        sessionTimeoutListeners.remove(listener);
+    }
+    
+    public void notifySessionTimeout() {
+        for (Runnable listener : sessionTimeoutListeners) {
+            try {
+                listener.run();
+            } catch (Exception e) {
+                LoggerUtil.logError(SessionManager.class, "Error notifying session timeout listener", e);
+            }
+        }
+    }
+    
+    public long getTimeRemainingMinutes() {
+        if (!isLoggedIn()) return 0;
+        long remaining = SESSION_TIMEOUT_MINUTES - getSessionDurationMinutes();
+        return Math.max(0, remaining);
+    }
+    
+    public long getInactivityRemainingMinutes() {
+        if (lastActivityTime == 0) return INACTIVITY_TIMEOUT_MINUTES;
+        long inactive = (System.currentTimeMillis() - lastActivityTime) / (1000 * 60);
+        return Math.max(0, INACTIVITY_TIMEOUT_MINUTES - inactive);
+    }
+    
+    public Long getCurrentUserId() {
+        return currentUser != null ? currentUser.getId() : null;
+    }
+    
+    public String getCurrentUserDisplayName() {
+        if (currentUser == null) return "Inconnu";
+        return currentUser.getPrenom() + " " + currentUser.getNom();
+    }
+    
+    public String getCurrentUserRoleName() {
+        if (currentUser == null || currentUser.getRole() == null) return "N/A";
+        return currentUser.getRole().getLibelle();
     }
 }

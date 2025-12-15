@@ -1,14 +1,11 @@
 package org.example.model.pattern.strategy;
 
-/**
- * CardPayment - Strategy for credit/debit card payment
- */
 public class CardPayment implements PaymentStrategy {
     
     private String numeroCarte;
     private String nomTitulaire;
     private String dateExpiration;
-    private String typeCarte; // VISA, MASTERCARD, AMERICAN_EXPRESS
+    private String typeCarte; 
     
     public CardPayment(String numeroCarte, String nomTitulaire, String dateExpiration) {
         this.numeroCarte = masquerNumeroCarte(numeroCarte);
@@ -24,12 +21,10 @@ public class CardPayment implements PaymentStrategy {
             return false;
         }
         
-        // Simulate payment processing
         System.out.println("Traitement du paiement par carte...");
         System.out.println("Montant: " + montant + "€");
         System.out.println("Carte: " + typeCarte + " " + numeroCarte);
         
-        // In production, integrate with payment gateway
         boolean success = simulerTransactionBancaire(montant);
         
         if (success) {
@@ -48,7 +43,7 @@ public class CardPayment implements PaymentStrategy {
     
     @Override
     public boolean valider() {
-        // Basic validation
+        
         return numeroCarte != null && !numeroCarte.isEmpty()
             && nomTitulaire != null && !nomTitulaire.isEmpty()
             && dateExpiration != null && !dateExpiration.isEmpty();
@@ -65,7 +60,6 @@ public class CardPayment implements PaymentStrategy {
         );
     }
     
-    // Helper methods
     private String masquerNumeroCarte(String numero) {
         if (numero == null || numero.length() < 4) {
             return "****";
@@ -92,11 +86,10 @@ public class CardPayment implements PaymentStrategy {
     }
     
     private boolean simulerTransactionBancaire(double montant) {
-        // Simulate 95% success rate
+        
         return Math.random() > 0.05;
     }
     
-    // Getters
     public String getNumeroCarte() {
         return numeroCarte;
     }

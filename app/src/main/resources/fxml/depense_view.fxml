@@ -64,7 +64,7 @@
             <Label text="📅 Période" style="-fx-text-fill: #6b7280;">
                 <font><Font name="Segoe UI Semibold" size="11"/></font>
             </Label>
-            <Label fx:id="totalPeriodeLabel" text="0.00 DH" style="-fx-text-fill: #1e3a5f;">
+            <Label fx:id="totalPeriodeLabel" text="0.00 DZD" style="-fx-text-fill: #1e3a5f;">
                 <font><Font name="Segoe UI Bold" size="18"/></font>
             </Label>
         </VBox>
@@ -74,7 +74,7 @@
             <Label text="📆 Ce Mois" style="-fx-text-fill: #6b7280;">
                 <font><Font name="Segoe UI Semibold" size="11"/></font>
             </Label>
-            <Label fx:id="totalMoisLabel" text="0.00 DH" style="-fx-text-fill: #1e3a5f;">
+            <Label fx:id="totalMoisLabel" text="0.00 DZD" style="-fx-text-fill: #1e3a5f;">
                 <font><Font name="Segoe UI Bold" size="18"/></font>
             </Label>
         </VBox>
@@ -84,7 +84,7 @@
             <Label text="📊 Cette Année" style="-fx-text-fill: #6b7280;">
                 <font><Font name="Segoe UI Semibold" size="11"/></font>
             </Label>
-            <Label fx:id="totalAnneeLabel" text="0.00 DH" style="-fx-text-fill: #1e3a5f;">
+            <Label fx:id="totalAnneeLabel" text="0.00 DZD" style="-fx-text-fill: #1e3a5f;">
                 <font><Font name="Segoe UI Bold" size="18"/></font>
             </Label>
         </VBox>
@@ -94,7 +94,7 @@
             <Label text="📈 Moyenne/Mois" style="-fx-text-fill: #6b7280;">
                 <font><Font name="Segoe UI Semibold" size="11"/></font>
             </Label>
-            <Label fx:id="moyenneMoisLabel" text="0.00 DH" style="-fx-text-fill: #1e3a5f;">
+            <Label fx:id="moyenneMoisLabel" text="0.00 DZD" style="-fx-text-fill: #1e3a5f;">
                 <font><Font name="Segoe UI Bold" size="18"/></font>
             </Label>
         </VBox>
@@ -117,7 +117,7 @@
                     <TableColumn fx:id="dateColumn" text="Date" prefWidth="90" minWidth="80"/>
                     <TableColumn fx:id="categorieColumn" text="Catégorie" prefWidth="120" minWidth="100"/>
                     <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="180" minWidth="150"/>
-                    <TableColumn fx:id="montantColumn" text="Montant (DH)" prefWidth="100" minWidth="90"/>
+                    <TableColumn fx:id="montantColumn" text="Montant (DZD)" prefWidth="100" minWidth="90"/>
                     <TableColumn fx:id="recurrentColumn" text="Récurrent" prefWidth="80" minWidth="70"/>
                 </columns>
             </TableView>
@@ -161,7 +161,7 @@
                         <!-- Row 2: Montant + Mode -->
                         <HBox spacing="8">
                             <VBox spacing="3" HBox.hgrow="ALWAYS">
-                                <Label text="Montant (DH) *" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
+                                <Label text="Montant (DZD) *" style="-fx-text-fill: #6b7280; -fx-font-size: 10;"/>
                                 <TextField fx:id="montantField" promptText="0.00" 
                                           styleClass="modern-input" prefHeight="32"/>
                             </VBox>

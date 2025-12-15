@@ -5,9 +5,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * BonCommande - Purchase Order entity
- */
 public class BonCommande {
     
     private Long id;
@@ -50,7 +47,6 @@ public class BonCommande {
         return montantPaye >= montantTotal;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -160,18 +156,6 @@ public class BonCommande {
         return numero + " - " + fournisseur.getNom();
     }
     
-    /**
-     * Builder for BonCommande - implements Builder Pattern
-     * Usage:
-     *   BonCommande bon = new BonCommande.Builder()
-     *       .withFournisseur(fournisseur)
-     *       .withCommandeParUser(user)
-     *       .addLigne(ligne1)
-     *       .addLigne(ligne2)
-     *       .withDateLivraisonPrevue(date)
-     *       .withModePaiement("VIREMENT")
-     *       .build();
-     */
     public static class Builder {
         private final BonCommande bonCommande;
         
@@ -240,10 +224,6 @@ public class BonCommande {
             return this;
         }
         
-        /**
-         * Build the BonCommande instance
-         * Automatically calculates total amount
-         */
         public BonCommande build() {
             if (!bonCommande.lignes.isEmpty()) {
                 bonCommande.calculerMontantTotal();
@@ -251,9 +231,6 @@ public class BonCommande {
             return bonCommande;
         }
         
-        /**
-         * Build without recalculating (for loading from database)
-         */
         public BonCommande buildFromDB() {
             return bonCommande;
         }

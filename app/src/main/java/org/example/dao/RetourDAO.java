@@ -11,9 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * DAO pour la gestion des retours produits
- */
 public class RetourDAO {
 
     private final DatabaseConnection dbConnection;
@@ -27,9 +24,6 @@ public class RetourDAO {
     private final UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
     private final ProduitDAO produitDAO = new ProduitDAO();
 
-    /**
-     * Sauvegarde un nouveau retour avec ses lignes
-     */
     public Retour save(Retour retour) throws SQLException {
         String sql = "INSERT INTO retours (numero_retour, date_retour, vente_originale_id, client_id, " +
                 "traite_par_user_id, motif, type_retour, statut, montant_total, montant_rembourse, " +
@@ -64,7 +58,6 @@ public class RetourDAO {
                 }
             }
 
-            // Sauvegarder les lignes
             saveLignes(conn, retour);
 
             conn.commit();
@@ -83,9 +76,6 @@ public class RetourDAO {
         }
     }
 
-    /**
-     * Sauvegarde les lignes d'un retour
-     */
     private void saveLignes(Connection conn, Retour retour) throws SQLException {
         String sql = "INSERT INTO lignes_retour (retour_id, produit_id, quantite_retournee, " +
                 "quantite_originale, prix_unitaire, montant_ligne, raison_retour, produit_endommage, " +
@@ -108,9 +98,6 @@ public class RetourDAO {
         }
     }
 
-    /**
-     * Met Ã  jour un retour
-     */
     public void update(Retour retour) throws SQLException {
         String sql = "UPDATE retours SET statut = ?, montant_rembourse = ?, mode_paiement = ?, " +
                 "numero_credit_note = ?, commentaire = ? WHERE id = ?";
@@ -129,9 +116,6 @@ public class RetourDAO {
         }
     }
 
-    /**
-     * Met Ã  jour le statut d'un retour
-     */
     public void updateStatut(Long id, StatutRetour statut) throws SQLException {
         String sql = "UPDATE retours SET statut = ? WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -142,9 +126,6 @@ public class RetourDAO {
         }
     }
 
-    /**
-     * Recherche un retour par ID avec ses lignes
-     */
     public Optional<Retour> findById(Long id) throws SQLException {
         String sql = "SELECT * FROM retours WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -161,9 +142,6 @@ public class RetourDAO {
         return Optional.empty();
     }
 
-    /**
-     * Recherche un retour par numÃ©ro
-     */
     public Optional<Retour> findByNumero(String numero) throws SQLException {
         String sql = "SELECT * FROM retours WHERE numero_retour = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -180,9 +158,6 @@ public class RetourDAO {
         return Optional.empty();
     }
 
-    /**
-     * Retourne toutes les lignes d'un retour
-     */
     private List<LigneRetour> findLignesByRetourId(Long retourId) throws SQLException {
         String sql = "SELECT * FROM lignes_retour WHERE retour_id = ?";
         List<LigneRetour> lignes = new ArrayList<>();
@@ -199,9 +174,6 @@ public class RetourDAO {
         return lignes;
     }
 
-    /**
-     * Retourne tous les retours
-     */
     public List<Retour> findAll() throws SQLException {
         String sql = "SELECT * FROM retours ORDER BY date_retour DESC";
         List<Retour> retours = new ArrayList<>();
@@ -219,9 +191,6 @@ public class RetourDAO {
         return retours;
     }
 
-    /**
-     * Retourne les retours par client
-     */
     public List<Retour> findByClient(Long clientId) throws SQLException {
         String sql = "SELECT * FROM retours WHERE client_id = ? ORDER BY date_retour DESC";
         List<Retour> retours = new ArrayList<>();
@@ -240,9 +209,6 @@ public class RetourDAO {
         return retours;
     }
 
-    /**
-     * Retourne les retours par statut
-     */
     public List<Retour> findByStatut(StatutRetour statut) throws SQLException {
         String sql = "SELECT * FROM retours WHERE statut = ? ORDER BY date_retour DESC";
         List<Retour> retours = new ArrayList<>();
@@ -261,9 +227,6 @@ public class RetourDAO {
         return retours;
     }
 
-    /**
-     * Supprime un retour (cascade sur les lignes)
-     */
     public void delete(Long id) throws SQLException {
         String sql = "DELETE FROM retours WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -273,9 +236,6 @@ public class RetourDAO {
         }
     }
 
-    /**
-     * Convertit un ResultSet en Retour
-     */
     private Retour mapResultSetToRetour(ResultSet rs) throws SQLException {
         Retour retour = new Retour();
         retour.setId(rs.getLong("id"));
@@ -301,9 +261,6 @@ public class RetourDAO {
         return retour;
     }
 
-    /**
-     * Convertit un ResultSet en LigneRetour
-     */
     private LigneRetour mapResultSetToLigne(ResultSet rs) throws SQLException {
         LigneRetour ligne = new LigneRetour();
         ligne.setId(rs.getLong("id"));

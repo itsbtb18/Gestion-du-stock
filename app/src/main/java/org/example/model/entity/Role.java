@@ -1,8 +1,5 @@
 package org.example.model.entity;
 
-/**
- * Role - User roles in the system
- */
 public enum Role {
     ADMIN("Administrateur", "Accès complet au système"),
     GERANT("Gérant", "Gestion des stocks et rapports"),

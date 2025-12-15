@@ -6,9 +6,6 @@ import org.example.model.entity.StoreSettings;
 import java.sql.*;
 import java.util.Optional;
 
-/**
- * StoreSettingsDAO - Data Access Object for StoreSettings entity
- */
 public class StoreSettingsDAO {
     
     private final DatabaseConnection dbConnection;
@@ -17,9 +14,6 @@ public class StoreSettingsDAO {
         this.dbConnection = DatabaseConnection.getInstance();
     }
     
-    /**
-     * Find settings by store ID
-     */
     public Optional<StoreSettings> findByStoreId(Long storeId) {
         String sql = "SELECT * FROM store_settings WHERE store_id = ?";
         
@@ -40,9 +34,6 @@ public class StoreSettingsDAO {
         return Optional.empty();
     }
     
-    /**
-     * Save new store settings
-     */
     public StoreSettings save(StoreSettings settings) {
         String sql = "INSERT INTO store_settings (store_id, allow_negative_stock, " +
                     "require_manager_approval, default_vat_rate, max_discount_percent, " +
@@ -80,9 +71,6 @@ public class StoreSettingsDAO {
         }
     }
     
-    /**
-     * Update existing store settings
-     */
     public boolean update(StoreSettings settings) {
         String sql = "UPDATE store_settings SET allow_negative_stock = ?, " +
                     "require_manager_approval = ?, default_vat_rate = ?, max_discount_percent = ?, " +
@@ -114,9 +102,6 @@ public class StoreSettingsDAO {
         }
     }
     
-    /**
-     * Map ResultSet to StoreSettings entity
-     */
     private StoreSettings mapResultSetToSettings(ResultSet rs) throws SQLException {
         StoreSettings settings = new StoreSettings();
         settings.setId(rs.getLong("id"));

@@ -258,7 +258,7 @@
                                     <Font name="Segoe UI Bold" size="22"/>
                                 </font>
                             </Label>
-                            <Label text="DH" style="-fx-text-fill: #e74c3c; -fx-font-size: 14px;"/>
+                            <Label text="DZD" style="-fx-text-fill: #e74c3c; -fx-font-size: 14px;"/>
                         </HBox>
                     </VBox>
             </VBox>

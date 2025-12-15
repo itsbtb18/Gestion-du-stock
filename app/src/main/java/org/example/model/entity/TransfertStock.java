@@ -2,9 +2,6 @@ package org.example.model.entity;
 
 import java.time.LocalDateTime;
 
-/**
- * TransfertStock - Stock transfer between locations
- */
 public class TransfertStock {
     
     private Long id;
@@ -13,7 +10,7 @@ public class TransfertStock {
     private Emplacement emplacementSource;
     private Emplacement emplacementDestination;
     private Produit produit;
-    private Lot lot; // Optional, if tracking by lot
+    private Lot lot; 
     private int quantite;
     private Utilisateur demandePar;
     private Utilisateur validePar;
@@ -26,7 +23,6 @@ public class TransfertStock {
         this.statut = StatutTransfert.EN_ATTENTE;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -131,7 +127,6 @@ public class TransfertStock {
         this.commentaire = commentaire;
     }
     
-    // Alias methods for compatibility
     public Utilisateur getDemandeur() {
         return demandePar;
     }

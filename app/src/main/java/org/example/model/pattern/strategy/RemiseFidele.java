@@ -1,13 +1,10 @@
 package org.example.model.pattern.strategy;
 
-/**
- * RemiseFidele - Loyalty discount strategy
- */
 public class RemiseFidele implements RemiseStrategy {
     
-    private static final double TAUX_REMISE_BASE = 0.05; // 5%
-    private static final double TAUX_REMISE_VIP = 0.10; // 10%
-    private static final double SEUIL_VIP = 1000.0; // 1000€ total purchases
+    private static final double TAUX_REMISE_BASE = 0.05; 
+    private static final double TAUX_REMISE_VIP = 0.10; 
+    private static final double SEUIL_VIP = 1000.0; 
     
     private double totalAchatsClient;
     
@@ -22,7 +19,7 @@ public class RemiseFidele implements RemiseStrategy {
     
     @Override
     public double getTauxRemise() {
-        // VIP clients get higher discount
+        
         if (totalAchatsClient >= SEUIL_VIP) {
             return TAUX_REMISE_VIP;
         }
@@ -39,10 +36,9 @@ public class RemiseFidele implements RemiseStrategy {
     
     @Override
     public boolean estApplicable(double montantOriginal) {
-        return montantOriginal > 0; // Applicable to any positive amount
+        return montantOriginal > 0; 
     }
     
-    // Getters
     public double getTotalAchatsClient() {
         return totalAchatsClient;
     }

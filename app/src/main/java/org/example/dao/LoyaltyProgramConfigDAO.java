@@ -7,9 +7,6 @@ import org.example.model.entity.LoyaltyProgramConfig.RewardType;
 import java.sql.*;
 import java.util.Optional;
 
-/**
- * LoyaltyProgramConfigDAO - Data Access Object for LoyaltyProgramConfig entity
- */
 public class LoyaltyProgramConfigDAO {
     
     private final DatabaseConnection dbConnection;
@@ -18,9 +15,6 @@ public class LoyaltyProgramConfigDAO {
         this.dbConnection = DatabaseConnection.getInstance();
     }
     
-    /**
-     * Find loyalty config by store ID
-     */
     public Optional<LoyaltyProgramConfig> findByStoreId(Long storeId) {
         String sql = "SELECT * FROM loyalty_program_config WHERE store_id = ?";
         
@@ -41,9 +35,6 @@ public class LoyaltyProgramConfigDAO {
         return Optional.empty();
     }
     
-    /**
-     * Save a new loyalty config
-     */
     public LoyaltyProgramConfig save(LoyaltyProgramConfig config) {
         String sql = "INSERT INTO loyalty_program_config (store_id, enabled, points_per_currency_unit, " +
                     "minimum_purchase_amount, reward_threshold, reward_type, reward_value, " +
@@ -80,9 +71,6 @@ public class LoyaltyProgramConfigDAO {
         }
     }
     
-    /**
-     * Update an existing loyalty config
-     */
     public boolean update(LoyaltyProgramConfig config) {
         String sql = "UPDATE loyalty_program_config SET enabled = ?, points_per_currency_unit = ?, " +
                     "minimum_purchase_amount = ?, reward_threshold = ?, reward_type = ?, reward_value = ?, " +
@@ -113,9 +101,6 @@ public class LoyaltyProgramConfigDAO {
         }
     }
     
-    /**
-     * Map ResultSet to LoyaltyProgramConfig entity
-     */
     private LoyaltyProgramConfig mapResultSetToConfig(ResultSet rs) throws SQLException {
         LoyaltyProgramConfig config = new LoyaltyProgramConfig();
         config.setId(rs.getLong("id"));

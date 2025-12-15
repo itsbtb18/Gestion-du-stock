@@ -1,194 +1,195 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.StockController"
-            styleClass="content-area" stylesheets="@../css/styles.css">
+<VBox xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="org.example.controller.StockController"
+      styleClass="content-container" 
+      stylesheets="@../css/styles.css"
+      spacing="20">
+    <padding>
+        <Insets top="24" right="24" bottom="24" left="24"/>
+        </padding>
     
-    <!-- Top: Header & Alert Banner -->
-    <top>
-        <VBox spacing="15">
-            <VBox styleClass="card">
-                <padding>
-                    <Insets top="20" right="20" bottom="20" left="20"/>
-                </padding>
-                
-                <HBox alignment="CENTER_LEFT" spacing="15">
-                    <Label text="Gestion du Stock" styleClass="section-title">
+    <!-- Header Card -->
+    <VBox spacing="18" styleClass="content-card">
+        <padding>
+            <Insets top="24" right="28" bottom="24" left="28"/>
+        </padding>
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Gestion du Stock" styleClass="page-title">
+                    <font>
+                        <Font name="Segoe UI Bold" size="24"/>
+                    </font>
+                </Label>
+                <Label text="Gérer les mouvements et alertes de stock" styleClass="page-subtitle">
+                    <font>
+                        <Font name="Segoe UI" size="14"/>
+                    </font>
+                </Label>
+            </VBox>
+            <HBox spacing="12" alignment="CENTER_RIGHT">
+                <VBox spacing="4" alignment="CENTER">
+                    <Label fx:id="lblNombreAlertes" text="Alertes: 0" 
+                          styleClass="kpi-value" style="-fx-text-fill: #16A34A; -fx-font-size: 16px;">
                         <font>
-                            <Font name="System Bold" size="24"/>
+                            <Font name="Segoe UI Bold" size="16"/>
                         </font>
                     </Label>
-                    <Region HBox.hgrow="ALWAYS"/>
-                    
-                    <!-- Alert Badge -->
-                    <HBox spacing="10" alignment="CENTER" styleClass="alert-box alert-warning">
-                        <Label text="⚠️ Alertes:" styleClass="stat-label">
-                            <font>
-                                <Font name="System Bold" size="13"/>
-                            </font>
-                        </Label>
-                        <Label fx:id="lblNombreAlertes" text="0" styleClass="stat-value" textFill="#ff9800">
-                            <font>
-                                <Font name="System Bold" size="20"/>
-                            </font>
-                        </Label>
-                        <Button text="Voir les alertes" styleClass="btn-primary" 
-                               onAction="#handleVoirAlertes"/>
-                    </HBox>
-                </HBox>
-            </VBox>
-        </VBox>
-    </top>
+                </VBox>
+                <Button text="🔔 Voir Alertes" styleClass="btn-primary" 
+                       prefHeight="42" prefWidth="150" onAction="#handleVoirAlertes">
+                    <font>
+                        <Font name="Segoe UI Semibold" size="14"/>
+                    </font>
+                </Button>
+            </HBox>
+        </HBox>
+    </VBox>
     
-    <!-- Center: Split View -->
-    <center>
-        <HBox spacing="20" HBox.hgrow="ALWAYS">
+    <!-- Main Content: Two Columns -->
+    <HBox spacing="24" VBox.vgrow="ALWAYS">
+        
+        <!-- Left: Movements History (65%) -->
+        <VBox spacing="20" styleClass="content-card" HBox.hgrow="ALWAYS" prefWidth="780">
             <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
+                <Insets top="24" right="24" bottom="24" left="24"/>
             </padding>
             
-            <!-- Left: Movement Form -->
-            <VBox spacing="15" prefWidth="380">
-                <VBox styleClass="card" spacing="20">
-                    <padding>
-                        <Insets top="20" right="20" bottom="20" left="20"/>
-                    </padding>
-                    
-                    <HBox alignment="CENTER_LEFT" spacing="10">
-                        <Label text="📦" styleClass="stat-icon">
-                            <font>
-                                <Font size="32"/>
-                            </font>
-                        </Label>
-                        <VBox>
-                            <Label text="Nouveau Mouvement" styleClass="section-title">
-                                <font>
-                                    <Font name="System Bold" size="18"/>
-                                </font>
-                            </Label>
-                            <Label text="Enregistrer entrées/sorties" styleClass="section-subtitle"/>
-                        </VBox>
-                    </HBox>
-                    
-                    <Separator/>
-                    
-                    <!-- Product Selection -->
-                    <VBox spacing="8">
-                        <Label text="Produit *" styleClass="form-label">
-                            <font>
-                                <Font name="System Bold" size="13"/>
-                            </font>
-                        </Label>
-                        <ComboBox fx:id="cmbProduit" promptText="Sélectionner un produit" 
-                                 styleClass="modern-combo-box" prefWidth="Infinity"/>
-                    </VBox>
-                    
-                    <!-- Stock Status Card -->
-                    <HBox spacing="10" alignment="CENTER" styleClass="stat-card info">
-                        <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
-                            <Label text="Stock Actuel" styleClass="stat-label"/>
-                            <Label fx:id="lblStockActuel" text="0" styleClass="stat-value" textFill="#2196f3">
-                                <font>
-                                    <Font name="System Bold" size="28"/>
-                                </font>
-                            </Label>
-                        </VBox>
-                    </HBox>
-                    
-                    <!-- Movement Type -->
-                    <VBox spacing="8">
-                        <Label text="Type de Mouvement *" styleClass="form-label">
-                            <font>
-                                <Font name="System Bold" size="13"/>
-                            </font>
-                        </Label>
-                        <ComboBox fx:id="cmbTypeMouvement" promptText="Sélectionner le type" 
-                                 styleClass="modern-combo-box" prefWidth="Infinity"/>
-                    </VBox>
-                    
-                    <!-- Quantity -->
-                    <VBox spacing="8">
-                        <Label text="Quantité *" styleClass="form-label">
-                            <font>
-                                <Font name="System Bold" size="13"/>
-                            </font>
-                        </Label>
-                        <TextField fx:id="txtQuantite" promptText="Quantité" styleClass="modern-field"/>
-                    </VBox>
-                    
-                    <!-- Reason -->
-                    <VBox spacing="8">
-                        <Label text="Motif" styleClass="form-label">
-                            <font>
-                                <Font name="System Bold" size="13"/>
-                            </font>
-                        </Label>
-                        <TextArea fx:id="txtMotif" promptText="Raison du mouvement (optionnel)" 
-                                 styleClass="modern-text-area" prefRowCount="3"/>
-                    </VBox>
-                    
-                    <!-- Action Buttons -->
-                    <VBox spacing="10">
-                        <Button text="✅ Enregistrer le Mouvement" styleClass="btn-success" 
-                               onAction="#handleEnregistrerMouvement" prefWidth="Infinity">
-                            <font>
-                                <Font name="System Bold" size="14"/>
-                            </font>
-                        </Button>
-                        <Button text="🔄 Réinitialiser" styleClass="btn-secondary" 
-                               onAction="#handleReinitialiser" prefWidth="Infinity"/>
-                    </VBox>
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="📋 Historique des Mouvements" styleClass="section-title">
+                    <font>
+                        <Font name="Segoe UI Bold" size="18"/>
+                    </font>
+                </Label>
+                
+                <Region HBox.hgrow="ALWAYS"/>
+                
+                <Button text="↻ Actualiser" styleClass="btn-secondary" 
+                       prefHeight="40" prefWidth="130" onAction="#handleActualiser">
+                    <font>
+                        <Font name="Segoe UI Semibold" size="13"/>
+                    </font>
+                </Button>
+            </HBox>
+            
+            <Separator styleClass="glass-separator"/>
+            
+            <!-- Movements Table -->
+            <TableView fx:id="tableMouvements" styleClass="modern-table" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colProduit" text="Produit" prefWidth="200"/>
+                    <TableColumn fx:id="colType" text="Type" prefWidth="120"/>
+                    <TableColumn fx:id="colQuantite" text="Quantité" prefWidth="90"/>
+                    <TableColumn fx:id="colDate" text="Date" prefWidth="150"/>
+                    <TableColumn fx:id="colMotif" text="Motif" prefWidth="220"/>
+                </columns>
+            </TableView>
+            
+            <!-- Info Footer -->
+            <HBox spacing="16" alignment="CENTER_LEFT" styleClass="glass-info-box">
+                <padding>
+                    <Insets top="12" right="12" bottom="12" left="12"/>
+                </padding>
+                <Label text="💡" style="-fx-font-size: 18px;"/>
+                <VBox spacing="4">
+                    <Label text="Types de mouvements:" style="-fx-text-fill: #667085; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <Label text="ENTREE: Réception | SORTIE: Vente | AJUSTEMENT: Correction | RETOUR: Retour client" 
+                          style="-fx-text-fill: #7B8394; -fx-font-size: 11px;" wrapText="true"/>
                 </VBox>
+            </HBox>
+        </VBox>
+        
+        <!-- Right: New Movement Form (35%) -->
+        <VBox spacing="20" styleClass="content-card" prefWidth="420">
+            <padding>
+                <Insets top="24" right="24" bottom="24" left="24"/>
+            </padding>
+            
+            <Label text="➕ Nouveau Mouvement" styleClass="section-title">
+                <font>
+                    <Font name="Segoe UI Bold" size="18"/>
+                </font>
+            </Label>
+            
+            <Separator styleClass="glass-separator"/>
+            
+            <VBox spacing="8">
+                <Label text="Produit *" styleClass="filter-label">
+                    <font>
+                        <Font name="Segoe UI Semibold" size="13"/>
+                    </font>
+                </Label>
+                <ComboBox fx:id="cmbProduit" styleClass="modern-combo" 
+                         prefHeight="44" maxWidth="Infinity"/>
             </VBox>
             
-            <!-- Right: Movement History -->
-            <VBox spacing="15" HBox.hgrow="ALWAYS">
-                <VBox styleClass="card" VBox.vgrow="ALWAYS" spacing="15">
-                    <padding>
-                        <Insets top="20" right="20" bottom="20" left="20"/>
-                    </padding>
-                    
-                    <HBox alignment="CENTER_LEFT" spacing="10">
-                        <Label text="📋 Historique des Mouvements" styleClass="section-title">
-                            <font>
-                                <Font name="System Bold" size="18"/>
-                            </font>
-                        </Label>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Button text="↻ Actualiser" styleClass="btn-secondary" 
-                               onAction="#handleActualiser"/>
-                        <Button text="📥 Exporter" styleClass="btn-primary"/>
-                    </HBox>
-                    
-                    <TableView fx:id="tableMouvements" styleClass="modern-table" VBox.vgrow="ALWAYS">
-                        <columns>
-                            <TableColumn fx:id="colProduit" text="Produit" prefWidth="200"/>
-                            <TableColumn fx:id="colType" text="Type" prefWidth="100">
-                                <cellFactory>
-                                    <!-- Custom cell with colored badges -->
-                                </cellFactory>
-                            </TableColumn>
-                            <TableColumn fx:id="colQuantite" text="Quantité" prefWidth="100"/>
-                            <TableColumn fx:id="colDate" text="Date" prefWidth="150"/>
-                            <TableColumn fx:id="colMotif" text="Motif" prefWidth="200"/>
-                        </columns>
-                        <placeholder>
-                            <VBox alignment="CENTER" spacing="10">
-                                <Label text="📦" style="-fx-font-size: 48px; -fx-opacity: 0.3;"/>
-                                <Label text="Aucun mouvement enregistré" styleClass="text-muted">
-                                    <font>
-                                        <Font size="14"/>
-                                    </font>
-                                </Label>
-                            </VBox>
-                        </placeholder>
-                    </TableView>
-                </VBox>
+            <VBox spacing="8">
+                <Label text="Type de Mouvement *" styleClass="filter-label">
+                    <font>
+                        <Font name="Segoe UI Semibold" size="13"/>
+                    </font>
+                </Label>
+                <ComboBox fx:id="cmbTypeMouvement" styleClass="modern-combo" 
+                         prefHeight="44" maxWidth="Infinity"/>
             </VBox>
-        </HBox>
-    </center>
-</BorderPane>
+            
+            <VBox spacing="8">
+                <Label text="Quantité *" styleClass="filter-label">
+                    <font>
+                        <Font name="Segoe UI Semibold" size="13"/>
+                    </font>
+                </Label>
+                <TextField fx:id="txtQuantite" styleClass="modern-input" 
+                          promptText="Ex: 50" prefHeight="44"/>
+            </VBox>
+            
+            <!-- Stock Display -->
+            <HBox styleClass="glass-info-box" spacing="12" alignment="CENTER_LEFT">
+                <padding>
+                    <Insets top="16" right="16" bottom="16" left="16"/>
+                </padding>
+                <Label text="📊" style="-fx-font-size: 24px;"/>
+                <Label fx:id="lblStockActuel" text="Stock actuel: -" 
+                      styleClass="kpi-value" style="-fx-text-fill: #667085; -fx-font-size: 16px;">
+                    <font>
+                        <Font name="Segoe UI Bold" size="16"/>
+                    </font>
+                </Label>
+            </HBox>
+            
+            <VBox spacing="8" VBox.vgrow="ALWAYS">
+                <Label text="Motif / Notes" styleClass="filter-label">
+                    <font>
+                        <Font name="Segoe UI Semibold" size="13"/>
+                    </font>
+                </Label>
+                <TextArea fx:id="txtMotif" styleClass="glass-textarea" 
+                         promptText="Raison du mouvement..." 
+                         prefRowCount="4" wrapText="true"/>
+            </VBox>
+            
+            <Separator styleClass="glass-separator"/>
+            
+            <!-- Action Buttons -->
+            <HBox spacing="12" alignment="CENTER">
+                <Button text="💾 Enregistrer" styleClass="btn-primary" 
+                       prefHeight="48" prefWidth="170" onAction="#handleEnregistrerMouvement">
+                    <font>
+                        <Font name="Segoe UI Semibold" size="14"/>
+                    </font>
+                </Button>
+                
+                <Button text="🔄 Réinitialiser" styleClass="btn-secondary" 
+                       prefHeight="48" prefWidth="160" onAction="#handleReinitialiser">
+                    <font>
+                        <Font name="Segoe UI Semibold" size="14"/>
+                    </font>
+                </Button>
+            </HBox>
+        </VBox>
+    </HBox>
+</VBox>

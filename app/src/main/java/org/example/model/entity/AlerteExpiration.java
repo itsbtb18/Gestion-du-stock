@@ -4,9 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-/**
- * AlerteExpiration - Entity representing a product expiration alert
- */
 public class AlerteExpiration {
     
     private String id;
@@ -14,7 +11,7 @@ public class AlerteExpiration {
     private LocalDate dateExpiration;
     private LocalDateTime dateAlerte;
     private long joursRestants;
-    private String niveau; // CRITIQUE, AVERTISSEMENT, INFO
+    private String niveau; 
     private boolean traitee;
     private String message;
     
@@ -61,7 +58,6 @@ public class AlerteExpiration {
         }
     }
     
-    // Getters and Setters
     public String getId() {
         return id;
     }

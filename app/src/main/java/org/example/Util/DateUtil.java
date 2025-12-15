@@ -6,9 +6,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-/**
- * DateUtil - Utility class for date operations
- */
 public class DateUtil {
     
     private static final DateTimeFormatter DATE_FORMATTER = 
@@ -22,9 +19,6 @@ public class DateUtil {
         throw new UnsupportedOperationException("Utility class");
     }
     
-    /**
-     * Format LocalDate to string
-     */
     public static String formaterDate(LocalDate date) {
         if (date == null) {
             return "";
@@ -32,9 +26,6 @@ public class DateUtil {
         return date.format(DATE_FORMATTER);
     }
     
-    /**
-     * Format LocalDateTime to string
-     */
     public static String formaterDateTime(LocalDateTime dateTime) {
         if (dateTime == null) {
             return "";
@@ -42,9 +33,6 @@ public class DateUtil {
         return dateTime.format(DATETIME_FORMATTER);
     }
     
-    /**
-     * Format LocalDateTime to time only
-     */
     public static String formaterHeure(LocalDateTime dateTime) {
         if (dateTime == null) {
             return "";
@@ -52,9 +40,6 @@ public class DateUtil {
         return dateTime.format(TIME_FORMATTER);
     }
     
-    /**
-     * Parse string to LocalDate
-     */
     public static LocalDate parserDate(String dateStr) {
         if (dateStr == null || dateStr.trim().isEmpty()) {
             return null;
@@ -66,9 +51,6 @@ public class DateUtil {
         }
     }
     
-    /**
-     * Parse string to LocalDateTime
-     */
     public static LocalDateTime parserDateTime(String dateTimeStr) {
         if (dateTimeStr == null || dateTimeStr.trim().isEmpty()) {
             return null;
@@ -80,9 +62,6 @@ public class DateUtil {
         }
     }
     
-    /**
-     * Calculate days between two dates
-     */
     public static long joursEntre(LocalDate debut, LocalDate fin) {
         if (debut == null || fin == null) {
             return 0;
@@ -90,9 +69,6 @@ public class DateUtil {
         return ChronoUnit.DAYS.between(debut, fin);
     }
     
-    /**
-     * Check if date is in the past
-     */
     public static boolean estPasse(LocalDate date) {
         if (date == null) {
             return false;
@@ -100,9 +76,6 @@ public class DateUtil {
         return date.isBefore(LocalDate.now());
     }
     
-    /**
-     * Check if date is in the future
-     */
     public static boolean estFutur(LocalDate date) {
         if (date == null) {
             return false;
@@ -110,9 +83,6 @@ public class DateUtil {
         return date.isAfter(LocalDate.now());
     }
     
-    /**
-     * Check if date is today
-     */
     public static boolean estAujourdhui(LocalDate date) {
         if (date == null) {
             return false;
@@ -120,9 +90,6 @@ public class DateUtil {
         return date.equals(LocalDate.now());
     }
     
-    /**
-     * Get start of month
-     */
     public static LocalDate debutMois(LocalDate date) {
         if (date == null) {
             return null;
@@ -130,9 +97,6 @@ public class DateUtil {
         return date.withDayOfMonth(1);
     }
     
-    /**
-     * Get end of month
-     */
     public static LocalDate finMois(LocalDate date) {
         if (date == null) {
             return null;
@@ -140,9 +104,6 @@ public class DateUtil {
         return date.withDayOfMonth(date.lengthOfMonth());
     }
     
-    /**
-     * Get relative date description
-     */
     public static String descriptionRelative(LocalDate date) {
         if (date == null) {
             return "";

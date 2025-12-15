@@ -1,13 +1,10 @@
 package org.example.model.entity;
 
-/**
- * TypeClient - Types of clients (NORMAL, FIDELE, etc.)
- */
 public enum TypeClient {
     NORMAL("Normal", 0.0),
-    FIDELE("Fidèle", 0.05), // 5% discount
-    VIP("VIP", 0.10), // 10% discount
-    PROFESSIONNEL("Professionnel", 0.15); // 15% discount
+    FIDELE("Fidèle", 0.05), 
+    VIP("VIP", 0.10), 
+    PROFESSIONNEL("Professionnel", 0.15); 
     
     private final String libelle;
     private final double tauxRemise;

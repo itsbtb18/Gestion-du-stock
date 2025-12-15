@@ -18,39 +18,30 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
-/**
- * RapportController - Generate and export sales and stock reports
- * Provides date filtering and CSV export functionality
- */
 public class RapportController implements Initializable {
     
-    // FXML Components - Filters
     @FXML private DatePicker dateDebut;
     @FXML private DatePicker dateFin;
     @FXML private ComboBox<String> comboTypeRapport;
     @FXML private Button btnGenerer;
     @FXML private Button btnExporterCSV;
     
-    // FXML Components - Sales Table
     @FXML private TableView<Vente> tableVentes;
     @FXML private TableColumn<Vente, String> colNumero;
     @FXML private TableColumn<Vente, LocalDate> colDate;
     @FXML private TableColumn<Vente, Double> colMontant;
     @FXML private TableColumn<Vente, String> colClient;
     
-    // FXML Components - Stock Movements Table
     @FXML private TableView<MouvementStock> tableMouvements;
     @FXML private TableColumn<MouvementStock, String> colProduit;
     @FXML private TableColumn<MouvementStock, String> colType;
     @FXML private TableColumn<MouvementStock, Integer> colQuantite;
     @FXML private TableColumn<MouvementStock, LocalDate> colDateMouvement;
     
-    // FXML Components - Summary
     @FXML private Label lblTotalVentes;
     @FXML private Label lblNombreVentes;
     @FXML private Label lblMoyenneVente;
     
-    // Data
     private final VenteDAO venteDAO = new VenteDAO();
     private final MouvementStockDAO mouvementDAO = new MouvementStockDAO();
     private ObservableList<Vente> ventesData = FXCollections.observableArrayList();
@@ -58,17 +49,15 @@ public class RapportController implements Initializable {
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Initialize report type combo
+        
         comboTypeRapport.setItems(FXCollections.observableArrayList(
             "Ventes", "Mouvements de Stock", "Tous"
         ));
         comboTypeRapport.setValue("Ventes");
         
-        // Set default date range (last 30 days)
         dateFin.setValue(LocalDate.now());
         dateDebut.setValue(LocalDate.now().minusDays(30));
         
-        // Setup sales table columns
         colNumero.setCellValueFactory(new PropertyValueFactory<>("numero"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("dateVente"));
         colMontant.setCellValueFactory(new PropertyValueFactory<>("montantFinal"));
@@ -79,7 +68,6 @@ public class RapportController implements Initializable {
             return new SimpleStringProperty("Anonyme");
         });
         
-        // Setup stock movements table columns
         colProduit.setCellValueFactory(cellData -> 
             new SimpleStringProperty(
                 cellData.getValue().getProduit() != null ? 
@@ -90,21 +78,15 @@ public class RapportController implements Initializable {
         colQuantite.setCellValueFactory(new PropertyValueFactory<>("quantite"));
         colDateMouvement.setCellValueFactory(new PropertyValueFactory<>("dateMouvement"));
         
-        // Setup event handlers
         btnGenerer.setOnAction(e -> handleGenererRapport());
         btnExporterCSV.setOnAction(e -> handleExporterCSV());
         comboTypeRapport.setOnAction(e -> toggleTableVisibility());
         
-        // Initial visibility
         toggleTableVisibility();
         
-        // Load initial data
         handleGenererRapport();
     }
     
-    /**
-     * Generate report based on selected filters
-     */
     @FXML
     private void handleGenererRapport() {
         LocalDate debut = dateDebut.getValue();
@@ -138,9 +120,6 @@ public class RapportController implements Initializable {
         }
     }
     
-    /**
-     * Load sales data for the period
-     */
     private void loadVentesData(LocalDate debut, LocalDate fin) {
         List<Vente> ventes = venteDAO.findByDateRange(debut, fin);
         ventesData.clear();
@@ -148,9 +127,6 @@ public class RapportController implements Initializable {
         tableVentes.setItems(ventesData);
     }
     
-    /**
-     * Load stock movements data for the period
-     */
     private void loadMouvementsData(LocalDate debut, LocalDate fin) {
         List<MouvementStock> mouvements = mouvementDAO.findByDateRange(debut, fin);
         mouvementsData.clear();
@@ -158,9 +134,6 @@ public class RapportController implements Initializable {
         tableMouvements.setItems(mouvementsData);
     }
     
-    /**
-     * Update summary statistics
-     */
     private void updateSummary() {
         if (!ventesData.isEmpty()) {
             double total = ventesData.stream()
@@ -168,19 +141,16 @@ public class RapportController implements Initializable {
                 .sum();
             double moyenne = total / ventesData.size();
             
-            lblTotalVentes.setText(String.format("%.2f DH", total));
+            lblTotalVentes.setText(String.format("%.2f %s", total, org.example.app.AppConfig.CURRENCY_CODE));
             lblNombreVentes.setText(String.valueOf(ventesData.size()));
-            lblMoyenneVente.setText(String.format("%.2f DH", moyenne));
+            lblMoyenneVente.setText(String.format("%.2f %s", moyenne, org.example.app.AppConfig.CURRENCY_CODE));
         } else {
-            lblTotalVentes.setText("0.00 DH");
+            lblTotalVentes.setText(String.format("0.00 %s", org.example.app.AppConfig.CURRENCY_CODE));
             lblNombreVentes.setText("0");
-            lblMoyenneVente.setText("0.00 DH");
+            lblMoyenneVente.setText(String.format("0.00 %s", org.example.app.AppConfig.CURRENCY_CODE));
         }
     }
     
-    /**
-     * Export current report to CSV
-     */
     @FXML
     private void handleExporterCSV() {
         String typeRapport = comboTypeRapport.getValue();
@@ -202,9 +172,6 @@ public class RapportController implements Initializable {
         }
     }
     
-    /**
-     * Toggle table visibility based on report type
-     */
     private void toggleTableVisibility() {
         String type = comboTypeRapport.getValue();
         boolean showVentes = "Ventes".equals(type) || "Tous".equals(type);
@@ -216,9 +183,6 @@ public class RapportController implements Initializable {
         tableMouvements.setManaged(showMouvements);
     }
     
-    /**
-     * Show alert dialog
-     */
     private void showAlert(String title, String content, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

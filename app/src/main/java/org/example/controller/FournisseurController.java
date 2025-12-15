@@ -12,13 +12,8 @@ import org.example.util.AlertUtil;
 
 import java.util.List;
 
-/**
- * Controller for Supplier (Fournisseur) management view
- * Handles supplier CRUD operations, performance tracking, and search
- */
 public class FournisseurController {
 
-    // FXML UI Components - Supplier Table
     @FXML private TableView<Fournisseur> fournisseurTable;
     @FXML private TableColumn<Fournisseur, String> codeColumn;
     @FXML private TableColumn<Fournisseur, String> nomColumn;
@@ -28,14 +23,12 @@ public class FournisseurController {
     @FXML private TableColumn<Fournisseur, Double> ratingColumn;
     @FXML private TableColumn<Fournisseur, String> actifColumn;
     
-    // FXML UI Components - Search
     @FXML private TextField searchField;
     @FXML private Button searchButton;
     @FXML private Button refreshButton;
     @FXML private Button showActiveButton;
     @FXML private Button showAllButton;
     
-    // FXML UI Components - Form
     @FXML private TextField codeField;
     @FXML private TextField nomField;
     @FXML private TextField contactField;
@@ -50,7 +43,6 @@ public class FournisseurController {
     @FXML private Label ratingLabel;
     @FXML private CheckBox actifCheckBox;
     
-    // FXML UI Components - Actions
     @FXML private Button newButton;
     @FXML private Button saveButton;
     @FXML private Button updateButton;
@@ -58,17 +50,12 @@ public class FournisseurController {
     @FXML private Button clearFormButton;
     @FXML private Button rateButton;
     
-    // Service
     private final FournisseurService fournisseurService = FournisseurService.getInstance();
     
-    // State
     private ObservableList<Fournisseur> fournisseurList = FXCollections.observableArrayList();
     private Fournisseur selectedFournisseur = null;
     private boolean isEditMode = false;
 
-    /**
-     * Initialize the controller
-     */
     @FXML
     public void initialize() {
         setupFournisseurTable();
@@ -78,9 +65,6 @@ public class FournisseurController {
         updateFormState();
     }
 
-    /**
-     * Configure supplier table columns
-     */
     private void setupFournisseurTable() {
         codeColumn.setCellValueFactory(cellData -> 
             new SimpleStringProperty(cellData.getValue().getCode()));
@@ -99,15 +83,11 @@ public class FournisseurController {
         
         fournisseurTable.setItems(fournisseurList);
         
-        // Selection listener
         fournisseurTable.getSelectionModel().selectedItemProperty().addListener(
             (observable, oldValue, newValue) -> handleFournisseurSelected(newValue)
         );
     }
 
-    /**
-     * Setup rating slider
-     */
     private void setupRatingSlider() {
         if (ratingSlider != null) {
             ratingSlider.setMin(0);
@@ -127,19 +107,13 @@ public class FournisseurController {
         }
     }
 
-    /**
-     * Setup listeners
-     */
     private void setupListeners() {
-        // Search on Enter key
+        
         if (searchField != null) {
             searchField.setOnAction(event -> handleSearch());
         }
     }
 
-    /**
-     * Load all suppliers
-     */
     private void loadAllFournisseurs() {
         try {
             List<Fournisseur> fournisseurs = fournisseurService.getAllFournisseurs();
@@ -149,9 +123,6 @@ public class FournisseurController {
         }
     }
 
-    /**
-     * Handle supplier selection
-     */
     private void handleFournisseurSelected(Fournisseur fournisseur) {
         selectedFournisseur = fournisseur;
         if (fournisseur != null) {
@@ -161,9 +132,6 @@ public class FournisseurController {
         }
     }
 
-    /**
-     * Populate form with supplier data
-     */
     private void populateForm(Fournisseur fournisseur) {
         codeField.setText(fournisseur.getCode());
         nomField.setText(fournisseur.getNom());
@@ -182,9 +150,6 @@ public class FournisseurController {
         }
     }
 
-    /**
-     * Update form state based on mode
-     */
     private void updateFormState() {
         boolean editing = isEditMode && selectedFournisseur != null;
         
@@ -196,9 +161,6 @@ public class FournisseurController {
         if (codeField != null) codeField.setEditable(!editing);
     }
 
-    /**
-     * Handle search action
-     */
     @FXML
     private void handleSearch() {
         String query = searchField.getText().trim();
@@ -215,18 +177,12 @@ public class FournisseurController {
         }
     }
 
-    /**
-     * Handle refresh action
-     */
     @FXML
     private void handleRefresh() {
         loadAllFournisseurs();
         handleClearForm();
     }
 
-    /**
-     * Show active suppliers only
-     */
     @FXML
     private void handleShowActive() {
         try {
@@ -237,17 +193,11 @@ public class FournisseurController {
         }
     }
 
-    /**
-     * Show all suppliers
-     */
     @FXML
     private void handleShowAll() {
         loadAllFournisseurs();
     }
 
-    /**
-     * Handle new supplier action
-     */
     @FXML
     private void handleNew() {
         isEditMode = false;
@@ -256,9 +206,6 @@ public class FournisseurController {
         updateFormState();
     }
 
-    /**
-     * Handle save action (new supplier)
-     */
     @FXML
     private void handleSave() {
         if (!validateForm()) {
@@ -288,9 +235,6 @@ public class FournisseurController {
         }
     }
 
-    /**
-     * Handle update action
-     */
     @FXML
     private void handleUpdate() {
         if (selectedFournisseur == null || !validateForm()) {
@@ -318,9 +262,6 @@ public class FournisseurController {
         }
     }
 
-    /**
-     * Handle delete action
-     */
     @FXML
     private void handleDelete() {
         if (selectedFournisseur == null) {
@@ -341,9 +282,6 @@ public class FournisseurController {
         }
     }
 
-    /**
-     * Handle rate supplier action
-     */
     @FXML
     private void handleRate() {
         if (selectedFournisseur == null) {
@@ -362,9 +300,6 @@ public class FournisseurController {
         }
     }
 
-    /**
-     * Handle clear form action
-     */
     @FXML
     private void handleClearForm() {
         codeField.clear();
@@ -389,9 +324,6 @@ public class FournisseurController {
         updateFormState();
     }
 
-    /**
-     * Validate form inputs
-     */
     private boolean validateForm() {
         if (codeField.getText().trim().isEmpty()) {
             AlertUtil.showWarning("Validation", "Le code fournisseur est requis.");

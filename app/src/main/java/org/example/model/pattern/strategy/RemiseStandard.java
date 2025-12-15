@@ -1,13 +1,10 @@
 package org.example.model.pattern.strategy;
 
-/**
- * RemiseStandard - Standard discount strategy (no discount)
- */
 public class RemiseStandard implements RemiseStrategy {
     
     @Override
     public double calculerRemise(double montantOriginal) {
-        return 0.0; // No discount for standard customers
+        return 0.0; 
     }
     
     @Override
@@ -22,6 +19,6 @@ public class RemiseStandard implements RemiseStrategy {
     
     @Override
     public boolean estApplicable(double montantOriginal) {
-        return true; // Always applicable
+        return true; 
     }
 }

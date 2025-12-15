@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * DAO pour la gestion des dÃ©penses
- */
 public class DepenseDAO {
 
     private final DatabaseConnection dbConnection;
@@ -24,9 +21,6 @@ public class DepenseDAO {
     private final FournisseurDAO fournisseurDAO = new FournisseurDAO();
     private final UtilisateurDAO utilisateurDAO = new UtilisateurDAO();
 
-    /**
-     * Sauvegarde une nouvelle dÃ©pense
-     */
     public Depense save(Depense depense) throws SQLException {
         String sql = "INSERT INTO depenses (numero, date_depense, categorie, description, montant, " +
                 "mode_paiement, fournisseur_id, saisi_par_user_id, numero_facture, recurrente, " +
@@ -73,9 +67,6 @@ public class DepenseDAO {
         }
     }
 
-    /**
-     * Met Ã  jour une dÃ©pense
-     */
     public void update(Depense depense) throws SQLException {
         String sql = "UPDATE depenses SET date_depense = ?, categorie = ?, description = ?, montant = ?, " +
                 "mode_paiement = ?, fournisseur_id = ?, numero_facture = ?, recurrente = ?, " +
@@ -113,9 +104,6 @@ public class DepenseDAO {
         }
     }
 
-    /**
-     * Supprime une dÃ©pense
-     */
     public void delete(Long id) throws SQLException {
         String sql = "DELETE FROM depenses WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -125,9 +113,6 @@ public class DepenseDAO {
         }
     }
 
-    /**
-     * Recherche une dÃ©pense par ID
-     */
     public Optional<Depense> findById(Long id) throws SQLException {
         String sql = "SELECT * FROM depenses WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -142,9 +127,6 @@ public class DepenseDAO {
         return Optional.empty();
     }
 
-    /**
-     * Recherche une dÃ©pense par numÃ©ro
-     */
     public Optional<Depense> findByNumero(String numero) throws SQLException {
         String sql = "SELECT * FROM depenses WHERE numero = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -159,9 +141,6 @@ public class DepenseDAO {
         return Optional.empty();
     }
 
-    /**
-     * Retourne toutes les dÃ©penses
-     */
     public List<Depense> findAll() throws SQLException {
         String sql = "SELECT * FROM depenses ORDER BY date_depense DESC";
         List<Depense> depenses = new ArrayList<>();
@@ -177,9 +156,6 @@ public class DepenseDAO {
         return depenses;
     }
 
-    /**
-     * Retourne les dÃ©penses par catÃ©gorie
-     */
     public List<Depense> findByCategorie(CategorieDepense categorie) throws SQLException {
         String sql = "SELECT * FROM depenses WHERE categorie = ? ORDER BY date_depense DESC";
         List<Depense> depenses = new ArrayList<>();
@@ -196,9 +172,6 @@ public class DepenseDAO {
         return depenses;
     }
 
-    /**
-     * Retourne les dÃ©penses par pÃ©riode
-     */
     public List<Depense> findByPeriode(java.time.LocalDate debut, java.time.LocalDate fin) throws SQLException {
         String sql = "SELECT * FROM depenses WHERE date_depense BETWEEN ? AND ? ORDER BY date_depense DESC";
         List<Depense> depenses = new ArrayList<>();
@@ -216,9 +189,6 @@ public class DepenseDAO {
         return depenses;
     }
 
-    /**
-     * Retourne les dÃ©penses rÃ©currentes
-     */
     public List<Depense> findRecurrentes() throws SQLException {
         String sql = "SELECT * FROM depenses WHERE recurrente = true ORDER BY date_depense DESC";
         List<Depense> depenses = new ArrayList<>();
@@ -234,9 +204,6 @@ public class DepenseDAO {
         return depenses;
     }
 
-    /**
-     * Calcule le total des dÃ©penses par catÃ©gorie pour une pÃ©riode
-     */
     public double getTotalByCategorie(CategorieDepense categorie, java.time.LocalDate debut, 
                                       java.time.LocalDate fin) throws SQLException {
         String sql = "SELECT SUM(montant) FROM depenses WHERE categorie = ? AND date_depense BETWEEN ? AND ?";
@@ -256,9 +223,6 @@ public class DepenseDAO {
         return 0.0;
     }
 
-    /**
-     * Calcule le total des dÃ©penses pour une pÃ©riode
-     */
     public double getTotalByPeriode(java.time.LocalDate debut, java.time.LocalDate fin) throws SQLException {
         String sql = "SELECT SUM(montant) FROM depenses WHERE date_depense BETWEEN ? AND ?";
         
@@ -276,9 +240,6 @@ public class DepenseDAO {
         return 0.0;
     }
 
-    /**
-     * Convertit un ResultSet en Depense
-     */
     private Depense mapResultSetToDepense(ResultSet rs) throws SQLException {
         Depense depense = new Depense();
         depense.setId(rs.getLong("id"));

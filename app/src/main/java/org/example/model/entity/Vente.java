@@ -4,9 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Vente - Entity class representing a sale transaction
- */
 public class Vente {
     
     private Long id;
@@ -14,17 +11,16 @@ public class Vente {
     private LocalDateTime dateVente;
     private Client client;
     private Utilisateur vendeur;
-    private Long vendeurId; // For database operations
+    private Long vendeurId; 
     private List<LigneVente> lignes;
     private double montantTotal;
     private double montantRemise;
     private double montantTVA;
     private double montantFinal;
-    private String modePaiement; // ESPECES, CARTE, CHEQUE, etc.
-    private String statut; // EN_COURS, VALIDEE, ANNULEE
+    private String modePaiement; 
+    private String statut; 
     private String commentaire;
     
-    // Constructors
     public Vente() {
         this.numero = genererNumero();
         this.dateVente = LocalDateTime.now();
@@ -42,7 +38,6 @@ public class Vente {
         this.vendeur = vendeur;
     }
     
-    // Business logic
     private String genererNumero() {
         return "V" + System.currentTimeMillis();
     }
@@ -63,17 +58,14 @@ public class Vente {
             this.montantTotal += ligne.getSousTotal();
         }
         
-        // Calculate discount
         if (client != null) {
             double tauxRemise = client.getRemiseDisponible();
             this.montantRemise = montantTotal * tauxRemise;
         }
         
-        // Calculate TVA (20%)
         double montantAvantTVA = montantTotal - montantRemise;
         this.montantTVA = montantAvantTVA * 0.20;
         
-        // Calculate final amount
         this.montantFinal = montantAvantTVA + montantTVA;
     }
     
@@ -92,7 +84,6 @@ public class Vente {
         return lignes.stream().mapToInt(LigneVente::getQuantite).sum();
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -205,7 +196,6 @@ public class Vente {
         this.commentaire = commentaire;
     }
     
-    // Additional getters for compatibility
     public double getMontantTva() {
         return montantTVA;
     }
@@ -214,18 +204,6 @@ public class Vente {
         return numero;
     }
     
-    /**
-     * Builder for Vente - implements Builder Pattern
-     * Usage:
-     *   Vente vente = new Vente.Builder()
-     *       .withClient(client)
-     *       .withVendeur(vendeur)
-     *       .addLigne(ligne1)
-     *       .addLigne(ligne2)
-     *       .withModePaiement("CARTE")
-     *       .withCommentaire("Vente avec remise")
-     *       .build();
-     */
     public static class Builder {
         private final Vente vente;
         
@@ -295,10 +273,6 @@ public class Vente {
             return this;
         }
         
-        /**
-         * Build the Vente instance
-         * Automatically recalculates amounts based on lines
-         */
         public Vente build() {
             if (!vente.lignes.isEmpty()) {
                 vente.recalculerMontants();
@@ -306,9 +280,6 @@ public class Vente {
             return vente;
         }
         
-        /**
-         * Build without recalculating (for loading from database)
-         */
         public Vente buildFromDB() {
             return vente;
         }

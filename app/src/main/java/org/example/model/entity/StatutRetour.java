@@ -1,8 +1,5 @@
 package org.example.model.entity;
 
-/**
- * StatutRetour - Enum for return status
- */
 public enum StatutRetour {
     EN_COURS("En Cours"),
     APPROUVE("Approuvé"),

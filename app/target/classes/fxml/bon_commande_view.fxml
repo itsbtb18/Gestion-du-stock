@@ -3,144 +3,245 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.BonCommandeController"
-            styleClass="main-container" stylesheets="@../css/styles.css">
-    
-    <top>
-        <VBox spacing="15" styleClass="search-section">
-            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
-            
-            <Label text="Gestion des Bons de Commande" styleClass="section-title">
-                <font><Font name="System Bold" size="20"/></font>
-            </Label>
-            
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <Button fx:id="refreshButton" text="Actualiser" styleClass="btn-secondary" onAction="#handleRefresh"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="newButton" text="+ Nouvelle Commande" styleClass="btn-success" onAction="#handleNew"/>
-            </HBox>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controller.BonCommandeController"
+      stylesheets="@../css/styles.css"
+      styleClass="content-container"
+      spacing="24"
+      prefHeight="900">
+    <padding>
+        <Insets top="24" right="24" bottom="24" left="24"/>
+    </padding>
+
+    <!-- Header Section -->
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Gestion des Bons de Commande" styleClass="page-title"/>
+            <Label text="Gérer les commandes fournisseurs" styleClass="page-subtitle"/>
         </VBox>
-    </top>
-    
-    <center>
-        <VBox spacing="15" VBox.vgrow="ALWAYS">
-            <padding><Insets top="10" right="15" bottom="15" left="15"/></padding>
+        <Button fx:id="newButton" 
+                text="+ Nouveau" 
+                styleClass="btn-primary" 
+                onAction="#handleNew"
+                prefHeight="40"/>
+    </HBox>
+
+    <!-- Main Content: Two Column Layout -->
+    <HBox spacing="24" prefHeight="350" minHeight="350">
+        
+        <!-- Left Column: Orders List -->
+        <VBox spacing="16" styleClass="content-card" HBox.hgrow="ALWAYS">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
             
-            <!-- Top: Order List -->
-            <VBox spacing="10" VBox.vgrow="SOMETIMES" prefHeight="200">
-                <Label text="Liste des Commandes" styleClass="section-title">
-                    <font><Font name="System Bold" size="14"/></font>
-                </Label>
+            <Label text="Liste des Commandes" styleClass="section-title"/>
+            
+            <TableView fx:id="commandeTable" 
+                       styleClass="modern-table"
+                       VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="numeroColumn" text="Numéro" prefWidth="100"/>
+                    <TableColumn fx:id="fournisseurColumn" text="Fournisseur" prefWidth="150"/>
+                    <TableColumn fx:id="dateColumn" text="Date" prefWidth="100"/>
+                    <TableColumn fx:id="statutColumn" text="Statut" prefWidth="100"/>
+                    <TableColumn fx:id="totalColumn" text="Total (DH)" prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+
+        <!-- Right Column: Order Details Form (Scrollable) -->
+        <ScrollPane styleClass="form-scroll" fitToWidth="true" 
+                    hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                    prefWidth="420" minWidth="420" maxWidth="420">
+            <VBox spacing="12" styleClass="content-card">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
                 
-                <TableView fx:id="commandeTable" VBox.vgrow="ALWAYS" styleClass="cart-table">
-                    <columns>
-                        <TableColumn fx:id="numeroColumn" text="Numéro" prefWidth="120"/>
-                        <TableColumn fx:id="fournisseurColumn" text="Fournisseur" prefWidth="200"/>
-                        <TableColumn fx:id="dateColumn" text="Date" prefWidth="100"/>
-                        <TableColumn fx:id="statutColumn" text="Statut" prefWidth="100"/>
-                        <TableColumn fx:id="totalColumn" text="Total TTC" prefWidth="100"/>
-                    </columns>
-                </TableView>
+                <Label text="Détails de la Commande" styleClass="section-title"/>
+                
+                <VBox spacing="6">
+                    <Label text="Numéro" styleClass="form-label"/>
+                    <Label fx:id="numeroLabel" 
+                           text="Nouveau" 
+                           style="-fx-text-fill: #667085; -fx-font-size: 14px;"/>
+                </VBox>
+                
+                <VBox spacing="6">
+                    <Label text="Fournisseur *" styleClass="form-label"/>
+                    <ComboBox fx:id="fournisseurCombo" 
+                              styleClass="modern-combo"
+                              prefHeight="38"
+                              prefWidth="360"/>
+                </VBox>
+                
+                <VBox spacing="6">
+                    <Label text="Statut" styleClass="form-label"/>
+                    <ComboBox fx:id="statutCombo" 
+                              styleClass="modern-combo"
+                              prefHeight="38"
+                              prefWidth="360"/>
+                </VBox>
+                
+                <VBox spacing="6">
+                    <Label text="Date Commande" styleClass="form-label"/>
+                    <DatePicker fx:id="dateCommandePicker" 
+                                styleClass="modern-date-picker"
+                                prefHeight="38"
+                                prefWidth="360"/>
+                </VBox>
+                
+                <VBox spacing="6">
+                    <Label text="Date Livraison" styleClass="form-label"/>
+                    <DatePicker fx:id="dateLivraisonPicker" 
+                                styleClass="modern-date-picker"
+                                prefHeight="38"
+                                prefWidth="360"/>
+                </VBox>
+                
+                <VBox spacing="6">
+                    <Label text="Notes" styleClass="form-label"/>
+                    <TextArea fx:id="notesArea" 
+                              styleClass="modern-textarea"
+                              promptText="Instructions de livraison..."
+                              prefRowCount="3"
+                              wrapText="true"/>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </HBox>
+    <!-- ^^^ THIS WAS MISSING! -->
+
+    <!-- Line Items Section -->
+    <VBox spacing="16" styleClass="content-card" prefHeight="400">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+        
+        <Label text="Articles Commandés" styleClass="section-title"/>
+        
+        <!-- Add Line Form -->
+        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="filter-bar">
+            <padding>
+                <Insets top="8" right="12" bottom="8" left="12"/>
+            </padding>
+            
+            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                <Label text="Produit" style="-fx-font-size: 11px; -fx-text-fill: #667085;"/>
+                <ComboBox fx:id="produitCombo" 
+                          styleClass="modern-combo"
+                          prefHeight="36"/>
             </VBox>
             
-            <!-- Middle: Order Form and Line Items -->
-            <HBox spacing="15" VBox.vgrow="ALWAYS">
-                <!-- Left: Header Form -->
-                <VBox spacing="15" prefWidth="400">
-                    <VBox spacing="15" styleClass="card">
-                        <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
-                        
-                        <Label text="En-tête de Commande" styleClass="section-title">
-                            <font><Font name="System Bold" size="14"/></font>
-                        </Label>
-                        <Separator/>
-                        
-                        <GridPane hgap="10" vgap="12">
-                            <Label text="Numéro:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <Label fx:id="numeroLabel" text="Nouveau" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="form-value"/>
-                            
-                            <Label text="Fournisseur:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <ComboBox fx:id="fournisseurCombo" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="Sélectionner" prefWidth="250"/>
-                            
-                            <Label text="Date Commande:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <DatePicker fx:id="dateCommandePicker" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-                            
-                            <Label text="Date Livraison:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <DatePicker fx:id="dateLivraisonPicker" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-                            
-                            <Label text="Statut:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <ComboBox fx:id="statutCombo" GridPane.rowIndex="4" GridPane.columnIndex="1" disable="true"/>
-                            
-                            <Label text="Notes:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="form-label"/>
-                            <TextArea fx:id="notesArea" GridPane.rowIndex="5" GridPane.columnIndex="1" promptText="Notes" prefRowCount="3"/>
-                        </GridPane>
-                    </VBox>
-                    
-                    <VBox spacing="15" styleClass="card">
-                        <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
-                        
-                        <Label text="Totaux" styleClass="section-title">
-                            <font><Font name="System Bold" size="14"/></font>
-                        </Label>
-                        <Separator/>
-                        
-                        <HBox spacing="10" alignment="CENTER_RIGHT">
-                            <Label text="Total HT:" styleClass="form-label"/>
-                            <Label fx:id="totalHTLabel" text="0.00" styleClass="form-value"/>
-                        </HBox>
-                        <HBox spacing="10" alignment="CENTER_RIGHT">
-                            <Label text="TVA (20%):" styleClass="form-label"/>
-                            <Label fx:id="taxeLabel" text="0.00" styleClass="form-value"/>
-                        </HBox>
-                        <Separator/>
-                        <HBox spacing="10" alignment="CENTER_RIGHT">
-                            <Label text="Total TTC:" styleClass="total-label"/>
-                            <Label fx:id="totalTTCLabel" text="0.00" styleClass="total-value"/>
-                        </HBox>
-                    </VBox>
-                    
-                    <HBox spacing="10">
-                        <Button fx:id="saveButton" text="Créer" styleClass="btn-success" onAction="#handleSave" HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="clearButton" text="Vider" styleClass="btn-secondary" onAction="#handleClear" HBox.hgrow="ALWAYS"/>
-                    </HBox>
-                    <HBox spacing="10">
-                        <Button fx:id="approveButton" text="Approuver" styleClass="btn-primary" onAction="#handleApprove" HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="receiveButton" text="Réceptionner" styleClass="btn-success" onAction="#handleReceive" HBox.hgrow="ALWAYS"/>
-                    </HBox>
-                </VBox>
-                
-                <!-- Right: Line Items -->
-                <VBox spacing="15" HBox.hgrow="ALWAYS">
-                    <VBox spacing="10" styleClass="card" VBox.vgrow="ALWAYS">
-                        <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
-                        
-                        <Label text="Lignes de Commande" styleClass="section-title">
-                            <font><Font name="System Bold" size="14"/></font>
-                        </Label>
-                        
-                        <TableView fx:id="lignesTable" VBox.vgrow="ALWAYS" styleClass="cart-table">
-                            <columns>
-                                <TableColumn fx:id="produitColumn" text="Produit" prefWidth="250"/>
-                                <TableColumn fx:id="quantiteColumn" text="Quantité" prefWidth="80"/>
-                                <TableColumn fx:id="prixColumn" text="Prix Unitaire" prefWidth="100"/>
-                                <TableColumn fx:id="totalLigneColumn" text="Total" prefWidth="100"/>
-                            </columns>
-                        </TableView>
-                        
-                        <Separator/>
-                        
-                        <HBox spacing="10" alignment="CENTER_LEFT">
-                            <ComboBox fx:id="produitCombo" promptText="Produit" prefWidth="250"/>
-                            <TextField fx:id="quantiteField" promptText="Quantité" prefWidth="80"/>
-                            <TextField fx:id="prixUnitaireField" promptText="Prix" prefWidth="100"/>
-                            <Button fx:id="addLineButton" text="+ Ajouter" styleClass="btn-primary" onAction="#handleAddLine"/>
-                            <Button fx:id="removeLineButton" text="- Retirer" styleClass="btn-danger" onAction="#handleRemoveLine"/>
-                        </HBox>
-                    </VBox>
-                </VBox>
+            <VBox spacing="2" prefWidth="100">
+                <Label text="Quantité" style="-fx-font-size: 11px; -fx-text-fill: #667085;"/>
+                <TextField fx:id="quantiteField" 
+                           styleClass="modern-input"
+                           promptText="Qté"
+                           prefHeight="36"/>
+            </VBox>
+            
+            <VBox spacing="2" prefWidth="100">
+                <Label text="Prix Unit." style="-fx-font-size: 11px; -fx-text-fill: #667085;"/>
+                <TextField fx:id="prixUnitaireField" 
+                           styleClass="modern-input"
+                           promptText="Prix"
+                           prefHeight="36"/>
+            </VBox>
+            
+            <VBox spacing="2" alignment="BOTTOM_LEFT">
+                <Label text=" " style="-fx-font-size: 11px;"/>
+                <HBox spacing="6">
+                    <Button fx:id="addLineButton" 
+                            text="➕ Ajouter" 
+                            styleClass="btn-primary"
+                            onAction="#handleAddLine"
+                            prefHeight="36"
+                            prefWidth="130"/>
+                    <Button fx:id="removeLineButton" 
+                            text="➖ Retirer" 
+                            styleClass="btn-danger"
+                            onAction="#handleRemoveLine"
+                            prefHeight="36"
+                            prefWidth="130"/>
+                </HBox>
+            </VBox>
+        </HBox>
+
+        <!-- Lines Table -->
+        <TableView fx:id="lignesTable" 
+                   styleClass="modern-table"
+                   VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="produitColumn" text="Produit" prefWidth="300"/>
+                <TableColumn fx:id="quantiteColumn" text="Quantité" prefWidth="100"/>
+                <TableColumn fx:id="prixColumn" text="Prix Unit." prefWidth="120"/>
+                <TableColumn fx:id="totalLigneColumn" text="Total" prefWidth="120"/>
+            </columns>
+        </TableView>
+        
+        <!-- Totals -->
+        <HBox spacing="40" alignment="CENTER_RIGHT">
+            <padding>
+                <Insets top="12" right="20" bottom="0" left="0"/>
+            </padding>
+            
+            <HBox spacing="12">
+                <Label text="Total HT:" styleClass="form-label"/>
+                <Label fx:id="totalHTLabel" text="0.00 DH" style="-fx-font-weight: bold;"/>
             </HBox>
-        </VBox>
-    </center>
-</BorderPane>
+            
+            <HBox spacing="12">
+                <Label text="TVA (20%):" styleClass="form-label"/>
+                <Label fx:id="taxeLabel" text="0.00 DH" style="-fx-font-weight: bold;"/>
+            </HBox>
+            
+            <HBox spacing="12">
+                <Label text="Total TTC:" styleClass="form-label" style="-fx-font-size: 14px;"/>
+                <Label fx:id="totalTTCLabel" text="0.00 DH" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+            </HBox>
+        </HBox>
+    </VBox>
+
+    <!-- Action Buttons -->
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button fx:id="saveButton" 
+                text="💾 Enregistrer" 
+                styleClass="btn-primary"
+                onAction="#handleSave"
+                prefHeight="38"/>
+        
+        <Button fx:id="updateButton" 
+                text="✏️ Modifier" 
+                styleClass="btn-primary"
+                prefHeight="38"/>
+        
+        <Button fx:id="approveButton" 
+                text="✅ Valider" 
+                styleClass="btn-success"
+                onAction="#handleApprove"
+                prefHeight="38"/>
+        
+        <Button fx:id="receiveButton" 
+                text="📦 Réceptionner" 
+                styleClass="btn-primary"
+                onAction="#handleReceive"
+                prefHeight="38"/>
+        
+        <Region HBox.hgrow="ALWAYS"/>
+        
+        <Button fx:id="clearButton" 
+                text="🔄 Vider" 
+                styleClass="btn-secondary"
+                onAction="#handleClear"
+                prefHeight="38"/>
+        
+        <Button fx:id="deleteButton" 
+                text="🗑️ Supprimer" 
+                styleClass="btn-danger"
+                prefHeight="38"/>
+    </HBox>
+</VBox>

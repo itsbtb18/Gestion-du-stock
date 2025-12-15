@@ -7,10 +7,6 @@ import org.example.util.ValidationUtil;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * ProduitService - Business logic for product management
- * Singleton service for handling product operations
- */
 public class ProduitService {
     
     private static ProduitService instance;

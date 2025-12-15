@@ -1,43 +1,35 @@
 package org.example.model.entity;
 
-/**
- * LoyaltyProgramConfig - Configuration for store's loyalty program
- * Defines rules for earning and redeeming loyalty points
- */
 public class LoyaltyProgramConfig {
     
     private Long id;
-    private Long storeId; // Foreign key to Store
+    private Long storeId; 
     private boolean enabled;
     
-    // Earning Rules
-    private int pointsPerCurrencyUnit; // e.g., 10 points per 1 DH spent
-    private double minimumPurchaseAmount; // Minimum purchase to earn points
+    private int pointsPerCurrencyUnit; 
+    private double minimumPurchaseAmount; 
     
-    // Redemption Rules
-    private int rewardThreshold; // Points needed to get reward (e.g., 100 points)
-    private RewardType rewardType; // PERCENTAGE or FIXED_AMOUNT
-    private double rewardValue; // Value of reward (e.g., 10% or 10 DH)
-    private int pointsExpirationDays; // Days until points expire (0 = never)
+    private int rewardThreshold; 
+    private RewardType rewardType; 
+    private double rewardValue; 
+    private int pointsExpirationDays; 
     
-    // Advanced Rules
-    private boolean allowPartialRedemption; // Allow using any amount of points
-    private int minimumRedemptionPoints; // Minimum points to redeem
-    private double maxRedemptionPercentOfTotal; // Max % of sale that can be paid with points
+    private boolean allowPartialRedemption; 
+    private int minimumRedemptionPoints; 
+    private double maxRedemptionPercentOfTotal; 
     
-    // Constructors
     public LoyaltyProgramConfig() {
-        // Set default values
+        
         this.enabled = true;
-        this.pointsPerCurrencyUnit = 10; // 10 points per DH
+        this.pointsPerCurrencyUnit = 10; 
         this.minimumPurchaseAmount = 0.0;
-        this.rewardThreshold = 100; // 100 points
+        this.rewardThreshold = 100; 
         this.rewardType = RewardType.PERCENTAGE;
-        this.rewardValue = 5.0; // 5% discount
-        this.pointsExpirationDays = 0; // Never expire
+        this.rewardValue = 5.0; 
+        this.pointsExpirationDays = 0; 
         this.allowPartialRedemption = true;
         this.minimumRedemptionPoints = 50;
-        this.maxRedemptionPercentOfTotal = 50.0; // Max 50% of purchase
+        this.maxRedemptionPercentOfTotal = 50.0; 
     }
     
     public LoyaltyProgramConfig(Long storeId) {
@@ -45,11 +37,6 @@ public class LoyaltyProgramConfig {
         this.storeId = storeId;
     }
     
-    // Business logic
-    
-    /**
-     * Calculate points earned from a purchase amount
-     */
     public int calculatePointsEarned(double purchaseAmount) {
         if (!enabled || purchaseAmount < minimumPurchaseAmount) {
             return 0;
@@ -58,15 +45,11 @@ public class LoyaltyProgramConfig {
         return (int) (purchaseAmount * pointsPerCurrencyUnit);
     }
     
-    /**
-     * Calculate discount amount from points
-     */
     public double calculateDiscountFromPoints(int points, double purchaseAmount) {
         if (!enabled || points < minimumRedemptionPoints) {
             return 0.0;
         }
         
-        // Check if threshold is met
         if (!allowPartialRedemption && points < rewardThreshold) {
             return 0.0;
         }
@@ -74,7 +57,7 @@ public class LoyaltyProgramConfig {
         double discount = 0.0;
         
         if (allowPartialRedemption) {
-            // Calculate proportional discount
+            
             double ratio = (double) points / rewardThreshold;
             
             switch (rewardType) {
@@ -86,7 +69,7 @@ public class LoyaltyProgramConfig {
                     break;
             }
         } else {
-            // All-or-nothing: must have at least rewardThreshold points
+            
             if (points >= rewardThreshold) {
                 int rewardsEarned = points / rewardThreshold;
                 
@@ -101,20 +84,15 @@ public class LoyaltyProgramConfig {
             }
         }
         
-        // Apply maximum redemption limit
         double maxDiscount = purchaseAmount * (maxRedemptionPercentOfTotal / 100.0);
         return Math.min(discount, maxDiscount);
     }
     
-    /**
-     * Calculate how many points will be consumed for a given discount
-     */
     public int calculatePointsToConsume(double discountAmount, double purchaseAmount) {
         if (!enabled || discountAmount <= 0) {
             return 0;
         }
         
-        // Calculate based on reward type
         int pointsNeeded = 0;
         
         switch (rewardType) {
@@ -131,17 +109,11 @@ public class LoyaltyProgramConfig {
         return pointsNeeded;
     }
     
-    /**
-     * Get display description of earning rule
-     */
     public String getEarningRuleDescription() {
         return String.format("Gagnez %d points pour chaque %d DH d'achat", 
                 pointsPerCurrencyUnit, 1);
     }
     
-    /**
-     * Get display description of reward rule
-     */
     public String getRewardRuleDescription() {
         String rewardDesc = rewardType == RewardType.PERCENTAGE 
                 ? String.format("%.0f%% de réduction", rewardValue)
@@ -150,7 +122,6 @@ public class LoyaltyProgramConfig {
         return String.format("%d points = %s", rewardThreshold, rewardDesc);
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -257,7 +228,6 @@ public class LoyaltyProgramConfig {
                 '}';
     }
     
-    // Enum
     public enum RewardType {
         PERCENTAGE("Pourcentage"),
         FIXED_AMOUNT("Montant fixe");

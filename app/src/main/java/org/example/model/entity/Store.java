@@ -2,10 +2,6 @@ package org.example.model.entity;
 
 import java.time.LocalDateTime;
 
-/**
- * Store (Magasin) - Entity representing a store/branch
- * Supports multi-store architecture where each store can have independent configuration
- */
 public class Store {
     
     private Long id;
@@ -14,18 +10,17 @@ public class Store {
     private String address;
     private String phone;
     private String email;
-    private String logoPath; // Path to store logo image
-    private String currency; // Default currency code (e.g., "MAD", "EUR")
-    private String language; // Default language (e.g., "fr", "ar", "en")
+    private String logoPath; 
+    private String currency; 
+    private String language; 
     private LocalDateTime createdDate;
     private boolean active;
     
-    // Constructors
     public Store() {
         this.createdDate = LocalDateTime.now();
         this.active = true;
-        this.currency = "MAD"; // Default to Moroccan Dirham
-        this.language = "fr"; // Default to French
+        this.currency = "MAD"; 
+        this.language = "fr"; 
     }
     
     public Store(String code, String name, String address, String phone, String email) {
@@ -37,7 +32,6 @@ public class Store {
         this.email = email;
     }
     
-    // Business logic
     public String getDisplayName() {
         return name + " (" + code + ")";
     }
@@ -46,7 +40,6 @@ public class Store {
         return logoPath != null && !logoPath.isEmpty();
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

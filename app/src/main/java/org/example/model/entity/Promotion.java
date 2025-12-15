@@ -6,28 +6,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Promotion - Entity representing a promotional offer/discount
- * Supports various types of promotions (percentage, fixed amount)
- * Can be scoped to entire store, specific categories, or specific products
- */
 public class Promotion {
     
     private Long id;
-    private Long storeId; // Foreign key to Store
+    private Long storeId; 
     private String name;
     private String description;
-    private PromotionType type; // PERCENTAGE or FIXED_AMOUNT
-    private double value; // Discount value (percentage or amount)
-    private PromotionScope scope; // STORE_WIDE, CATEGORY, PRODUCT
-    private String targetIds; // Comma-separated IDs of categories or products (if applicable)
+    private PromotionType type; 
+    private double value; 
+    private PromotionScope scope; 
+    private String targetIds; 
     private LocalDate startDate;
     private LocalDate endDate;
     private boolean active;
-    private int priority; // Higher priority promotions are applied first
+    private int priority; 
     private LocalDateTime createdDate;
     
-    // Constructors
     public Promotion() {
         this.active = true;
         this.priority = 0;
@@ -47,11 +41,6 @@ public class Promotion {
         this.endDate = endDate;
     }
     
-    // Business logic
-    
-    /**
-     * Check if promotion is currently active based on dates
-     */
     public boolean isCurrentlyActive() {
         if (!active) return false;
         
@@ -68,9 +57,6 @@ public class Promotion {
         return true;
     }
     
-    /**
-     * Calculate discount amount for a given price
-     */
     public double calculateDiscount(double originalPrice) {
         if (!isCurrentlyActive()) {
             return 0.0;
@@ -80,15 +66,12 @@ public class Promotion {
             case PERCENTAGE:
                 return originalPrice * (value / 100.0);
             case FIXED_AMOUNT:
-                return Math.min(value, originalPrice); // Don't exceed original price
+                return Math.min(value, originalPrice); 
             default:
                 return 0.0;
         }
     }
     
-    /**
-     * Check if promotion applies to a specific product
-     */
     public boolean appliesTo(Long productId, Long categoryId) {
         if (!isCurrentlyActive()) {
             return false;
@@ -106,9 +89,6 @@ public class Promotion {
         }
     }
     
-    /**
-     * Get list of target IDs (parsed from comma-separated string)
-     */
     public List<Long> getTargetIdList() {
         if (targetIds == null || targetIds.trim().isEmpty()) {
             return List.of();
@@ -121,9 +101,6 @@ public class Promotion {
                 .collect(Collectors.toList());
     }
     
-    /**
-     * Set target IDs from a list
-     */
     public void setTargetIdList(List<Long> ids) {
         if (ids == null || ids.isEmpty()) {
             this.targetIds = "";
@@ -134,9 +111,6 @@ public class Promotion {
         }
     }
     
-    /**
-     * Get promotion description for display
-     */
     public String getDisplayDescription() {
         StringBuilder sb = new StringBuilder();
         
@@ -156,7 +130,6 @@ public class Promotion {
         return sb.toString();
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -271,7 +244,6 @@ public class Promotion {
                 '}';
     }
     
-    // Enums
     public enum PromotionType {
         PERCENTAGE("Pourcentage"),
         FIXED_AMOUNT("Montant fixe");

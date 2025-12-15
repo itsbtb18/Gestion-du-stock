@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * DAO pour la gestion des lots de produits
- */
 public class LotDAO {
 
     private final DatabaseConnection dbConnection;
@@ -22,9 +19,6 @@ public class LotDAO {
     private final ProduitDAO produitDAO = new ProduitDAO();
     private final FournisseurDAO fournisseurDAO = new FournisseurDAO();
 
-    /**
-     * Sauvegarde un nouveau lot
-     */
     public Lot save(Lot lot) throws SQLException {
         String sql = "INSERT INTO lots (numero_lot, produit_id, quantite, date_fabrication, " +
                 "date_expiration, fournisseur_id, bon_commande_id, emplacement, actif, commentaire) " +
@@ -77,9 +71,6 @@ public class LotDAO {
         }
     }
 
-    /**
-     * Met Ã  jour un lot
-     */
     public void update(Lot lot) throws SQLException {
         String sql = "UPDATE lots SET quantite = ?, date_fabrication = ?, date_expiration = ?, " +
                 "emplacement = ?, actif = ?, commentaire = ? WHERE id = ?";
@@ -110,9 +101,6 @@ public class LotDAO {
         }
     }
 
-    /**
-     * Met Ã  jour la quantitÃ© d'un lot
-     */
     public void updateQuantite(Long id, int quantite) throws SQLException {
         String sql = "UPDATE lots SET quantite = ? WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -123,9 +111,6 @@ public class LotDAO {
         }
     }
 
-    /**
-     * Supprime un lot
-     */
     public void delete(Long id) throws SQLException {
         String sql = "DELETE FROM lots WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -135,9 +120,6 @@ public class LotDAO {
         }
     }
 
-    /**
-     * Recherche un lot par ID
-     */
     public Optional<Lot> findById(Long id) throws SQLException {
         String sql = "SELECT * FROM lots WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -152,9 +134,6 @@ public class LotDAO {
         return Optional.empty();
     }
 
-    /**
-     * Recherche un lot par numÃ©ro
-     */
     public Optional<Lot> findByNumero(String numero) throws SQLException {
         String sql = "SELECT * FROM lots WHERE numero_lot = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -169,9 +148,6 @@ public class LotDAO {
         return Optional.empty();
     }
 
-    /**
-     * Retourne tous les lots
-     */
     public List<Lot> findAll() throws SQLException {
         String sql = "SELECT * FROM lots ORDER BY date_expiration ASC";
         List<Lot> lots = new ArrayList<>();
@@ -187,9 +163,6 @@ public class LotDAO {
         return lots;
     }
 
-    /**
-     * Retourne les lots actifs
-     */
     public List<Lot> findActive() throws SQLException {
         String sql = "SELECT * FROM lots WHERE actif = true ORDER BY date_expiration ASC";
         List<Lot> lots = new ArrayList<>();
@@ -205,9 +178,6 @@ public class LotDAO {
         return lots;
     }
 
-    /**
-     * Retourne les lots par produit
-     */
     public List<Lot> findByProduit(Long produitId) throws SQLException {
         String sql = "SELECT * FROM lots WHERE produit_id = ? ORDER BY date_expiration ASC";
         List<Lot> lots = new ArrayList<>();
@@ -224,9 +194,6 @@ public class LotDAO {
         return lots;
     }
 
-    /**
-     * Retourne les lots expirÃ©s
-     */
     public List<Lot> findExpires() throws SQLException {
         String sql = "SELECT * FROM lots WHERE date_expiration < CURRENT_DATE AND actif = true " +
                 "ORDER BY date_expiration ASC";
@@ -243,9 +210,6 @@ public class LotDAO {
         return lots;
     }
 
-    /**
-     * Retourne les lots qui expirent bientÃ´t
-     */
     public List<Lot> findExpirantBientot(int joursAvance) throws SQLException {
         String sql = "SELECT * FROM lots WHERE date_expiration BETWEEN CURRENT_DATE AND " +
                 "DATEADD('DAY', ?, CURRENT_DATE) AND actif = true ORDER BY date_expiration ASC";
@@ -263,9 +227,6 @@ public class LotDAO {
         return lots;
     }
 
-    /**
-     * Retourne les lots par emplacement
-     */
     public List<Lot> findByEmplacement(String emplacement) throws SQLException {
         String sql = "SELECT * FROM lots WHERE emplacement = ? ORDER BY date_expiration ASC";
         List<Lot> lots = new ArrayList<>();
@@ -282,9 +243,6 @@ public class LotDAO {
         return lots;
     }
 
-    /**
-     * Convertit un ResultSet en Lot
-     */
     private Lot mapResultSetToLot(ResultSet rs) throws SQLException {
         Lot lot = new Lot();
         lot.setId(rs.getLong("id"));
@@ -306,9 +264,6 @@ public class LotDAO {
         if (!rs.wasNull()) {
             lot.setFournisseur(fournisseurDAO.findById(fournisseurId).orElse(null));
         }
-        
-        // Note: BonCommande relation would require BonCommandeDAO
-        // For now, just storing the ID if needed
         
         lot.setEmplacement(rs.getString("emplacement"));
         lot.setActif(rs.getBoolean("actif"));

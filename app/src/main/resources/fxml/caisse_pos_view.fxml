@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.controller.CaisseController"
+            styleClass="pos-container" stylesheets="@../css/pos_styles.css">
+    
+    <!-- TOP: Header Bar -->
+    <top>
+        <HBox styleClass="pos-header" alignment="CENTER_LEFT" spacing="20">
+            <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+            
+            <!-- Store Name -->
+            <VBox spacing="2">
+                <Label fx:id="storeNameLabel" text="REB7A SUPERMARCHÉ" styleClass="store-name">
+                    <font><Font name="Segoe UI Bold" size="18"/></font>
+                </Label>
+                <Label fx:id="storeAddressLabel" text="Point de Vente" styleClass="store-address"/>
+            </VBox>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <!-- Live Clock -->
+            <VBox alignment="CENTER" spacing="0">
+                <Label fx:id="dateLabel" text="15/12/2025" styleClass="header-date"/>
+                <Label fx:id="timeLabel" text="14:30:00" styleClass="header-time">
+                    <font><Font name="Segoe UI Bold" size="20"/></font>
+                </Label>
+            </VBox>
+            
+            <Separator orientation="VERTICAL" styleClass="header-separator"/>
+            
+            <!-- Cashier Info -->
+            <HBox spacing="10" alignment="CENTER" styleClass="cashier-badge">
+                <Circle radius="5" styleClass="online-indicator"/>
+                <VBox spacing="0">
+                    <Label fx:id="cashierNameLabel" text="Caissier: Admin" styleClass="cashier-name"/>
+                    <Label fx:id="cashierRoleLabel" text="Administrateur" styleClass="cashier-role"/>
+                </VBox>
+            </HBox>
+            
+            <Separator orientation="VERTICAL" styleClass="header-separator"/>
+            
+            <!-- Header Actions -->
+            <Button fx:id="btnZReport" text="📊 Rapport Z" styleClass="header-btn" onAction="#handleZReport"/>
+            <Button fx:id="btnNewTicket" text="🎫 Nouveau" styleClass="header-btn" onAction="#handleNewTicket"/>
+            <Button fx:id="btnSignOut" text="🚪 Déconnexion" styleClass="header-btn-danger" onAction="#handleSignOut"/>
+        </HBox>
+    </top>
+    
+    <!-- CENTER: Main Content -->
+    <center>
+        <HBox spacing="0" VBox.vgrow="ALWAYS">
+            
+            <!-- LEFT PANEL: Keypad + Actions -->
+            <VBox styleClass="left-panel" spacing="10" prefWidth="280" minWidth="260">
+                <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+                
+                <!-- Barcode Input -->
+                <VBox spacing="8" styleClass="input-section">
+                    <Label text="📦 Code Produit / Barcode" styleClass="section-label"/>
+                    <TextField fx:id="barcodeField" promptText="Scanner ou saisir le code..."
+                              styleClass="barcode-input" prefHeight="45" onAction="#handleBarcodeEnter"/>
+                </VBox>
+                
+                <!-- Numeric Keypad -->
+                <VBox spacing="8" styleClass="keypad-section" VBox.vgrow="ALWAYS">
+                    <Label text="⌨️ Clavier Numérique" styleClass="section-label"/>
+                    
+                    <!-- Mode Buttons -->
+                    <HBox spacing="5" alignment="CENTER">
+                        <ToggleButton fx:id="btnModeQty" text="QTÉ" styleClass="mode-btn" 
+                                     onAction="#handleModeQty" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        <ToggleButton fx:id="btnModePrice" text="PRIX" styleClass="mode-btn"
+                                     onAction="#handleModePrice" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        <ToggleButton fx:id="btnModeDiscount" text="REM%" styleClass="mode-btn"
+                                     onAction="#handleModeDiscount" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                    </HBox>
+                    
+                    <!-- Display -->
+                    <TextField fx:id="keypadDisplay" text="0" styleClass="keypad-display" 
+                              prefHeight="50" alignment="CENTER_RIGHT" editable="false"/>
+                    
+                    <!-- Number Grid -->
+                    <GridPane styleClass="keypad-grid" hgap="5" vgap="5">
+                        <Button text="7" onAction="#handleKeypad" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="keypad-btn" maxWidth="Infinity" prefHeight="55"/>
+                        <Button text="8" onAction="#handleKeypad" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="keypad-btn" maxWidth="Infinity" prefHeight="55"/>
+                        <Button text="9" onAction="#handleKeypad" GridPane.columnIndex="2" GridPane.rowIndex="0" styleClass="keypad-btn" maxWidth="Infinity" prefHeight="55"/>
+                        <Button text="C" onAction="#handleKeypadClear" GridPane.columnIndex="3" GridPane.rowIndex="0" styleClass="keypad-btn-clear" maxWidth="Infinity" prefHeight="55"/>
+                        
+                        <Button text="4" onAction="#handleKeypad" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="keypad-btn" maxWidth="Infinity" prefHeight="55"/>
+                        <Button text="5" onAction="#handleKeypad" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="keypad-btn" maxWidth="Infinity" prefHeight="55"/>
+                        <Button text="6" onAction="#handleKeypad" GridPane.columnIndex="2" GridPane.rowIndex="1" styleClass="keypad-btn" maxWidth="Infinity" prefHeight="55"/>
+                        <Button text="⌫" onAction="#handleKeypadBackspace" GridPane.columnIndex="3" GridPane.rowIndex="1" styleClass="keypad-btn-back" maxWidth="Infinity" prefHeight="55"/>
+                        
+                        <Button text="1" onAction="#handleKeypad" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="keypad-btn" maxWidth="Infinity" prefHeight="55"/>
+                        <Button text="2" onAction="#handleKeypad" GridPane.columnIndex="1" GridPane.rowIndex="2" styleClass="keypad-btn" maxWidth="Infinity" prefHeight="55"/>
+                        <Button text="3" onAction="#handleKeypad" GridPane.columnIndex="2" GridPane.rowIndex="2" styleClass="keypad-btn" maxWidth="Infinity" prefHeight="55"/>
+                        <Button text="OK" onAction="#handleKeypadEnter" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.rowSpan="2" 
+                               styleClass="keypad-btn-enter" maxWidth="Infinity" maxHeight="Infinity"/>
+                        
+                        <Button text="0" onAction="#handleKeypad" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2" styleClass="keypad-btn" maxWidth="Infinity" prefHeight="55"/>
+                        <Button text="." onAction="#handleKeypad" GridPane.columnIndex="2" GridPane.rowIndex="3" styleClass="keypad-btn" maxWidth="Infinity" prefHeight="55"/>
+                        
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="25"/>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="25"/>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="25"/>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="25"/>
+                        </columnConstraints>
+                    </GridPane>
+                </VBox>
+                
+                <!-- Quick Actions -->
+                <VBox spacing="8" styleClass="actions-section">
+                    <Label text="⚡ Actions Rapides" styleClass="section-label"/>
+                    <Button fx:id="btnManualEntry" text="✏️ Saisie Manuelle" styleClass="action-btn action-btn-manual"
+                           onAction="#handleManualEntry" maxWidth="Infinity" prefHeight="40"/>
+                    <Button fx:id="btnHoldTicket" text="⏸️ Mettre en Attente" styleClass="action-btn action-btn-hold"
+                           onAction="#handleHoldTicket" maxWidth="Infinity" prefHeight="40"/>
+                    <Button fx:id="btnRestoreTicket" text="▶️ Reprendre Ticket" styleClass="action-btn action-btn-restore"
+                           onAction="#handleRestoreTicket" maxWidth="Infinity" prefHeight="40"/>
+                    <Button fx:id="btnSearchProduct" text="🔍 Rechercher Article" styleClass="action-btn"
+                           onAction="#handleSearchProduct" maxWidth="Infinity" prefHeight="40"/>
+                    <Button fx:id="btnAssignClient" text="👤 Assigner Client" styleClass="action-btn"
+                           onAction="#handleAssignClient" maxWidth="Infinity" prefHeight="40"/>
+                </VBox>
+            </VBox>
+            
+            <!-- CENTER PANEL: Cart + Totals -->
+            <VBox styleClass="center-panel" HBox.hgrow="ALWAYS" spacing="0">
+                
+                <!-- Cart Header -->
+                <HBox styleClass="cart-header" alignment="CENTER_LEFT" spacing="15">
+                    <padding><Insets top="12" right="15" bottom="12" left="15"/></padding>
+                    <Label text="🛒 TICKET DE CAISSE" styleClass="cart-title"/>
+                    <Label fx:id="ticketNumberLabel" text="#TKT-001" styleClass="ticket-number"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="clientBadgeLabel" text="Client: Passage" styleClass="client-badge"/>
+                    <Button fx:id="btnRemoveLine" text="🗑️ Supprimer" styleClass="cart-action-btn"
+                           onAction="#handleRemoveFromCart"/>
+                    <Button fx:id="btnClearCart" text="✖️ Vider" styleClass="cart-action-btn-danger"
+                           onAction="#handleClearCart"/>
+                </HBox>
+                
+                <!-- Cart Table -->
+                <TableView fx:id="cartTable" styleClass="cart-table" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colCode" text="Code" prefWidth="100" minWidth="80"/>
+                        <TableColumn fx:id="colDesignation" text="Désignation" prefWidth="250" minWidth="180"/>
+                        <TableColumn fx:id="colQty" text="Qté" prefWidth="60" minWidth="50" style="-fx-alignment: CENTER;"/>
+                        <TableColumn fx:id="colPrixUnit" text="P.U." prefWidth="90" minWidth="80" style="-fx-alignment: CENTER-RIGHT;"/>
+                        <TableColumn fx:id="colRemise" text="Rem%" prefWidth="70" minWidth="60" style="-fx-alignment: CENTER;"/>
+                        <TableColumn fx:id="colTotal" text="Total" prefWidth="110" minWidth="90" style="-fx-alignment: CENTER-RIGHT;"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="Scannez ou recherchez un produit" styleClass="empty-cart-label"/>
+                    </placeholder>
+                </TableView>
+                
+                <!-- Totals Panel -->
+                <VBox styleClass="totals-panel" spacing="8">
+                    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+                    
+                    <HBox alignment="CENTER_LEFT">
+                        <Label text="Sous-total HT" styleClass="total-label"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="subtotalHTLabel" text="0.00" styleClass="total-value"/>
+                    </HBox>
+                    
+                    <HBox alignment="CENTER_LEFT">
+                        <Label text="Remise" styleClass="total-label"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="discountTotalLabel" text="-0.00" styleClass="total-value-discount"/>
+                    </HBox>
+                    
+                    <HBox alignment="CENTER_LEFT">
+                        <Label text="TVA (19%)" styleClass="total-label"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="tvaLabel" text="0.00" styleClass="total-value"/>
+                    </HBox>
+                    
+                    <Separator styleClass="total-separator"/>
+                    
+                    <HBox alignment="CENTER_LEFT">
+                        <Label text="TOTAL TTC" styleClass="grand-total-label"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="grandTotalLabel" text="0.00" styleClass="grand-total-value">
+                            <font><Font name="Segoe UI Bold" size="32"/></font>
+                        </Label>
+                        <Label fx:id="currencyLabel" text="DZD" styleClass="currency-label"/>
+                    </HBox>
+                </VBox>
+                
+                <!-- Payment Buttons -->
+                <HBox styleClass="payment-bar" spacing="10" alignment="CENTER">
+                    <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+                    
+                    <Button fx:id="btnPayCash" text="💵 ESPÈCES" styleClass="pay-btn pay-btn-cash"
+                           onAction="#handlePayCash" HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="60"/>
+                    <Button fx:id="btnPayCard" text="💳 CARTE" styleClass="pay-btn pay-btn-card"
+                           onAction="#handlePayCard" HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="60"/>
+                    <Button fx:id="btnPayMixed" text="🔄 MIXTE" styleClass="pay-btn pay-btn-mixed"
+                           onAction="#handlePayMixed" HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="60"/>
+                    <Button fx:id="btnCancelTicket" text="❌ ANNULER" styleClass="pay-btn pay-btn-cancel"
+                           onAction="#handleCancelSale" prefWidth="140" prefHeight="60"/>
+                </HBox>
+            </VBox>
+            
+            <!-- RIGHT PANEL: Categories + Products -->
+            <VBox styleClass="right-panel" prefWidth="350" minWidth="320">
+                
+                <!-- Categories -->
+                <VBox styleClass="categories-section" spacing="5">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <Label text="CATEGORIES" styleClass="section-title"/>
+                    <ScrollPane styleClass="categories-scroll" fitToWidth="true" prefHeight="100" maxHeight="100" vbarPolicy="NEVER" hbarPolicy="AS_NEEDED">
+                        <FlowPane fx:id="categoriesPane" styleClass="categories-flow" hgap="8" vgap="8" prefWrapLength="320"/>
+                    </ScrollPane>
+                </VBox>
+                
+                <!-- Products Grid -->
+                <VBox styleClass="products-section" spacing="5" prefHeight="350" maxHeight="400">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="PRODUITS" styleClass="section-title"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="productCountLabel" text="0 articles" styleClass="product-count"/>
+                    </HBox>
+                    <ScrollPane styleClass="products-scroll" fitToWidth="true" prefHeight="300" maxHeight="350" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER">
+                        <FlowPane fx:id="productsPane" styleClass="products-flow" hgap="10" vgap="10" prefWrapLength="320"/>
+                    </ScrollPane>
+                </VBox>
+                
+                <!-- Receipt Preview (collapsible) -->
+                <TitledPane fx:id="receiptPane" text="Apercu Ticket" styleClass="receipt-pane" expanded="false">
+                    <TextArea fx:id="receiptArea" styleClass="receipt-area" prefRowCount="8" editable="false" wrapText="true"/>
+                </TitledPane>
+            </VBox>
+            
+        </HBox>
+    </center>
+    
+    <!-- BOTTOM: Status Bar -->
+    <bottom>
+        <HBox styleClass="status-bar" alignment="CENTER_LEFT" spacing="20">
+            <padding><Insets top="8" right="15" bottom="8" left="15"/></padding>
+            <Label fx:id="statusLabel" text="Pret" styleClass="status-text"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="F1: Nouveau | F2: Barcode | F3: Recherche | F4: Attente | F5: Reprendre | Suppr: Retirer" styleClass="shortcuts-hint"/>
+            <Separator orientation="VERTICAL"/>
+            <Label fx:id="heldTicketsLabel" text="0 tickets en attente" styleClass="held-count"/>
+        </HBox>
+    </bottom>
+    
+</BorderPane>

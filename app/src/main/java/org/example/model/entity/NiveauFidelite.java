@@ -1,8 +1,5 @@
 package org.example.model.entity;
 
-/**
- * NiveauFidelite - Tiered loyalty membership levels
- */
 public enum NiveauFidelite {
     BRONZE("Bronze", 0, 999, 5.0, 0),
     ARGENT("Argent", 1000, 2499, 7.0, 5),
@@ -10,10 +7,10 @@ public enum NiveauFidelite {
     PLATINE("Platine", 5000, Integer.MAX_VALUE, 15.0, 20);
     
     private final String libelle;
-    private final int seuilMin; // Minimum total purchases
-    private final int seuilMax; // Maximum total purchases
-    private final double pourcentageRemise; // Discount percentage
-    private final int pointsBonus; // Bonus points on birthday
+    private final int seuilMin; 
+    private final int seuilMax; 
+    private final double pourcentageRemise; 
+    private final int pointsBonus; 
     
     NiveauFidelite(String libelle, int seuilMin, int seuilMax, double pourcentageRemise, int pointsBonus) {
         this.libelle = libelle;

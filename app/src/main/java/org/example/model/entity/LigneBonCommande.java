@@ -1,8 +1,5 @@
 package org.example.model.entity;
 
-/**
- * LigneBonCommande - Purchase order line item
- */
 public class LigneBonCommande {
     
     private Long id;
@@ -34,7 +31,6 @@ public class LigneBonCommande {
         return quantiteRecue >= quantiteCommandee;
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }

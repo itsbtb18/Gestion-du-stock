@@ -1,42 +1,32 @@
 package org.example.model.entity;
 
-/**
- * StoreSettings - Entity representing configurable settings for a store
- * Each store has one StoreSettings instance
- */
 public class StoreSettings {
     
     private Long id;
-    private Long storeId; // Foreign key to Store
-    private Store store; // Navigation property
+    private Long storeId; 
+    private Store store; 
     
-    // Stock Management Settings
     private boolean allowNegativeStock;
-    private boolean requireManagerApproval; // For discounts, returns, etc.
+    private boolean requireManagerApproval; 
     
-    // Financial Settings
-    private double defaultVatRate; // VAT/TVA rate (e.g., 0.20 for 20%)
-    private double maxDiscountPercent; // Maximum discount allowed without approval
+    private double defaultVatRate; 
+    private double maxDiscountPercent; 
     
-    // Receipt/Invoice Settings
-    private String invoiceFooterText; // Footer text on receipts
-    private String invoiceHeaderText; // Header text (e.g., "Merci pour votre visite")
+    private String invoiceFooterText; 
+    private String invoiceHeaderText; 
     
-    // Loyalty Program Settings
     private boolean loyaltyProgramEnabled;
     
-    // Notification Settings
     private boolean lowStockNotificationsEnabled;
     private boolean expirationAlertsEnabled;
-    private int expirationAlertDays; // Alert N days before expiration
+    private int expirationAlertDays; 
     
-    // Constructors
     public StoreSettings() {
-        // Set default values
+        
         this.allowNegativeStock = false;
         this.requireManagerApproval = true;
-        this.defaultVatRate = 0.20; // 20% VAT
-        this.maxDiscountPercent = 10.0; // 10% max discount
+        this.defaultVatRate = 0.20; 
+        this.maxDiscountPercent = 10.0; 
         this.loyaltyProgramEnabled = true;
         this.lowStockNotificationsEnabled = true;
         this.expirationAlertsEnabled = true;
@@ -50,7 +40,6 @@ public class StoreSettings {
         this.storeId = storeId;
     }
     
-    // Business logic
     public boolean isDiscountApprovalRequired(double discountPercent) {
         return requireManagerApproval && discountPercent > maxDiscountPercent;
     }
@@ -59,7 +48,6 @@ public class StoreSettings {
         return String.format("%.0f%%", defaultVatRate * 100);
     }
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }
