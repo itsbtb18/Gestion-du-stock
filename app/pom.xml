@@ -144,7 +144,17 @@
                 </configuration>
             </plugin>
 
-            <!-- Exec Maven Plugin for running JavaFX -->
+            <!-- JavaFX Maven Plugin -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>org.example.app.MainApp</mainClass>
+                </configuration>
+            </plugin>
+
+            <!-- Exec Maven Plugin (optionnel) -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -154,7 +164,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Maven Shade Plugin for creating executable JAR -->
+            <!-- Maven Shade Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>

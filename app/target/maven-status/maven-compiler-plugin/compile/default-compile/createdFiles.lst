@@ -43,7 +43,6 @@ org\example\dao\DepenseDAO.class
 org\example\exception\StockException.class
 org\example\util\CSVUtil$ConvertisseurCSV.class
 org\example\dao\NotificationDAO.class
-org\example\model\entity\Promotion$1.class
 org\example\model\pattern\strategy\CashPayment.class
 org\example\util\ListTables.class
 org\example\controller\RetourController$2.class
@@ -59,7 +58,6 @@ org\example\dao\StoreDAO.class
 org\example\model\entity\StatutRetour.class
 org\example\model\entity\TypeEmplacement.class
 org\example\dao\CategorieDAO.class
-org\example\model\entity\LoyaltyProgramConfig$1.class
 org\example\model\pattern\strategy\CreditPayment.class
 org\example\dao\AvisClientDAO.class
 org\example\dao\FournisseurDAO.class
@@ -152,7 +150,6 @@ org\example\dao\LotDAO.class
 org\example\model\entity\TransfertStock.class
 org\example\controller\SignupController.class
 org\example\controller\DashboardController.class
-org\example\model\pattern\factory\PaymentStrategyFactory$1.class
 org\example\dao\EmplacementDAO.class
 org\example\model\entity\Notification.class
 org\example\util\DatabaseInitializer.class
